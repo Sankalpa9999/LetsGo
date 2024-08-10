@@ -1,5 +1,10 @@
+/* Font Import */
+
+
+
+
 :root {
-    --primary-blue: 00274D;       /* Electric Blue */
+    --primary-blue: #00274D;       /* Electric Blue */
     --primary-orange: #FF6F3C;     /* Sunset Orange */
  /*   --secondary-navy: #00274D;     /* Deep Navy */
     --secondary-navy: #007BFF;     /* Deep Navy */
@@ -8,4 +13,111 @@
     --accent-sky: #87CEFA;         /* Soft Sky Blue */
     --text-dark: #333333;          /* Charcoal Black */
     --text-light: #FFFFFF;         /* White */
+}
+
+/* Global Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    color: var(--text-dark);
+    background-color: var(--secondary-gray);
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+h1, h5 {
+    font-weight: 700;
+}
+
+p {
+    font-weight: 400;
+}
+
+/* Hero Section */
+.hero {
+    background-color: var(--primary-blue);
+    color: var(--text-light);
+    height: 100vh; /* Occupies full height of the viewport */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.hero p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.hero .btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.125rem;
+    font-weight: 500;
+    background-color: var(--accent-lime);
+    color: var(--text-dark);
+    border: none;
+    border-radius: 30px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.hero .btn:hover {
+    background-color: var(--primary-orange);
+    color: var(--text-light);
+}
+
+/* Features Section */
+/* .section {
+    padding: 3rem 1rem;
+} */
+
+.card {
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 10px;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-title {
+    color: var(--primary-orange);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.card-text {
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 3.5rem;
+    }
+    
+    .hero p {
+        font-size: 1.125rem;
+    }
+
+    .section {
+        padding: 2rem 1rem;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+    }
+
+    .card-text {
+        font-size: 0.9rem;
+    }
 }

@@ -1,0 +1,128 @@
+/* Contact Page Styles */
+.contact-info {
+    background-color: #f9f9f9; /* Light background for contrast */
+    padding: 3rem 1rem; /* Generous padding for spacing */
+}
+
+.contact-info h2 {
+    text-align: center;
+    font-size: 2.5rem; /* Larger font size for headings */
+    margin-bottom: 2rem;
+    color: #007bff; /* Primary blue color */
+    font-weight: 600; /* Slightly bolder text */
+}
+
+.contact-info .row {
+    display: flex;
+    justify-content: space-between; /* Distribute space between items */
+    flex-wrap: wrap; /* Wrap items on smaller screens */
+    gap: 1rem; /* Space between items */
+}
+
+.contact-item {
+    flex: 1 1 calc(33.333% - 1rem); /* Equal width with gap consideration */
+    min-width: 250px; /* Minimum width to maintain readability */
+    padding: 1rem; /* Padding inside the item */
+    background-color: #ffffff; /* White background */
+    border-radius: 8px; /* Rounded corners */
+    text-align: center; /* Center text inside the item */
+    transition: transform 0.3s ease; /* Smooth transition */
+    border: 1px solid #e1e1e1; /* Light border for separation */
+}
+
+.contact-item:hover {
+    transform: translateY(-5px); /* Slight lift on hover */
+}
+
+.contact-item h3 {
+    font-size: 1.5rem; /* Larger font size for sub-headings */
+    margin-bottom: 1rem;
+    color: #343a40; /* Dark gray text color */
+}
+
+.contact-item p {
+    font-size: 1.1rem; /* Slightly larger font size for readability */
+    color: #495057; /* Slightly lighter gray */
+}
+
+.contact-icon {
+    font-size: 2.5rem; /* Larger icons */
+    color: #007bff; /* Primary blue color for icons */
+    margin-bottom: 1rem; /* Space between icon and text */
+}
+
+/* Contact Form Styles */
+.contact-form {
+    background-color: #ffffff; /* White background for contrast */
+    padding: 3rem 1rem; /* Generous padding for spacing */
+    border-top: 1px solid #dee2e6; /* Border on top to separate sections */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+}
+
+.contact-form h2 {
+    text-align: center;
+    font-size: 2.5rem; /* Larger font size for headings */
+    margin-bottom: 2rem;
+    color: #007bff; /* Primary blue color */
+    font-weight: 600; /* Slightly bolder text */
+}
+
+.form-group {
+    margin-bottom: 1.5rem; /* Increased space between form elements */
+}
+
+label {
+    display: block;
+    font-size: 1.1rem; /* Slightly larger font size for labels */
+    margin-bottom: 0.5rem;
+    color: #343a40; /* Dark gray */
+}
+
+input.form-control, textarea.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 8px; /* Rounded corners */
+    border: 1px solid #ced4da; /* Light border color */
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); /* Subtle inner shadow */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+}
+
+input.form-control:focus, textarea.form-control:focus {
+    border-color: #007bff; /* Change border color on focus */
+    box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25); /* Glow effect on focus */
+}
+
+textarea.form-control {
+    resize: vertical; /* Allows vertical resizing only */
+}
+
+.btn-primary {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #007bff; /* Primary blue color */
+    border: none;
+    border-radius: 8px; /* Rounded corners */
+    color: #ffffff; /* White text */
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-2px); /* Slight lift on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .contact-info .row {
+        flex-direction: column; /* Stack items vertically on small screens */
+    }
+
+    .contact-item {
+        flex: 1 1 100%; /* Full width for each item on small screens */
+        margin-bottom: 1rem; /* Space between stacked items */
+    }
+}

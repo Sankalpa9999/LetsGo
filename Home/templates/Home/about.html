@@ -1,14 +1,57 @@
-
-{%extends 'base.html'%}
+{% extends 'base.html' %}
 {% load static %}
-{%block content %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/about.css' %}">
 
 
 
-this is about page
+<section class="about-hero">
+    <div class="container">
+        <h1>About LetsGo</h1>
+        <p>Transforming Transportation and Delivery Services</p>
+    </div>
+</section>
 
-<h1>hello</h1>
+<section class="about-details">
+    <div class="container">
+        <h2>Our Mission</h2>
+        <p>
+            In this age of rapid technological progress, the way we move and deliver goods is undergoing a significant transformation.
+            As our world becomes more interconnected, the demand for transportation and package delivery services that are not only suitable
+            but also efficient and reliable has never been more evident.
+        </p>
+        <p>
+            “LetsGo” is not just a typical online platform; it's a complete solution crafted to meet the diverse needs of today's consumers and businesses.
+        </p>
 
+        <h2>Our History</h2>
+        <p>
+            Established in 2010 and situated in Newroad-5, Pokhara, “LetsGo” has been committed to offering a smooth online booking experience
+            for a range of vehicles and delivery services. Over the years, we have expanded our services to include flexible car rental choices
+            and streamlined package delivery services, making “LetsGo” a one-stop solution for all transportation and logistics needs.
+        </p>
 
+        <h2>Why Choose Us</h2>
+        <ul>
+            <li>Comprehensive transportation solutions from taxis to trucks</li>
+            <li>Flexible car rental services</li>
+            <li>Reliable and efficient package delivery</li>
+            <li>User-friendly online platform</li>
+            <li>Responsive customer support</li>
+        </ul>
+    </div>
+</section>
 
-{%endblock%}
+<section class="about-footer">
+    <div class="container">
+        <h2>Join Us in Transforming Transportation</h2>
+        <p>
+            Whether you're looking to book a ride, rent a car for a weekend getaway, or ensure the swift and reliable delivery of your packages,
+            “LetsGo” has got you covered. Experience the future of transportation and logistics with us.
+        </p>
+        <a class="btn btn-primary" href="#">Get Started</a>
+    </div>
+</section>
+{% endblock %}

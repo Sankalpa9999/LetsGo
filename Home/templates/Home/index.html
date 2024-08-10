@@ -1,14 +1,48 @@
-{%extends 'base.html'%}
+{% extends 'base.html' %}
 {% load static %}
-{%block content %}
 
+{% block content %}
+<!-- Link to index.css -->
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
 
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <h1>Welcome to LetsGo</h1>
+        <p>Your one-stop solution for all transportation and delivery needs.</p>
+        <a class="btn btn-primary" href="#">Get Started</a>
+    </div>
+</section>
 
-<h1>this is Index page</h1>
-
-
-
-
-
-
-{%endblock%}
+<!-- Features Section -->
+<!-- <section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Book a Ride</h5>
+                        <p class="card-text">Quickly book taxis, bikes, and trucks for all your transportation needs.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Rent a Car</h5>
+                        <p class="card-text">Flexible car rental services for short-term and long-term needs.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Package Delivery</h5>
+                        <p class="card-text">Reliable and efficient package delivery services for businesses and individuals.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section> -->
+{% endblock %}

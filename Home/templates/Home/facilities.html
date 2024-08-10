@@ -1,15 +1,51 @@
-{%extends 'base.html'%}
+{% extends 'base.html' %}
 {% load static %}
-{%block content %}
 
+{% block content %}
 
+<link rel="stylesheet" href="{% static 'css/facilities.css' %}">
 
-<h1>this is facilities page</h1>
+<section class="facilities-hero">
+    <div class="container">
+        <h1>Our Facilities</h1>
+        <p>Discover the range of services and amenities we offer.</p>
+    </div>
+</section>
 
+<section class="facilities-details">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="facility-card">
+                    <img src="{% static 'image/facility1.jpg' %}" alt="Facility 1">
+                    <h3>Modern Fleet</h3>
+                    <p>We maintain a modern fleet of vehicles to ensure a safe and comfortable ride for every user.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="facility-card">
+                    <img src="{% static 'image/facility2.jpg' %}" alt="Facility 2">
+                    <h3>Advanced Technology</h3>
+                    <p>Our platform is built with the latest technology for smooth, efficient service.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="facility-card">
+                    <img src="{% static 'image/facility3.jpg' %}" alt="Facility 3">
+                    <h3>Customer Support</h3>
+                    <p>We offer 24/7 customer support to assist you with any inquiries or issues.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
+<section class="facilities-footer">
+    <div class="container">
+        <h2>Experience Our Facilities</h2>
+        <p>Explore the full range of services and benefits we offer. Join us today and see the difference.</p>
+        <a class="btn btn-primary" href="#">Get Started</a>
+    </div>
+</section>
 
-
-
-
-{%endblock%}
-
+{% endblock %}

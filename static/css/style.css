@@ -1,6 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 /* Define Color Variables */
 :root {
-    --primary-blue: 00274D;       /* Electric Blue */
+    --primary-blue: #00274D;       /* Electric Blue */
     --primary-orange: #FF6F3C;     /* Sunset Orange */
  /*   --secondary-navy: #00274D;     /* Deep Navy */
     --secondary-navy: #007BFF;     /* Deep Navy */
@@ -11,12 +12,22 @@
     --text-light: #FFFFFF;         /* White */
 }
 
+
+body {
+    font-family: Arial, sans-serif;
+    color: var(--text-dark);
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
 /* Navbar Styling */
 .bg-custom {
     background-color: var(--secondary-navy);
     padding: 0.5rem 1rem; /* Add padding for better spacing */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
 }
+
 
 /* Logo Styling */
 .custom-logo {
@@ -35,7 +46,7 @@
 /* Navbar Link Styling */
 .nav-link {
     color: var(--text-light);
-    font-size: 1rem;
+    font-size: 1.2rem;
     margin-right: 1.5rem;
     position: relative; /* For positioning the pseudo-element */
     padding-bottom: 5px; /* Space for the underline */
@@ -110,5 +121,149 @@
         margin: 0.5rem 0; /* Space out the links vertically */
         display: inline-block; /* Make links respect padding and width */
         position: relative; /* Ensure pseudo-element is positioned correctly */
+    }
+}
+
+
+
+
+/* Footer Styles */
+.footer {
+    background-color: #f8f9fa; /* Light gray background */
+    color: #343a40; /* Dark gray text color */
+    padding: 2rem 1rem;
+    border-top: 1px solid #dee2e6; /* Light border */
+    font-family: 'Arial', sans-serif;
+    text-align: center; /* Center all text and content */
+}
+
+.footer h3 {
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+    color: #007bff; /* Primary blue color */
+}
+
+.footer p {
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.footer ul {
+    padding: 0;
+    list-style: none;
+    text-align: center; /* Center the list */
+}
+
+.footer ul li {
+    margin-bottom: 0.5rem;
+}
+
+.footer a {
+    color: #007bff; /* Primary blue color */
+    text-decoration: none; /* Remove underline */
+    font-weight: bold;
+}
+
+.footer a:hover {
+    color: #0056b3; /* Darker blue on hover */
+}
+
+.footer .social-icons {
+    margin-top: 1rem;
+    
+}
+
+.footer .social-icons h4 {
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+    color: #007bff; /* Primary blue color */
+}
+
+.footer .social-icon-container {
+    display: flex;
+    justify-content: center;
+    gap: 2rem; /* Space between icons */
+}
+
+.footer .social-icon-container a {
+    color: #007bff; /* Primary blue color */
+    font-size: 2rem; /* Larger icons */
+    transition: all 0.3s ease;
+}
+
+.footer .social-icon-container a:hover {
+    color: #0056b3; /* Darker blue on hover */
+    transform: scale(1.1); /* Slightly enlarge icon on hover */
+}
+
+.footer-bottom {
+    background-color: #007bff; /* Primary blue color */
+    color: #ffffff; /* White text color */
+    padding: 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (min-width: 1200px) {
+    .footer .row {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .footer .footer-section {
+        flex: 1;
+        margin-right: 2rem;
+    }
+
+    .footer .footer-section:last-child {
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 1199px) {
+    .footer .row {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .footer .footer-section {
+        flex: 1 1 45%;
+        margin-right: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .footer .footer-section:last-child {
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .footer {
+        text-align: center;
+    }
+
+    .footer .row {
+        flex-direction: column;
+    }
+
+    .footer .footer-section {
+        margin-bottom: 2rem;
+    }
+
+    
+}
+
+@media (max-width: 576px) {
+    .footer h3 {
+        font-size: 1.4rem;
+    }
+
+    .footer p {
+        font-size: 0.8rem;
+    }
+
+    .footer ul li {
+        font-size: 0.8rem;
     }
 }
