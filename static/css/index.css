@@ -1,0 +1,11 @@
+:root {
+    --primary-blue: 00274D;       /* Electric Blue */
+    --primary-orange: #FF6F3C;     /* Sunset Orange */
+ /*   --secondary-navy: #00274D;     /* Deep Navy */
+    --secondary-navy: #007BFF;     /* Deep Navy */
+    --secondary-gray: #D9D9D9;     /* Cool Gray */
+    --accent-lime: #C6FF00;        /* Bright Lime Green */
+    --accent-sky: #87CEFA;         /* Soft Sky Blue */
+    --text-dark: #333333;          /* Charcoal Black */
+    --text-light: #FFFFFF;         /* White */
+}

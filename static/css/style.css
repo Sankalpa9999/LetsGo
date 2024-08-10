@@ -1,0 +1,114 @@
+/* Define Color Variables */
+:root {
+    --primary-blue: 00274D;       /* Electric Blue */
+    --primary-orange: #FF6F3C;     /* Sunset Orange */
+ /*   --secondary-navy: #00274D;     /* Deep Navy */
+    --secondary-navy: #007BFF;     /* Deep Navy */
+    --secondary-gray: #D9D9D9;     /* Cool Gray */
+    --accent-lime: #C6FF00;        /* Bright Lime Green */
+    --accent-sky: #87CEFA;         /* Soft Sky Blue */
+    --text-dark: #333333;          /* Charcoal Black */
+    --text-light: #FFFFFF;         /* White */
+}
+
+/* Navbar Styling */
+.bg-custom {
+    background-color: var(--secondary-navy);
+    padding: 0.5rem 1rem; /* Add padding for better spacing */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+}
+
+/* Logo Styling */
+.custom-logo {
+    margin: -1rem 0 -1rem -1rem;
+    height: 80px; /* Adjust size as needed */
+    width: 112px;
+    border-radius: 10px;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.custom-logo:hover {
+    transform: scale(1.1); /* Slight scale-up on hover */
+    filter: brightness(1.2) saturate(1.2); /* Enhance brightness and saturation on hover */
+}
+
+/* Navbar Link Styling */
+.nav-link {
+    color: var(--text-light);
+    font-size: 1rem;
+    margin-right: 1.5rem;
+    position: relative; /* For positioning the pseudo-element */
+    padding-bottom: 5px; /* Space for the underline */
+    transition: color 0.3s ease;
+}
+
+.nav-link::after {
+    content: "";
+    display: block;
+    width: 0;
+    height: 2px;
+    background-color: var(--accent-lime); /* Underline color */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%; /* Full width underline on hover */
+}
+
+.nav-link:hover {
+    color: var(--accent-lime); /* Text color on hover */
+}
+
+/* Button Styling */
+.btn-accent {
+    background-color: var(--accent-lime);
+    color: var(--text-dark);
+    border: none;
+    border-radius: 30px;
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-accent:hover {
+    background-color: var(--primary-orange);
+    color: var(--text-light);
+    transform: scale(1.05);
+}
+
+/* Responsive Adjustments */
+
+/* Hide hamburger button on larger screens */
+@media (min-width: 992px) { /* lg breakpoint and above */
+    .navbar-toggler {
+        display: none; /* Hide hamburger button */
+    }
+}
+
+/* Adjust navbar collapse on small screens */
+@media (max-width: 991px) { /* md breakpoint and below */
+    .navbar-collapse {
+        display: none; /* Collapse menu by default on small screens */
+    }
+    .navbar-collapse.show {
+        display: block; /* Show menu when toggled */
+        padding-right: 1rem;
+    }
+
+    .navbar-nav {
+        text-align: center; /* Center the links */
+        margin: 0 auto; /* Center the navbar */
+        padding-right: 10px;
+    }
+    .navbar-nav .nav-item {
+        display: block; /* Stack the nav items vertically */
+    }
+    .navbar-nav .nav-link {
+        margin: 0.5rem 0; /* Space out the links vertically */
+        display: inline-block; /* Make links respect padding and width */
+        position: relative; /* Ensure pseudo-element is positioned correctly */
+    }
+}
