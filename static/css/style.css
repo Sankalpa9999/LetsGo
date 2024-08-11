@@ -131,7 +131,7 @@ body {
 .footer {
     background-color: #f8f9fa; /* Light gray background */
     color: #343a40; /* Dark gray text color */
-    padding: 2rem 1rem;
+    padding: 2rem 1rem 0 1rem;
     border-top: 1px solid #dee2e6; /* Light border */
     font-family: 'Arial', sans-serif;
     text-align: center; /* Center all text and content */
@@ -199,9 +199,10 @@ body {
 .footer-bottom {
     background-color: #007bff; /* Primary blue color */
     color: #ffffff; /* White text color */
-    padding: 1rem;
+    padding: 0.5rem;
     text-align: center;
     font-size: 0.9rem;
+    margin: 1rem -1rem 0 -1rem;
 }
 
 /* Responsive Design */

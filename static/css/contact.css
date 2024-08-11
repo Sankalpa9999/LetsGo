@@ -1,4 +1,36 @@
+/* Define Color Variables */
+:root {
+    --primary-blue: #00274D;       /* Electric Blue */
+    --primary-orange: #FF6F3C;     /* Sunset Orange */
+    --secondary-navy: #007BFF;     /* Deep Navy */
+    --secondary-gray: #F4F4F4;     /* Light Gray for contrast */
+    --accent-lime: #C6FF00;        /* Bright Lime Green */
+    --accent-sky: #87CEFA;         /* Soft Sky Blue */
+    --text-dark: #333333;          /* Charcoal Black */
+    --text-light: #FFFFFF;         /* White */
+}
+
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    color: var(--text-dark);
+    background-color: var(--secondary-gray);
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+h1, h5 {
+    font-weight: 700;
+}
+
+p {
+    font-weight: 400;
+}
+
+
 /* Contact Page Styles */
+
 .contact-info {
     background-color: #f9f9f9; /* Light background for contrast */
     padding: 3rem 1rem; /* Generous padding for spacing */
@@ -50,6 +82,9 @@
     color: #007bff; /* Primary blue color for icons */
     margin-bottom: 1rem; /* Space between icon and text */
 }
+
+
+
 
 /* Contact Form Styles */
 .contact-form {
@@ -124,5 +159,55 @@ textarea.form-control {
     .contact-item {
         flex: 1 1 100%; /* Full width for each item on small screens */
         margin-bottom: 1rem; /* Space between stacked items */
+    }
+}
+
+
+/* Custom Modal CSS */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1050; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+    backdrop-filter: blur(5px); /* Optional: adds blur effect to the backdrop */
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto; /* Center the modal */
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    width: 90%; /* Width of modal */
+    max-width: 500px; /* Max width of modal */
+    position: relative; /* Relative positioning for close button */
+}
+
+.close-button {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #333;
+    text-decoration: none;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 600px) {
+    .modal-content {
+        width: 95%; /* Full width on very small screens */
+        margin: 20% auto; /* Center the modal */
     }
 }
