@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Link to index.css -->
+<link rel="stylesheet" href="{% static 'css/register/joinpage.css' %}">
+
+<div class="center-container">
+    <div class="registration-container">
+        <h2>Connect with us!</h2>
+        
+        <div class="form-group">
+            <label for="country-code">Country Code</label>
+            <select id="country-code" name="country-code">
+                <option value="+1">+1 (USA)</option>
+                <option value="+44">+44 (UK)</option>
+                <option value="+91">+91 (India)</option>
+                <option value="+91">+977 (Nepal)</option>
+                <!-- Add more country codes as needed -->
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="phone-number">Enter your mobile number</label>
+            <input type="tel" id="phone-number" name="phone-number" placeholder="Enter your mobile number">
+        </div>
+        
+        <button class="continue-btn">Continue</button>
+        
+        <div class="social-links">
+            <a href="#">Continue with Google</a>
+            <br>
+            <a href="#">Continue with Facebook</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
