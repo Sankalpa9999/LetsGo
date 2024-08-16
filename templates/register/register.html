@@ -2,15 +2,24 @@
 {% load static %}
 
 {% block content %}
-<!-- Link to your CSS -->
-<link rel="stylesheet" href="{% static 'css/register/login.css' %}">
+<!-- Link to index.css -->
+<link rel="stylesheet" href="{% static 'css/register/joinpage.css' %}">
 
 <div class="center-container">
-    <div class="login-container">
-        <h2>Login</h2>
-
+    <div class="registration-container">
+        <h2>Connect with us!</h2>
+        
         <form method="post">
             {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your full name" value="{{ form.name.value|default_if_none:'' }}">
+
+                {% if form.name.errors %}
+                    <div class="error">{{ form.name.errors }}</div>
+                {% endif %}
+            </div>
+            
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" placeholder="Enter your email" value="{{ form.email.value|default_if_none:'' }}">
@@ -18,7 +27,7 @@
                     <div class="error">{{ form.email.errors }}</div>
                 {% endif %}
             </div>
-
+            
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" placeholder="Enter your password">
@@ -26,11 +35,19 @@
                     <div class="error">{{ form.password.errors }}</div>
                 {% endif %}
             </div>
-
-            <button class="continue-btn" type="submit">Login</button>
+            
+            <div class="form-group">
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" id="confirm-password" name="confirm_password" placeholder="Confirm your password">
+                {% if form.confirm_password.errors %}
+                    <div class="error">{{ form.confirm_password.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <button class="continue-btn" type="submit">Continue</button>
         </form>
-
-        <div class="registration-link">
+        
+        <div class="social-links">
             {% load socialaccount %}
             <h2>Google login</h2>
             <a href="{% provider_login_url 'google' %}?next=/">Login with Google</a>
@@ -39,7 +56,8 @@
             <p>You are signed in as {{user.username}}</p>
 
             {% endif %}
-            <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
+
+            <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
         </div>
     </div>
 </div>

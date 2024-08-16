@@ -7,8 +7,7 @@ from django.contrib.auth import logout
 def login(request):
     return render(request, 'users/login.html')
 
-def sanjog(request):
-    return render(request,'users/sanjog.html')
+
 
 
 def logout_view(request):

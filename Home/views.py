@@ -14,11 +14,6 @@ def facilities(request):
     return render(request,'Home/facilities.html')
 
 
-from django.shortcuts import render
-from django.http import HttpResponse
-from .forms import ContactForm
-from .models import ContactMessage
-
 def contact_view(request):
     success = False
     if request.method == 'POST':

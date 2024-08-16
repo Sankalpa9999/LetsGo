@@ -22,6 +22,6 @@ urlpatterns = [
     path('',include("Home.urls")),
     # path('',include("gooleauthentication.urls")),
     path('accounts/',include("allauth.urls")),
-    path('users/',include("users.urls")),
-    # path('register/',include("Register.urls")),
+    # path('users/',include("users.urls")),
+    path('register/',include("Register.urls")),
 ]

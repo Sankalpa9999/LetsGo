@@ -34,6 +34,7 @@ ALLOWED_HOSTS = [
 
 SITE_ID = 2
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -51,7 +52,9 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.google'
+    'allauth.socialaccount.providers.google',
+    
+    'crispy_forms',
 ]
 
 
@@ -164,5 +167,5 @@ AUTHENTICATION_BACKENDS =(
     "allauth.account.auth_backends.AuthenticationBackend"
 )
 
-LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = '/register/choose/'
+LOGOUT_REDIRECT_URL = "/register/register"
