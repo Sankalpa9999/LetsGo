@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+/* Define Color Variables */
+:root {
+    --primary-blue: #00274D;       /* Electric Blue */
+    --primary-orange: #FF6F3C;     /* Sunset Orange */
+ /*   --secondary-navy: #00274D;     /* Deep Navy */
+    --secondary-navy: #007BFF;     /* Deep Navy */
+    --secondary-gray: #D9D9D9;     /* Cool Gray */
+    --accent-lime: #C6FF00;        /* Bright Lime Green */
+    --accent-sky: #87CEFA;         /* Soft Sky Blue */
+    --text-dark: #333333;          /* Charcoal Black */
+    --text-light: #FFFFFF;         /* White */
+}
+
+
+body {
+    font-family: Arial, sans-serif;
+    color: var(--text-dark);
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar Styling */
+.bg-custom {
+    background-color: var(--secondary-navy);
+    padding: 0.5rem 1rem; /* Add padding for better spacing */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+}
+
+
+/* Logo Styling */
+.custom-logo {
+    margin: -1rem 0 -1rem -1rem;
+    height: 80px; /* Adjust size as needed */
+    width: 112px;
+    border-radius: 10px;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.custom-logo:hover {
+    transform: scale(1.1); /* Slight scale-up on hover */
+    filter: brightness(1.2) saturate(1.2); /* Enhance brightness and saturation on hover */
+}
