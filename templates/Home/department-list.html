@@ -1,0 +1,49 @@
+{% extends 'partial/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="featuredd">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title">
+                    <h2>Departments</h2>
+                    
+                </div>
+            </div>
+        </div>
+        <div>
+            <span>{{departments.count}} Department{{departments.count|pluralize}} </span>
+        </div>
+        <div class="row featured__filter">
+            {% for d in departments %}
+
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="featured__item">
+                    <!-- Product Image Section -->
+                    <div class="featured__item__pic-wrapper">
+                        
+                        <div class="featured__item__pic" style="background-image: url('{{ d.image.url }}');">
+                            
+                        </div>
+                    </div>
+        
+                    <!-- Product Info -->
+                    <div class="featured__item__text">
+                        <h6 class="product-title"><a href="{% url 'department-category-list' d.did %}">{{ d.title }}</a></h6>
+                        <div>
+                            <span>{{d.department.count}} product{{d.department.count|pluralize}} </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        
+    </div>
+</section>
+
+
+{% endblock %}

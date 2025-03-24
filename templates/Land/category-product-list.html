@@ -1,0 +1,57 @@
+{% extends 'partial/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="featuredd">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title">
+                    <h2>{{category.title}}</h2>                    
+                </div>
+            </div>
+        </div>
+        <div>
+            <span>{{products.count}} product{{products.count|pluralize}} </span>
+        </div>
+        
+        <div class="row featured__filter">
+            {% for p in products %}
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="featured__item">
+                    <!-- Product Image Section -->
+                    <div class="featured__item__pic-wrapper">
+                        <div class="hot-badge">-{{p.get_percentage | floatformat:0}}%</div> <!-- HOT Badge -->
+                        <div class="featured__item__pic" style="background-image: url('{{ p.image.url }}');">
+                            <ul class="featured__item__pic__hover">
+                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+        
+                    <!-- Product Info -->
+                    <div class="featured__item__text">
+                        <h4 class="category-name">{{ p.category.title }}</h4>
+                        <h6 class="product-title"><a href="#">{{ p.title }}</a></h6>
+                        
+                        <h5 class="product-price">
+                            <span class="old-price">${{ p.old_price }}</span> 
+                            <span class="discount-price">${{ p.price }}</span>/day
+                        </h5>
+        
+                        <h6 class="product-title">From: <a href="#">{{ p.vendor }}</a></h6>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        
+    </div>
+</section>
+
+
+{% endblock %}

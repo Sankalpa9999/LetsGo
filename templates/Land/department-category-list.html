@@ -1,0 +1,75 @@
+{% extends 'partial/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="featuredd">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title text-center mb-4">
+                    <h2>{{ department.title }}</h2>
+                    
+                </div>
+                <!-- <div class="featured__controls text-center mb-4">
+                    <ul class="list-inline">
+                        {% for c in category %}
+                            <li class="list-inline-item" data-filter=".oranges">{{ c.title }}</li>
+                        {% endfor %}
+                    </ul>
+                </div> -->
+            </div>
+        </div>
+        <div class="text-center mb-4">
+            <span>{{ products.count }} Product{{ products.count|pluralize }}</span>
+        </div>
+        
+        <div class="row featured__filter">
+            {% for p in products %}
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="featured__item card border-0 shadow-sm h-100">
+                        <!-- Product Image Section -->
+                        <div class="featured__item__pic-wrapper position-relative">
+                            <div class="hot-badge position-absolute bg-danger text-white p-2" style="top: 10px; right: 10px;">
+                                -{{ p.get_percentage | floatformat:0 }}%
+                            </div>
+                            <div class="featured__item__pic" 
+                                 style="background-image: url('{{ p.image.url }}'); height: 220px; background-size: cover; background-position: center;">
+                                <ul class="featured__item__pic__hover list-inline position-absolute" style="bottom: 10px; right: 10px;">
+                                    <li class="list-inline-item"><a href="#" class="text-white"><i class="fa fa-heart"></i></a></li>
+                                    <li class="list-inline-item"><a href="#" class="text-white"><i class="fa fa-retweet"></i></a></li>
+                                    <li class="list-inline-item"><a href="#" class="text-white"><i class="fa fa-shopping-cart"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Product Info -->
+                        <div class="featured__item__text text-center p-3">
+                            <h4 class="category-name text-muted">{{ p.category.title }}</h4>
+                            <h6 class="product-title"><a href="#" class="text-dark">{{ p.title }}</a></h6>
+                            
+                            <h5 class="product-price">
+                                <span class="old-price text-muted"><del>${{ p.old_price }}</del></span> 
+                                <span class="discount-price text-success">${{ p.price }}</span>/day
+                            </h5>
+
+                            <h6 class="product-title text-muted">From: <a href="#" class="text-dark">{{ p.vendor }}</a></h6>
+
+                            <!-- Buttons Section -->
+                            <div class="d-flex justify-content-between mt-3">
+                                <a href="#" class="btn btn-sm btn-outline-secondary">
+                                    <i class="fa fa-eye"></i> View Details
+                                </a>
+                                <a href="#" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-shopping-cart"></i> Add to Cart
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

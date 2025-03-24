@@ -1,0 +1,79 @@
+{% extends 'partial/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Vendor Cover Image -->
+        <div class="col-12">
+            <div class="cover-image"
+                style="background-image: url('{{ vendor.cover_image.url }}'); height: 300px; background-size: cover; background-position: center; border-radius: 10px;">
+            </div>
+        </div>
+    </div>
+
+    <!-- Vendor Info Section -->
+    <div class="row mt-4">
+        <div class="col-md-4 text-center">
+            <img src="{{ vendor.image.url }}" alt="{{ vendor.title }}" class="img-fluid rounded-circle shadow"
+                style="width: 150px; height: 150px; object-fit: cover;">
+            <h2 class="mt-3">{{ vendor.title }}</h2>
+            <p class="text-muted">{{ vendor.address }}</p>
+
+
+
+        </div>
+
+        <div class="col-md-8">
+            <h4>Contact Details</h4>
+            <p><strong>Phone:</strong> {{ vendor.contact }}</p>
+            <p><strong>Chat Response Time:</strong> {{ vendor.chat_resp_time }}</p>
+            <p><strong>Member Since:</strong> {{ vendor.date|date:"F d, Y" }}</p>
+            <hr>
+            <h4>Description</h4>
+            <p>{{ vendor.description|default:"No description available." }}</p>
+            <a href="#" class="btn btn-primary mt-3">
+                <i class="fa fa-comments"></i> Chat Now
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<!-- Vendor's Products -->
+<h3 class="mt-3">Products by {{ vendor.title }}</h3>
+<div class="container">  <!-- Ensure proper wrapping -->
+    <div class="row featured__filter mx-0 gx-0"> <!-- Remove extra left margin & padding -->
+        {% for p in products %}
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="featured__item card border-0 shadow-sm h-100">
+                <div class="featured__item__pic-wrapper position-relative">
+                    <div class="hot-badge position-absolute bg-danger text-white p-2" style="top: 10px; right: 10px;">
+                        -{{ p.get_percentage | floatformat:0 }}%
+                    </div>
+                    <div class="featured__item__pic"
+                        style="background-image: url('{{ p.image.url }}'); height: 220px; background-size: cover; background-position: center;">
+                    </div>
+                </div>
+                <div class="featured__item__text text-center p-3">
+                    <h4 class="category-name text-muted">{{ p.category.title }}</h4>
+                    <h6 class="product-title"><a href="#" class="text-dark">{{ p.title }}</a></h6>
+                    <h5 class="product-price">
+                        <span class="old-price text-muted"><del>${{ p.old_price }}</del></span>
+                        <span class="discount-price text-success">${{ p.price }}</span>/day
+                    </h5>
+                    <div class="d-flex justify-content-between mt-3">
+                        <a href="#" class="btn btn-sm btn-outline-secondary">
+                            <i class="fa fa-eye"></i> View Details
+                        </a>
+                        <a href="#" class="btn btn-sm btn-primary">
+                            <i class="fa fa-shopping-cart"></i> Add to Cart
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
