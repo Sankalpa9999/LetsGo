@@ -7,14 +7,13 @@
         <!-- Product Image Section -->
         <div class="col-lg-6">
             <div class="product-image-wrapper position-relative shadow-sm rounded overflow-hidden bg-white p-3">
-                <img id="mainProductImage" src="{{ product.image.url }}" class="d-block w-100 rounded"
-                    alt="{{ product.title }}">
+                <img id="mainProductImage" src="{{ p.image.url }}" class="d-block w-100 rounded" alt="{{ p.title }}">
             </div>
 
             <!-- Thumbnail Image Selection -->
             <div class="d-flex flex-wrap mt-3 gap-2 justify-content-center">
-                <img src="{{ product.image.url }}" class="img-thumbnail rounded shadow-sm" onclick="changeImage(this)">
-                {% for image in product.p_images.all %}
+                <img src="{{ p.image.url }}" class="img-thumbnail rounded shadow-sm" onclick="changeImage(this)">
+                {% for image in p.p_images.all %}
                 <img src="{{ image.image.url }}" class="img-thumbnail rounded shadow-sm" onclick="changeImage(this)">
                 {% endfor %}
             </div>
@@ -34,23 +33,23 @@
 
         <!-- Product Details Section -->
         <div class="col-lg-6 mt-4 mt-lg-0">
-            <h1 class="fw-bold text-primary">{{ product.title }}</h1>
-            <p class="text-muted">Category: <span class="fw-semibold">{{ product.category }}</span></p>
-            <p class="text-muted">License Plate: <strong>{{ product.numberp }}</strong></p>
+            <h1 class="fw-bold text-primary">{{ p.title }}</h1>
+            <p class="text-muted">Category: <span class="fw-semibold">{{ p.category }}</span></p>
+            <p class="text-muted">License Plate: <strong>{{ p.numberp }}</strong></p>
 
-            <h4 class="text-success">$ {{ product.price }}/day</h4>
-            {% if product.old_price > product.price %}
-            <p class="text-danger"><del>Was: ${{ product.old_price }}/day</del></p>
-            <span class="badge bg-warning text-dark">{{ product.get_percentage }}% OFF</span>
+            <h4 class="text-success">$ {{ p.price }}/day</h4>
+            {% if product.old_price > p.price %}
+            <p class="text-danger"><del>Was: ${{ p.old_price }}/day</del></p>
+            <span class="badge bg-warning text-dark">{{ p.get_percentage }}% OFF</span>
             {% endif %}
 
-            <p class="mt-3 text-black">{{ product.description|truncatechars:100|safe }}</p>
+            <p class="mt-3 text-black">{{ p.description|truncatechars:100|safe }}</p>
 
             <!-- Vendor Details -->
             <div class="border rounded p-3 bg-light">
                 <!-- <h6 class="fw-bold">Vendor Details:</h6> -->
-                <p class="mb-0"><strong>Owner Name:</strong> {{ product.vendor }}</p>
-                <p class="mb-0"><strong>Address:</strong> {{ product.vendor.address }}</p>
+                <p class="mb-0"><strong>Owner Name:</strong> {{ p.vendor }}</p>
+                <p class="mb-0"><strong>Address:</strong> {{ p.vendor.address }}</p>
                 <!-- <p class="mb-0"><strong>Address:</strong> 
                     {% if user_address %}
                         <a href="#" class="text-primary">{{ user_address.address }}</a>
@@ -65,11 +64,11 @@
             <!-- Specifications Section -->
             <div class="border rounded p-3 bg-light mt-3">
                 <h6 class="fw-bold">Specifications:</h6>
-                <p class="text-muted mb-0">{{ product.specifications|truncatechars:100|safe }}</p>
+                <p class="text-muted mb-0">{{ p.specifications|truncatechars:100|safe }}</p>
             </div>
 
             <p class="mt-3"><strong>Status:</strong>
-                {% if product.in_stock %}
+                {% if p.in_stock %}
                 <span class="badge text-success">Available</span>
                 {% else %}
                 <span class="badge text-danger">Not Available Right Now</span>
@@ -97,34 +96,85 @@
 
     <!-- Button to toggle visibility -->
     <button id="toggleReviewsBtn" class="btn btn-primary mb-4">Show Reviews</button>
-    
-    {% if product.reviews.all %}
-        <div id="reviewsList" class="reviews-list" style="display: none;">
-            <div class="d-flex align-items-center">
-                <div class="fw-bold me-2">
-                    {{ average_rating.rating|floatformat }} out of 5
-                </div>
-                <div>
 
-                </div>
+    {% if p.reviews.all %}
+    <div id="reviewsList" class="reviews-list" style="display: none;">
+        <div class="d-flex align-items-center">
+            <div class="fw-bold me-2">
+                {{ average_rating.rating|floatformat }} out of 5
             </div>
-            {% for r in reviews %}
-                <div class="review-item border-bottom pb-4 mb-4">
-                    <div class="d-flex justify-content-between">
-                        <h5 class="fw-bold">{{ r.user.username|title }}</h5>
-                        <p class="text-muted">{{ r.date|date:"M d, Y" }}</p>
-                    </div>
+            <div>
 
-
-                    
-
-                    <p class="review-text">{{ r.review|default:"No review provided" }}</p>
-                </div>
-            {% endfor %}
+            </div>
         </div>
+        {% for r in reviews %}
+        <div class="review-item border-bottom pb-4 mb-4">
+            <div class="d-flex justify-content-between">
+                <h5 class="fw-bold">{{ r.user.username|title }}</h5>
+                <p class="text-muted">{{ r.date|date:"M d, Y" }}</p>
+            </div>
+
+            <!-- Display star ratings -->
+            <div class="rating-stars">
+                {% for i in "12345" %}
+                {% if i|add:"0" <= r.rating %} <span class="text-warning">&#9733;</span> <!-- Filled star -->
+                    {% else %}
+                    <span class="text-secondary">&#9734;</span> <!-- Empty star -->
+                    {% endif %}
+                    {% endfor %}
+            </div>
+
+            <p class="review-text">{{ r.review|default:"No review provided" }}</p>
+        </div>
+        {% endfor %}
+    </div>
     {% else %}
-        <p>No reviews yet.</p>
+    <p>No reviews yet.</p>
     {% endif %}
+</div>
+
+<!-- {% if p %}
+    <p>Product ID: {{ p.pid }}</p>
+    {% else %}
+    <p>No product found.</p>
+    {% endif %} -->
+
+
+<div class="container my-5">
+    <div class="review-container text-center">
+        <!-- Button to trigger review form toggle -->
+        {% if not user_has_reviewed %}
+        <button class="btn btn-primary mb-4" id="toggle-review-form">Add Review</button>
+        {% endif %}
+
+        <form id="review-form" class="mt-3 bg-white p-4 shadow rounded" method="post"
+            action="{% url 'ajax-add-review' p.pid %}" style="display: none;">
+            {% csrf_token %}
+            <h4 class="mb-3">Leave a Review</h4>
+
+            <div class="mb-3">
+                <label for="rating" class="form-label">Rating:</label>
+                <select name="rating" id="rating" class="form-select" required>
+                    <option value="5">⭐⭐⭐⭐⭐ - Excellent</option>
+                    <option value="4">⭐⭐⭐⭐ - Good</option>
+                    <option value="3">⭐⭐⭐ - Average</option>
+                    <option value="2">⭐⭐ - Poor</option>
+                    <option value="1">⭐ - Terrible</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="review" class="form-label">Your Review:</label>
+                <textarea name="review" id="review" class="form-control" rows="4"
+                    placeholder="Write your thoughts here..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-success w-100">Submit Review</button>
+        </form>
+
+
+    </div>
+</div>
 </div>
 
 
@@ -138,61 +188,77 @@
                 <div class="text-center mb-4">
                     <h2 class="section-title px-5"><span class="px-2">Related Vehicles</span></h2>
                 </div>
-                
+
             </div>
         </div>
-    
+
         <span>{{ products.count }} Product{{ products.count|pluralize }} found.</span>
         <div class="row featured__filter">
             {% for p in products %}
-                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                    <div class="featured__item card border-0 shadow-sm h-100">
-                        <!-- Product Image Section -->
-                        <div class="featured__item__pic-wrapper position-relative">
-                            <div class="hot-badge position-absolute bg-danger text-white p-2" style="top: 10px; right: 10px;">
-                                -{{ p.get_percentage | floatformat:0 }}%
-                            </div>
-                            <div class="featured__item__pic" 
-                                 style="background-image: url('{{ p.image.url }}'); height: 220px; background-size: cover; background-position: center;">
-                                <ul class="featured__item__pic__hover list-inline position-absolute" style="bottom: 10px; right: 10px;">
-                                    <li class="list-inline-item"><a href="#" class="text-white"><i class="fa fa-heart"></i></a></li>
-                                    <li class="list-inline-item"><a href="#" class="text-white"><i class="fa fa-retweet"></i></a></li>
-                                    <li class="list-inline-item"><a href="#" class="text-white"><i class="fa fa-shopping-cart"></i></a></li>
-                                </ul>
-                            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="featured__item card border-0 shadow-sm h-100">
+                    <!-- Product Image Section -->
+                    <div class="featured__item__pic-wrapper position-relative">
+                        <div class="hot-badge position-absolute bg-danger text-white p-2"
+                            style="top: 10px; right: 10px;">
+                            -{{ p.get_percentage | floatformat:0 }}%
                         </div>
+                        <div class="featured__item__pic"
+                            style="background-image: url('{{ p.image.url }}'); height: 220px; background-size: cover; background-position: center;">
+                            <ul class="featured__item__pic__hover list-inline position-absolute"
+                                style="bottom: 10px; right: 10px;">
+                                <li class="list-inline-item"><a href="#" class="text-white"><i
+                                            class="fa fa-heart"></i></a></li>
+                                <li class="list-inline-item"><a href="#" class="text-white"><i
+                                            class="fa fa-retweet"></i></a></li>
+                                <li class="list-inline-item"><a href="#" class="text-white"><i
+                                            class="fa fa-shopping-cart"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
 
-                        <!-- Product Info -->
-                        <div class="featured__item__text text-center p-3">
-                            <h4 class="category-name text-muted">{{ p.category.title }}</h4>
-                            <h6 class="product-title"><a href="#" class="text-dark">{{ p.title }}</a></h6>
-                            
-                            <h5 class="product-price">
-                                <span class="old-price text-muted"><del>${{ p.old_price }}</del></span> 
-                                <span class="discount-price text-success">${{ p.price }}</span>/day
-                            </h5>
+                    <!-- Product Info -->
+                    <div class="featured__item__text text-center p-3">
+                        <h4 class="category-name text-muted">{{ p.category.title }}</h4>
+                        <h6 class="product-title"><a href="#" class="text-dark">{{ p.title }}</a></h6>
 
-                            <h6 class="product-title text-muted">From: <a href="#" class="text-dark">{{ p.vendor }}</a></h6>
+                        <h5 class="product-price">
+                            <span class="old-price text-muted"><del>${{ p.old_price }}</del></span>
+                            <span class="discount-price text-success">${{ p.price }}</span>/day
+                        </h5>
 
-                            <!-- Buttons Section -->
-                            <div class="d-flex justify-content-between mt-3">
-                                <a href="{% url 'product-detail' p.pid %}" class="btn btn-sm btn-outline-secondary">
-                                    <i class="fa fa-eye"></i> View Details
-                                </a>
-                                <a href="#" class="btn btn-sm btn-primary">
-                                    <i class="fa fa-shopping-cart"></i> Add to Cart
-                                </a>
-                            </div>
+                        <h6 class="product-title text-muted">From: <a href="#" class="text-dark">{{ p.vendor }}</a></h6>
+
+                        <!-- Buttons Section -->
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="{% url 'product-detail' p.pid %}" class="btn btn-sm btn-outline-secondary">
+                                <i class="fa fa-eye"></i> View Details
+                            </a>
+                            <a href="#" class="btn btn-sm btn-primary">
+                                <i class="fa fa-shopping-cart"></i> Add to Cart
+                            </a>
                         </div>
                     </div>
                 </div>
+            </div>
             {% endfor %}
         </div>
-        
+
     </div>
 </section>
 <!-- related product end  -->
 <script>
+
+
+    //
+    document.getElementById('toggle-review-form').addEventListener('click', function () {
+        const reviewForm = document.getElementById('review-form');
+
+        reviewForm.style.display = reviewForm.style.display === 'none' ? 'block' : 'none';
+    });
+
+
+
     function changeImage(element) {
         document.getElementById('mainProductImage').src = element.src;
     }
@@ -203,8 +269,10 @@
     const reviewsList = document.getElementById('reviewsList');
 
     // Toggle the reviews visibility when the button is clicked
-    toggleBtn.addEventListener('click', function() {
-        if (reviewsList.style.display === 'none') {
+
+
+    toggleBtn.addEventListener('click', function () {
+        if (reviewsList.style.display === 'none' || reviewsList.style.display === '') {
             reviewsList.style.display = 'block';
             toggleBtn.textContent = 'Hide Reviews'; // Change button text
         } else {
@@ -212,6 +280,8 @@
             toggleBtn.textContent = 'Show Reviews'; // Change button text back
         }
     });
+
+
 
 
 </script>
@@ -242,6 +312,17 @@
         /* Reduce font size */
         padding: 8px 12px;
         /* Reduce padding */
+    }
+
+    .rating-stars span {
+        font-size: 1.2rem;
+        margin-right: 2px;
+    }
+    .text-warning {
+        color: #ffc107; /* Yellow for filled stars */
+    }
+    .text-secondary {
+        color: #ccc; /* Grey for empty stars */
     }
 </style>
 
