@@ -1,0 +1,248 @@
+{% extends 'partial/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row g-4 align-items-center">
+        <!-- Product Image Section -->
+        <div class="col-lg-6">
+            <div class="product-image-wrapper position-relative shadow-sm rounded overflow-hidden bg-white p-3">
+                <img id="mainProductImage" src="{{ product.image.url }}" class="d-block w-100 rounded"
+                    alt="{{ product.title }}">
+            </div>
+
+            <!-- Thumbnail Image Selection -->
+            <div class="d-flex flex-wrap mt-3 gap-2 justify-content-center">
+                <img src="{{ product.image.url }}" class="img-thumbnail rounded shadow-sm" onclick="changeImage(this)">
+                {% for image in product.p_images.all %}
+                <img src="{{ image.image.url }}" class="img-thumbnail rounded shadow-sm" onclick="changeImage(this)">
+                {% endfor %}
+            </div>
+
+            <!-- Wishlist Button -->
+            <!-- Wishlist & Favorites Buttons -->
+            <div class="d-flex justify-content-center mt-3">
+                <button class="btn btn-outline-danger me-3" onclick="toggleWishlist(this)">
+                    <i class="fas fa-heart"></i> Wishlist
+                </button>
+                <button class="btn btn-outline-primary" onclick="toggleFavorites(this)">
+                    <i class="fa fa-shopping-cart"></i> Add to Cart
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Product Details Section -->
+        <div class="col-lg-6 mt-4 mt-lg-0">
+            <h1 class="fw-bold text-primary">{{ product.title }}</h1>
+            <p class="text-muted">Category: <span class="fw-semibold">{{ product.category }}</span></p>
+            <p class="text-muted">License Plate: <strong>{{ product.numberp }}</strong></p>
+
+            <h4 class="text-success">$ {{ product.price }}/day</h4>
+            {% if product.old_price > product.price %}
+            <p class="text-danger"><del>Was: ${{ product.old_price }}/day</del></p>
+            <span class="badge bg-warning text-dark">{{ product.get_percentage }}% OFF</span>
+            {% endif %}
+
+            <p class="mt-3 text-black">{{ product.description|truncatechars:100|safe }}</p>
+
+            <!-- Vendor Details -->
+            <div class="border rounded p-3 bg-light">
+                <!-- <h6 class="fw-bold">Vendor Details:</h6> -->
+                <p class="mb-0"><strong>Owner Name:</strong> {{ product.vendor }}</p>
+                <p class="mb-0"><strong>Address:</strong> {{ product.vendor.address }}</p>
+                <!-- <p class="mb-0"><strong>Address:</strong> 
+                    {% if user_address %}
+                        <a href="#" class="text-primary">{{ user_address.address }}</a>
+                    {% else %}
+                        <span class="text-muted">No address available</span>
+                    {% endif %}
+                </p> -->
+            </div>
+
+
+
+            <!-- Specifications Section -->
+            <div class="border rounded p-3 bg-light mt-3">
+                <h6 class="fw-bold">Specifications:</h6>
+                <p class="text-muted mb-0">{{ product.specifications|truncatechars:100|safe }}</p>
+            </div>
+
+            <p class="mt-3"><strong>Status:</strong>
+                {% if product.in_stock %}
+                <span class="badge text-success">Available</span>
+                {% else %}
+                <span class="badge text-danger">Not Available Right Now</span>
+                {% endif %}
+            </p>
+
+            <!-- Action Buttons -->
+            <div class="d-flex flex-wrap gap-3 mt-4">
+                <a href="#" class="btn btn-primary px-3 py-1 small-btn me-2"><i class="fas fa-car"></i> Rent Now</a>
+                <a href="#" class="btn btn-outline-secondary px-3 py-1 small-btn"><i class="fas fa-comments"></i> Chat
+                    with Owner</a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Product Reviews Section -->
+<div class="container my-5">
+    <h3 class="mb-4">Product Reviews <span>({{reviews.count}}) </span></h3>
+
+    <!-- Button to toggle visibility -->
+    <button id="toggleReviewsBtn" class="btn btn-primary mb-4">Show Reviews</button>
+    
+    {% if product.reviews.all %}
+        <div id="reviewsList" class="reviews-list" style="display: none;">
+            <div class="d-flex align-items-center">
+                <div class="fw-bold me-2">
+                    {{ average_rating.rating|floatformat }} out of 5
+                </div>
+                <div>
+
+                </div>
+            </div>
+            {% for r in reviews %}
+                <div class="review-item border-bottom pb-4 mb-4">
+                    <div class="d-flex justify-content-between">
+                        <h5 class="fw-bold">{{ r.user.username|title }}</h5>
+                        <p class="text-muted">{{ r.date|date:"M d, Y" }}</p>
+                    </div>
+
+
+                    
+
+                    <p class="review-text">{{ r.review|default:"No review provided" }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No reviews yet.</p>
+    {% endif %}
+</div>
+
+
+
+
+<!-- related product -->
+<section class="featuredd">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="text-center mb-4">
+                    <h2 class="section-title px-5"><span class="px-2">Related Vehicles</span></h2>
+                </div>
+                
+            </div>
+        </div>
+    
+        <span>{{ products.count }} Product{{ products.count|pluralize }} found.</span>
+        <div class="row featured__filter">
+            {% for p in products %}
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="featured__item card border-0 shadow-sm h-100">
+                        <!-- Product Image Section -->
+                        <div class="featured__item__pic-wrapper position-relative">
+                            <div class="hot-badge position-absolute bg-danger text-white p-2" style="top: 10px; right: 10px;">
+                                -{{ p.get_percentage | floatformat:0 }}%
+                            </div>
+                            <div class="featured__item__pic" 
+                                 style="background-image: url('{{ p.image.url }}'); height: 220px; background-size: cover; background-position: center;">
+                                <ul class="featured__item__pic__hover list-inline position-absolute" style="bottom: 10px; right: 10px;">
+                                    <li class="list-inline-item"><a href="#" class="text-white"><i class="fa fa-heart"></i></a></li>
+                                    <li class="list-inline-item"><a href="#" class="text-white"><i class="fa fa-retweet"></i></a></li>
+                                    <li class="list-inline-item"><a href="#" class="text-white"><i class="fa fa-shopping-cart"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Product Info -->
+                        <div class="featured__item__text text-center p-3">
+                            <h4 class="category-name text-muted">{{ p.category.title }}</h4>
+                            <h6 class="product-title"><a href="#" class="text-dark">{{ p.title }}</a></h6>
+                            
+                            <h5 class="product-price">
+                                <span class="old-price text-muted"><del>${{ p.old_price }}</del></span> 
+                                <span class="discount-price text-success">${{ p.price }}</span>/day
+                            </h5>
+
+                            <h6 class="product-title text-muted">From: <a href="#" class="text-dark">{{ p.vendor }}</a></h6>
+
+                            <!-- Buttons Section -->
+                            <div class="d-flex justify-content-between mt-3">
+                                <a href="{% url 'product-detail' p.pid %}" class="btn btn-sm btn-outline-secondary">
+                                    <i class="fa fa-eye"></i> View Details
+                                </a>
+                                <a href="#" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-shopping-cart"></i> Add to Cart
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+    </div>
+</section>
+<!-- related product end  -->
+<script>
+    function changeImage(element) {
+        document.getElementById('mainProductImage').src = element.src;
+    }
+
+
+    // Get the button and the reviews list
+    const toggleBtn = document.getElementById('toggleReviewsBtn');
+    const reviewsList = document.getElementById('reviewsList');
+
+    // Toggle the reviews visibility when the button is clicked
+    toggleBtn.addEventListener('click', function() {
+        if (reviewsList.style.display === 'none') {
+            reviewsList.style.display = 'block';
+            toggleBtn.textContent = 'Hide Reviews'; // Change button text
+        } else {
+            reviewsList.style.display = 'none';
+            toggleBtn.textContent = 'Show Reviews'; // Change button text back
+        }
+    });
+
+
+</script>
+
+<style>
+    .product-image-wrapper {
+        max-height: 400px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .img-thumbnail {
+        cursor: pointer;
+        transition: transform 0.3s ease-in-out;
+        width: 110px;
+        /* Increased size for better visibility */
+        height: auto;
+    }
+
+    .img-thumbnail:hover {
+        transform: scale(1.3);
+        border: 2px solid #007bff;
+    }
+
+    .small-btn {
+        font-size: 14px;
+        /* Reduce font size */
+        padding: 8px 12px;
+        /* Reduce padding */
+    }
+</style>
+
+{% endblock %}

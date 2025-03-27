@@ -5,8 +5,14 @@ def default(request):
     departments = Department.objects.all()
     vendors = Vendor.objects.all()
     
+    
+    user_address = None
+    if request.user.is_authenticated:  # Check if user is logged in
+        user_address = Address.objects.filter(user=request.user, status=True).first()
+    
     return {
         'categories':categories,
         'departments':departments,
         'vendors':vendors,
+        'user_address': user_address,  # Pass as user_address
         }

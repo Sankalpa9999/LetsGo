@@ -10,8 +10,8 @@
                             <img class="img-fluid" src="{% static 'imgs/yellow.webp' %}" alt="Image">
                             <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                                 <div class="p-3" style="max-width: 700px;">
-                                    <h4 class="text-light text-uppercase font-weight-medium mb-3">20% Off Your First Order</h4>
-                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">Fashionable Dress</h3>
+                                    <h4 class="text-light text-uppercase font-weight-medium mb-3">Special Offers in this Month</h4>
+                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">Top Vehicles</h3>
                                     <a href="{% url 'product-list' %}" class="btn btn-light py-2 px-3">Book Now</a>
                                 </div>
                             </div>
@@ -20,7 +20,7 @@
                             <img class="img-fluid" src="{% static 'imgs/toyota.jpg' %}" alt="Image">
                             <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                                 <div class="p-3" style="max-width: 700px;">
-                                    <h4 class="text-light text-uppercase font-weight-medium mb-3">10% Off Your First Order</h4>
+                                    <h4 class="text-light text-uppercase font-weight-medium mb-3">Special Offers in this Month</h4>
                                     <h3 class="display-4 text-white font-weight-semi-bold mb-4">Reasonable Price</h3>
                                     <a href="{% url 'product-list' %}" class="btn btn-light py-2 px-3">Book Now</a>
                                 </div>
@@ -45,30 +45,30 @@
 
 
     <!-- Featured Start -->
-    <div class="container-fluid pt-5">
+    <div class="container-fluid pt-3">
         <div class="row px-xl-5 pb-3">
             <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
                 <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
-                    <h1 class="fa fa-check text-primary m-0 mr-3"></h1>
-                    <h5 class="font-weight-semi-bold m-0">Quality Product</h5>
+                    <h1 class="fa fa-car text-primary m-0 mr-3"></h1>
+                    <h5 class="font-weight-semi-bold m-0">Wide Vehicle Selection</h5>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
                 <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
-                    <h1 class="fa fa-shipping-fast text-primary m-0 mr-2"></h1>
-                    <h5 class="font-weight-semi-bold m-0">Free Shipping</h5>
+                    <h1 class="fa fa-dollar-sign text-primary m-0 mr-2"></h1>
+                    <h5 class="font-weight-semi-bold m-0">Affordable Pricing</h5>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
                 <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
-                    <h1 class="fas fa-exchange-alt text-primary m-0 mr-3"></h1>
-                    <h5 class="font-weight-semi-bold m-0">14-Day Return</h5>
+                    <h1 class="fa fa-shield-alt text-primary m-0 mr-3"></h1>
+                    <h5 class="font-weight-semi-bold m-0">Insurance Coverage</h5>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
                 <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
-                    <h1 class="fa fa-phone-volume text-primary m-0 mr-3"></h1>
-                    <h5 class="font-weight-semi-bold m-0">24/7 Support</h5>
+                    <h1 class="fa fa-user-check text-primary m-0 mr-3"></h1>
+                    <h5 class="font-weight-semi-bold m-0">Verified Owners</h5>
                 </div>
             </div>
         </div>
@@ -79,7 +79,7 @@
 
 
     <!-- department start -->
-    <div class="container-fluid pt-5">
+    <div class="container-fluid pt-3">
         <div class="row featured__filter">
             {% for d in departments %}
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
@@ -111,98 +111,76 @@
     <!-- department end -->
 
 
-    <!-- Offer Start -->
-    <div class="container-fluid offer pt-5">
-        <div class="row px-xl-5">
-            <div class="col-md-6 pb-4">
-                <div class="position-relative bg-secondary text-center text-md-right text-white mb-2 py-5 px-5">
-                    <img src="{% static 'img/offer-1.png' %}" alt="">
-                    <div class="position-relative" style="z-index: 1;">
-                        <h5 class="text-uppercase text-primary mb-3">20% off the all order</h5>
-                        <h1 class="mb-4 font-weight-semi-bold">Spring Collection</h1>
-                        <a href="" class="btn btn-outline-primary py-md-2 px-md-3">Shop Now</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 pb-4">
-                <div class="position-relative bg-secondary text-center text-md-left text-white mb-2 py-5 px-5">
-                    <img src="{% static 'img/offer-2.png' %}" alt="">
-                    <div class="position-relative" style="z-index: 1;">
-                        <h5 class="text-uppercase text-primary mb-3">20% off the all order</h5>
-                        <h1 class="mb-4 font-weight-semi-bold">Winter Collection</h1>
-                        <a href="" class="btn btn-outline-primary py-md-2 px-md-3">Shop Now</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Offer End -->
-
-
-    <!-- Products Start -->
-    <!-- <div class="container-fluid pt-5">
-        <div class="text-center mb-4">
-            <h2 class="section-title px-5"><span class="px-2">Trandy Products</span></h2>
-        </div>
-        <div class="row px-xl-5 pb-3">
-            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                <div class="card product-item border-0 mb-4">
-                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="">
-                    </div>
-                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
-                        <div class="d-flex justify-content-center">
-                            <h6>$123.00</h6><h6 class="text-muted ml-2"><del>$123.00</del></h6>
+     <!-- Offer Start -->
+<div class="container-fluid offer pt-3">
+    <div class="row px-xl-5">
+        {% for d in departments %}
+        
+            {% if d.title == 'Bike' or d.title == 'Car' %}
+                <div class="col-md-6 pb-4">
+                    <div class="position-relative bg-secondary text-center text-md-right text-white mb-2 py-5 px-5"
+                        style="height: 100%; min-height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                        {% if d.title == 'Bike'%}
+                            <img src="{% static 'imgs/Yahama.webp' %}" alt="{{ d.title }}" 
+                                style="width: 80%; max-width: 350px; height: auto; object-fit: contain;">
+                        {% else %}
+                            <img src="{% static 'imgs/bg car.png' %}" alt="{{ d.title }}" 
+                                style="width: 80%; max-width: 350px; height: auto; object-fit: contain;">
+                        {% endif %}
+                        
+                        <div class="position-relative" style="z-index: 1;">
+                            <h5 class="text-uppercase text-primary mb-3">Special Off on {{ d.title }} Rentals</h5>
+                            <h1 class="mb-4 font-weight-semi-bold">{{ d.title }} Rentals</h1>
+                            <a href="{% url 'department-category-list' d.did %}" class="btn btn-outline-primary py-md-2 px-md-3">Book Now</a>
                         </div>
                     </div>
-                    <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
-                    </div>
                 </div>
-            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+<!-- Offer End -->
 
-        </div>
-    </div> -->
-    <!-- Products End -->
+
+
+
 
 <!-- product start -->
 
-    <div class="container-fluid pt-5">
+    <!-- <div class="container-fluid pt-5">
         <div class="text-center mb-4">
             <h2 class="section-title px-5"><span class="px-2">Trendy Products</span></h2>
         </div>
         <div class="row px-xl-5 pb-3">
             {% for p in products %}
-                <div class="col-lg-3 col-md-6 col-sm-12 mb-4"> <!-- Added spacing between products -->
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-4"> 
                     <div class="card product-item border-0 h-100 d-flex flex-column">
                         
-                        <!-- Product Image -->
+                        
                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0"
-                             style="height: 220px;">  <!-- Fixed image height -->
+                             style="height: 220px;">  
                             <img class="img-fluid w-100 h-100" src="{{ p.image.url }}" alt="{{ p.title }}"
-                                 style="object-fit: cover;">  <!-- Ensures the image fills the space proportionally -->
+                                 style="object-fit: cover;">  
                             <div class="hot-badge position-absolute"
                                  style="top: 10px; right: 10px; background: red; color: white; padding: 5px; border-radius: 5px;">
                                 -{{ p.get_percentage | floatformat:0 }}%
                             </div>
                         </div>
     
-                        <!-- Product Info -->
+                        
                         <div class="card-body border-left border-right text-center p-3 flex-grow-1 d-flex flex-column justify-content-start"
-                             style="min-height: 160px;"> <!-- Adjusted space -->
+                             style="min-height: 160px;"> 
                             <h6 class="text-truncate mb-2">{{ p.title }}</h6>
                             <div class="d-flex justify-content-center mb-2">
                                 <h6>${{ p.price }}</h6>
                                 <h6 class="text-muted ml-2"><del>${{ p.old_price }}</del></h6>
                             </div>
-                            <h6 class="text-truncate mb-2">From: {{ p.vendor }}</h6> <!-- Reduced margin -->
+                            <h6 class="text-truncate mb-2">From: {{ p.vendor }}</h6> <
                         </div>
     
-                        <!-- Product Actions -->
+                        
                         <div class="card-footer d-flex justify-content-between bg-light border p-2">
-                            <a href="#" class="btn btn-sm text-dark p-0">
+                            <a href="{% url 'product-detail' p.pid %}" class="btn btn-sm text-dark p-0">
                                 <i class="fas fa-eye text-primary mr-1"></i> View Detail
                             </a>
                             <a href="#" class="btn btn-sm text-dark p-0">
@@ -213,10 +191,73 @@
                 </div>
             {% endfor %}
         </div>
-    </div>
+    </div> -->
     
     
 <!-- products end -->
+ 
+<!-- related product -->
+<section class="featuredd">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="text-center mb-4">
+                    <h2 class="section-title px-5"><span class="px-2">Related Vehicles</span></h2>
+                </div>
+                
+            </div>
+        </div>
+    
+
+        <div class="row featured__filter">
+            {% for p in products %}
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="featured__item card border-0 shadow-sm h-100">
+                        <!-- Product Image Section -->
+                        <div class="featured__item__pic-wrapper position-relative">
+                            <div class="hot-badge position-absolute bg-danger text-white p-2" style="top: 10px; right: 10px;">
+                                -{{ p.get_percentage | floatformat:0 }}%
+                            </div>
+                            <div class="featured__item__pic" 
+                                 style="background-image: url('{{ p.image.url }}'); height: 220px; background-size: cover; background-position: center;">
+                                <ul class="featured__item__pic__hover list-inline position-absolute" style="bottom: 10px; right: 10px;">
+                                    <li class="list-inline-item"><a href="#" class="text-white"><i class="fa fa-heart"></i></a></li>
+                                    <li class="list-inline-item"><a href="#" class="text-white"><i class="fa fa-retweet"></i></a></li>
+                                    <li class="list-inline-item"><a href="#" class="text-white"><i class="fa fa-shopping-cart"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Product Info -->
+                        <div class="featured__item__text text-center p-3">
+                            <h4 class="category-name text-muted">{{ p.category.title }}</h4>
+                            <h6 class="product-title"><a href="#" class="text-dark">{{ p.title }}</a></h6>
+                            
+                            <h5 class="product-price">
+                                <span class="old-price text-muted"><del>${{ p.old_price }}</del></span> <br>
+                                <span class="discount-price text-success">${{ p.price }}</span>/day
+                            </h5>
+
+                            <h6 class="product-title text-muted">From: <a href="#" class="text-dark">{{ p.vendor }}</a></h6>
+
+                            <!-- Buttons Section -->
+                            <div class="d-flex justify-content-between mt-3">
+                                <a href="{% url 'product-detail' p.pid %}" class="btn btn-sm btn-outline-secondary">
+                                    <i class="fa fa-eye"></i> View Details
+                                </a>
+                                <a href="#" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-shopping-cart"></i> Add to Cart
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+    </div>
+</section>
+<!-- related product end  -->
 
 
 
@@ -270,11 +311,7 @@
     
     <!-- Vendor End -->
 
-    
-
-
-    <!-- Footer Start -->
-    <div class="container-fluid bg-secondary text-dark mt-5 pt-5">
+    <!-- <div class="container-fluid bg-secondary text-dark mt-5 pt-5">
         <div class="row px-xl-5 pt-5">
             <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
                 <a href="" class="text-decoration-none">
@@ -340,8 +377,10 @@
                 <img class="img-fluid" src="{% static 'img/payments.png' %}" alt="">
             </div>
         </div>
-    </div>
-    <!-- Footer End -->
+    </div> -->
+
+
+
 
 
     <!-- Back to Top -->

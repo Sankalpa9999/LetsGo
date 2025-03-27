@@ -4,6 +4,10 @@ from django.utils.safestring import mark_safe
 
 from userauths.models import User
 
+from taggit.managers import TaggableManager
+
+from ckeditor_uploader.fields import RichTextUploadingField
+
 # Create your models here.
 
 STATUS_CHOICE = (
@@ -23,7 +27,7 @@ RATING = (
     ('2', '★★☆☆☆'),
     ('3', '★★★☆☆'),
     ('4', '★★★★☆'),
-    ('5', '★★★★★')
+    ('5', '★★★★★'),
 )
 
 def user_directory_path(instance, filename):
@@ -69,11 +73,16 @@ class Vendor(models.Model):
     image = models.ImageField(upload_to=user_directory_path, default='vendor.jpg')
     cover_image = models.ImageField(upload_to=user_directory_path, default='vendor.jpg')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    description = models.TextField(null=True, blank=True)
+    # description = models.TextField(null=True, blank=True)
+    
+    description = RichTextUploadingField(null=True, blank=True)
+    
+    
     address = models.CharField(max_length=100, null=True, blank=True, default='Pokhara')
     contact = models.CharField(max_length=100, null=True, blank=True, default='977-9000000')   
     chat_resp_time = models.CharField(max_length=100, null=True, blank=True, default='10:00 AM - 5:00 PM')
     date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    authentic_rating = models.CharField(max_length=100, null=True, blank=True, default='100')
     
     class Meta:
         verbose_name_plural = 'Vendors'
@@ -93,10 +102,17 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='category')
     title = models.CharField(max_length=100)
     image = models.ImageField(upload_to=user_directory_path, default='product.jpg')
-    description = models.TextField(null=True, blank=True)
+    
+    # description = models.TextField(null=True, blank=True)
+    description = RichTextUploadingField(null=True, blank=True)
+    
     price = models.DecimalField(max_digits=99999, decimal_places=2,default=100)
     old_price = models.DecimalField(max_digits=99999, decimal_places=2,default=100)
-    specifications = models.TextField(null=True, blank=True)
+    
+    # specifications = models.TextField(null=True, blank=True)
+    specifications = RichTextUploadingField(null=True, blank=True)
+    
+    
     # Tags = models.ForeignKey(Tags, on_delete=models.SET_NULL, null=True)
     product_status = models.CharField(choices= STATUS, max_length=100, default='in_review')
     status = models.BooleanField(default=True)
@@ -106,6 +122,11 @@ class Product(models.Model):
     sku = ShortUUIDField(unique=True, length=10, max_length=20, prefix = "sku", alphabet='abcdefgh12345')
     date = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(null=True, blank=True) 
+    numberp = models.CharField(max_length=100, null=True, blank=True, default='ga 1 pa 1111')
+    stock_count = models.IntegerField(default=1)
+    
+    tags = TaggableManager(blank=True)
+    
     
     class Meta:
         verbose_name_plural = 'Products'
@@ -124,7 +145,7 @@ class Product(models.Model):
 
     
 class ProductImages(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+    product = models.ForeignKey(Product, related_name='p_images', on_delete=models.SET_NULL, null=True)
     image = models.ImageField(upload_to="product-images", default='product.jpg')
     date = models.DateTimeField(auto_now_add=True)
     
@@ -159,17 +180,19 @@ class CartOrderItems(models.Model):
     def order_image(self):
         return mark_safe('<img src="/media/%s" width="50" height="50" />'%(self.image))
     
-class ProductReview(models.Model):
+class ProductReview(models.Model): 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
-    rating = models.IntegerField(choices= RATING, default=None)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, related_name='reviews')
+    
+    rating = models.CharField(choices=RATING, default='3', max_length=1)  # Use CharField instead of IntegerField
+    
     review = models.TextField(null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
     
     class Meta:
         verbose_name_plural = 'Product Reviews'
                 
-    def __str__ (self):
+    def __str__(self):
         return self.rating
     
     def get_rating(self):

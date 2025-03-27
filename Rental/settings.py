@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-!zwychtyqo@7anh$xw4ypq95-_w1r7brvgu7vf%abm4tabeyaz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.65']
+# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.1.65','10.32.17.39']
 
 
 
@@ -41,6 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    'taggit',
+    'ckeditor', 
     
     'Home',
     'userauths',
@@ -153,3 +157,22 @@ JAZZMIN_SETTINGS = {
 }
 
 AUTH_USER_MODEL = 'userauths.User'
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'skin': 'moono-lisa',
+        'codeSnippet_theme': 'monokai_sublime',
+        'extraPlugins': ','.join(
+            [
+                'codesnippet',
+                'uploadimage',
+                'widget',
+                'lineutils',
+                'clipboard',
+            ]
+        ),
+    },
+}
