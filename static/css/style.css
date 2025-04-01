@@ -6606,9 +6606,7 @@ button.bg-dark:focus {
   justify-content: center !important;
 }
 
-.justify-content-between {
-  justify-content: space-between !important;
-}
+.justify-content-between { justify-content: space-between !important; }
 
 .justify-content-around {
   justify-content: space-around !important;

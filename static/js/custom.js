@@ -24,6 +24,7 @@ function showNotification(message, type) {
 // });
 
 // Form submission handler
+
 $("#review-form").submit(function(e) {
     e.preventDefault();
 
@@ -35,11 +36,20 @@ $("#review-form").submit(function(e) {
         success: function(response) {
             if (response.bool) {
                 showNotification('Review saved successfully!', 'success');
-                
-                // Hide the "Add Review" button immediately
                 $("#toggle-review-form").hide();
+        
+                // Append the new review dynamically with proper star formatting
+                $(".reviews-list").prepend(`
+                    <div class="review-item border-bottom pb-4 mb-4">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="fw-bold">${response.user}</h5>
+                            <p class="text-muted">Just now</p>
+                        </div>
+                        <div class="review-stars">${response.stars}</div>
+                        <p class="review-text">${response.review}</p>
+                    </div>
+                `);
                 
-                // Refresh the page after 1.5 seconds
                 setTimeout(function() {
                     location.reload();
                 }, 1500);
@@ -54,6 +64,9 @@ $("#review-form").submit(function(e) {
         }
     });
 });
+
+
+
 
 // Notification function
 function showNotification(message, type) {

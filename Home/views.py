@@ -7,7 +7,7 @@ from Home.models import Product, Category, Department, Vendor, CartOrder, CartOr
 from django.contrib.auth.decorators import login_required
 
 from Home.forms import ProductReviewForm
-
+from django.template.loader import render_to_string
 
 
 def index(request):
@@ -123,32 +123,54 @@ def product_detail_view(request, pid):
         }
     return render(request,'Land/product-detail.html', context)
 
-
 @login_required
 def ajax_add_review(request, pid):
-    # Use the pid to fetch the product, not pk
-    product = Product.objects.get(pid=pid)  # Assuming pid is a unique field
+    product = get_object_or_404(Product, pid=pid)
     user = request.user
-    review = ProductReview.objects.create(product=product, user=user, review=request.POST['review'], rating=request.POST['rating'])
+    rating = int(request.POST['rating'])
 
-    context = {
-        'user': user.username,
-        'review': request.POST['review'],
-        'rating': request.POST['rating'],
-    }
+    review = ProductReview.objects.create(
+        product=product,
+        user=user,
+        review=request.POST['review'],
+        rating=rating
+    )
 
     average_reviews = ProductReview.objects.filter(product=product).aggregate(rating=Avg('rating'))
-    
-    
+
+    # Generate star HTML for Ajax response
+    star_html = ''.join(['&#9733;' if i < rating else '&#9734;' for i in range(5)])
 
     return JsonResponse({
         'bool': True,
-        'context': context,
+        'user': user.username,
+        'review': request.POST['review'],
+        'rating': rating,
+        'stars': star_html,
         'average_reviews': average_reviews,
-        'user_has_reviewed': ProductReview.objects.filter(product=product, user=request.user).exists
-        
+        'user_has_reviewed': ProductReview.objects.filter(product=product, user=user).exists()
     })
-    
     
 def contact(request):
     return render(request,'Land/contact.html')
+
+
+def search_view(request):
+    query = request.GET.get('q', '').strip()
+    print(f"Search query: '{query}'")  # Debug print
+
+    if query:
+        products = Product.objects.filter(title__icontains=query).order_by('-date')
+        print(f"Found {products.count()} products")  # Debug print
+    else:
+        products = Product.objects.none()
+
+    context = {
+        'products': products,
+        'query': query,
+    }
+    return render(request, 'Land/search.html', context)
+
+
+
+

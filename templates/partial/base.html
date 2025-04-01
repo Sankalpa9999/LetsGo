@@ -16,7 +16,16 @@
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
 
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" 
+      crossorigin="anonymous" />
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
 
@@ -85,17 +94,32 @@
                 </a>
             </div>
             <div class="col-lg-6 col-6 text-left">
-                <form action="">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search for products">
-                        <div class="input-group-append">
-                            <span class="input-group-text bg-transparent text-primary">
-                                <i class="fa fa-search"></i>
-                            </span>
-                        </div>
-                    </div>
+                <form method="GET" action="{% url 'search' %}" class="d-flex position-relative">
+                    <input 
+                        type="text" 
+                        class="form-control rounded-pill shadow-sm ps-4 border-0" 
+                        placeholder="Search for products..." 
+                        name="q"
+                        style="
+                            font-size: 16px; 
+                            height: 50px;
+                            padding-right: 50px;
+                            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                            transition: all 0.3s ease;
+                        "
+                        onfocus="this.style.boxShadow='0 4px 12px rgba(59, 59, 59, 0.2)'"
+                        onblur="this.style.boxShadow='0 4px 12px rgba(0, 0, 0, 0.1)'"
+                    />
+                    <button type="submit" class="btn btn-primary rounded-circle position-absolute end-0 me-2" 
+                            style="width: 40px; height: 40px; top: 50%; transform: translateY(-50%);">
+                        <i class="fa fa-search"></i>
+                    </button>
                 </form>
             </div>
+
+            
+
+
             <div class="col-lg-3 col-6 text-right">
                 <a href="" class="btn border">
                     <i class="fas fa-heart text-primary"></i>
@@ -183,12 +207,12 @@
         <div class="row px-xl-5 pt-5">
             <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
                 <a href="" class="text-decoration-none">
-                    <h1 class="mb-4 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border border-white px-3 mr-1">E</span>Shopper</h1>
+                    <h1 class="mb-4 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border border-white px-3 mr-1">Lets</span>Go</h1>
                 </a>
                 <p>Dolore erat dolor sit lorem vero amet. Sed sit lorem magna, ipsum no sit erat lorem et magna ipsum dolore amet erat.</p>
-                <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street, New York, USA</p>
-                <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>info@example.com</p>
-                <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+012 345 67890</p>
+                <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>Pokhara, Nepal</p>
+                <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>letsgo@example.com</p>
+                <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+977 061 00000</p>
             </div>
             <div class="col-lg-8 col-md-12">
                 <div class="row">
@@ -235,10 +259,10 @@
         <div class="row border-top border-light mx-xl-5 py-4">
             <div class="col-md-6 px-xl-0">
                 <p class="mb-md-0 text-center text-md-left text-dark">
-                    &copy; <a class="text-dark font-weight-semi-bold" href="#">Your Site Name</a>. All Rights Reserved. Designed
+                    &copy; <a class="text-dark font-weight-semi-bold" href="#">Letsgo</a>. All Rights Reserved. Designed
                     by
-                    <a class="text-dark font-weight-semi-bold" href="https://htmlcodex.com">HTML Codex</a><br>
-                    Distributed By <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
+                    <a class="text-dark font-weight-semi-bold" href="https://htmlcodex.com">Hexacore IT</a><br>
+                    Distributed By <a href="https://themewagon.com" target="_blank">Hexacore</a>
                 </p>
             </div>
             <div class="col-md-6 px-xl-0 text-center text-md-right">

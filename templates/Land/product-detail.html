@@ -90,38 +90,93 @@
 </div>
 </div>
 
-<!-- Product Reviews Section -->
-<div class="container my-5">
-    <h3 class="mb-4">Product Reviews <span>({{reviews.count}}) </span></h3>
+<!-- TEST: Hardcoded Stars (Should show 3 filled, 2 empty) -->
 
-    <!-- Button to toggle visibility -->
+
+
+
+
+<!-- Product Reviews Section -->
+<div class="container py-5">
+    <h3 class="mb-4">Vehicle reviews <span>({{reviews.count}})</span></h3>
+
     <button id="toggleReviewsBtn" class="btn btn-primary mb-4">Show Reviews</button>
 
     {% if p.reviews.all %}
+
+
     <div id="reviewsList" class="reviews-list" style="display: none;">
         <div class="d-flex align-items-center">
             <div class="fw-bold me-2">
-                {{ average_rating.rating|floatformat }} out of 5
-            </div>
-            <div>
-
-            </div>
+               Average rating =  {{ average_rating.rating|floatformat }} out of 5
+            </div><br><br>
         </div>
+
         {% for r in reviews %}
+
+
+        <!-- <small>(Rating: {{ r.rating }})</small> -->
         <div class="review-item border-bottom pb-4 mb-4">
             <div class="d-flex justify-content-between">
                 <h5 class="fw-bold">{{ r.user.username|title }}</h5>
                 <p class="text-muted">{{ r.date|date:"M d, Y" }}</p>
             </div>
-
-            <!-- Display star ratings -->
-            <div class="rating-stars">
-                {% for i in "12345" %}
-                {% if i|add:"0" <= r.rating %} <span class="text-warning">&#9733;</span> <!-- Filled star -->
-                    {% else %}
-                    <span class="text-secondary">&#9734;</span> <!-- Empty star -->
-                    {% endif %}
+            <!-- 
+            <div class="review-stars">
+                {% with rating=r.rating|default:0 %}  
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= rating %}
+                            <i class="fas fa-star" style="color: gold;"></i>
+                        {% else %}
+                            <i class="far fa-star" style="color: #ccc;"></i>
+                        {% endif %}
                     {% endfor %}
+                    
+                    <small class="text-muted">(ID: {{ r.id }}, Rating: {{ rating }})</small>
+                {% endwith %}
+            </div> -->
+
+
+
+            <div class="review-stars">
+                {% if r.rating|add:"0" == 1 %}
+                <i class="fas fa-star" style="color: gold;"></i>
+                <i class="far fa-star" style="color: #ccc;"></i>
+                <i class="far fa-star" style="color: #ccc;"></i>
+                <i class="far fa-star" style="color: #ccc;"></i>
+                <i class="far fa-star" style="color: #ccc;"></i>
+                {% elif r.rating|add:"0" == 2 %}
+                <i class="fas fa-star" style="color: gold;"></i>
+                <i class="fas fa-star" style="color: gold;"></i>
+                <i class="far fa-star" style="color: #ccc;"></i>
+                <i class="far fa-star" style="color: #ccc;"></i>
+                <i class="far fa-star" style="color: #ccc;"></i>
+                {% elif r.rating|add:"0" == 3 %}
+                <i class="fas fa-star" style="color: gold;"></i>
+                <i class="fas fa-star" style="color: gold;"></i>
+                <i class="fas fa-star" style="color: gold;"></i>
+                <i class="far fa-star" style="color: #ccc;"></i>
+                <i class="far fa-star" style="color: #ccc;"></i>
+                {% elif r.rating|add:"0" == 4 %}
+                <i class="fas fa-star" style="color: gold;"></i>
+                <i class="fas fa-star" style="color: gold;"></i>
+                <i class="fas fa-star" style="color: gold;"></i>
+                <i class="fas fa-star" style="color: gold;"></i>
+                <i class="far fa-star" style="color: #ccc;"></i>
+                {% elif r.rating|add:"0" == 5 %}
+                <i class="fas fa-star" style="color: gold;"></i>
+                <i class="fas fa-star" style="color: gold;"></i>
+                <i class="fas fa-star" style="color: gold;"></i>
+                <i class="fas fa-star" style="color: gold;"></i>
+                <i class="fas fa-star" style="color: gold;"></i>
+                {% else %}
+                <!-- Fallback if rating is 0 or invalid -->
+                <i class="far fa-star" style="color: #ccc;"></i>
+                <i class="far fa-star" style="color: #ccc;"></i>
+                <i class="far fa-star" style="color: #ccc;"></i>
+                <i class="far fa-star" style="color: #ccc;"></i>
+                <i class="far fa-star" style="color: #ccc;"></i>
+                {% endif %}
             </div>
 
             <p class="review-text">{{ r.review|default:"No review provided" }}</p>
@@ -283,7 +338,6 @@
 
 
 
-
 </script>
 
 <style>
@@ -318,11 +372,30 @@
         font-size: 1.2rem;
         margin-right: 2px;
     }
+
     .text-warning {
-        color: #ffc107; /* Yellow for filled stars */
+        color: #ffc107;
+        /* Yellow for filled stars */
     }
+
     .text-secondary {
-        color: #ccc; /* Grey for empty stars */
+        color: #ccc;
+        /* Grey for empty stars */
+    }
+
+    /* Force stars to look exactly like the debug test */
+    .review-stars .fas.fa-star {
+        color: gold !important;
+        font-family: "Font Awesome 6 Free" !important;
+        font-weight: 900 !important;
+        display: inline !important;
+    }
+
+    .review-stars .far.fa-star {
+        color: #ccc !important;
+        font-family: "Font Awesome 6 Free" !important;
+        font-weight: 400 !important;
+        display: inline !important;
     }
 </style>
 
