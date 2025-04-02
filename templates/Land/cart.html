@@ -1,0 +1,69 @@
+{% extends 'partial/base.html' %}
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4">Shopping Cart</h2>
+    {% if request.session.cart_data_obj %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Title</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, item in request.session.cart_data_obj.items %}
+                <tr>
+                    <td>
+                        {% if item.image %}
+                            <img src="{{ item.image }}" alt="{{ item.title }}" width="80">
+                        {% else %}
+                            <img src="/static/images/default.jpg" alt="No Image" width="80">
+                        {% endif %}
+                    </td>
+                    <td>{{ item.title }}</td>
+                    <td>${{ item.price }}</td>
+                    <td>
+                        <button class="btn btn-danger remove-from-cart" data-product-id="{{ key }}">Remove</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="#" class="btn btn-success">Proceed to Checkout</a>
+    {% else %}
+        <p>Your cart is empty.</p>
+        <a href="{% url 'home' %}" class="btn btn-primary">Continue Shopping</a>
+    {% endif %}
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".remove-from-cart").on("click", function () {
+            let product_id = $(this).data("product-id");
+            let row = $(this).closest("tr");
+
+            $.ajax({
+                url: "/remove-from-cart/",  // Ensure the backend has this view
+                type: "POST",
+                data: {
+                    id: product_id,
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                },
+                dataType: "json",
+                success: function (response) {
+                    row.remove();
+                    $(".cart-count").text(response.totalcartitems);
+                    if (response.totalcartitems === 0) {
+                        location.reload();
+                    }
+                },
+                error: function () {
+                    alert("Error removing item.");
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

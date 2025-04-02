@@ -4,6 +4,7 @@ def default(request):
     categories = Category.objects.all()
     departments = Department.objects.all()
     vendors = Vendor.objects.all()
+    Products = Product.objects.all()
     
     
     user_address = None
@@ -15,4 +16,5 @@ def default(request):
         'departments':departments,
         'vendors':vendors,
         'user_address': user_address,  # Pass as user_address
+        'Products':Products,
         }

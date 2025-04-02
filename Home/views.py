@@ -173,4 +173,80 @@ def search_view(request):
 
 
 
+    
+    
+    
 
+
+# def add_to_cart(request):
+#     if request.method == "POST":
+#         cart_product = {}
+        
+#         product_id = str(request.POST.get('id'))
+#         product_title = request.POST.get('title')
+#         product_price = request.POST.get('price')
+#         product_image = request.POST.get('image')
+#         pid = request.POST.get('pid')
+
+#         if not product_id or not product_title or not product_price:
+#             return JsonResponse({'error': 'Invalid data'}, status=400)
+
+#         cart_product[product_id] = {
+#             'title': product_title,
+#             'price': product_price,
+#         }
+
+#         if 'cart_data_obj' in request.session:
+#             cart_data = request.session['cart_data_obj']
+#             if product_id in cart_data:
+#                 # If item is already in cart, do nothing or update quantity
+#                 pass
+#             else:
+#                 cart_data.update(cart_product)
+#                 request.session['cart_data_obj'] = cart_data
+#         else:
+#             request.session['cart_data_obj'] = cart_product
+
+#         return JsonResponse({
+#             'data': request.session['cart_data_obj'],
+#             'totalcartitems': len(request.session['cart_data_obj'])
+#         })
+    
+#     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+def add_to_cart(request):
+    if request.method == "POST":
+        product_id = str(request.POST.get('id'))
+        product_title = request.POST.get('title')
+        product_price = request.POST.get('price')
+        product_image = request.POST.get('image')  # Ensure image is captured
+        pid = request.POST.get('pid')
+
+        if not product_id or not product_title or not product_price:
+            return JsonResponse({'error': 'Invalid data'}, status=400)
+
+        cart_product = {
+            product_id: {
+                'title': product_title,
+                'price': product_price,
+                'image': product_image  # Store image in session
+            }
+        }
+
+        if 'cart_data_obj' in request.session:
+            cart_data = request.session['cart_data_obj']
+            cart_data.update(cart_product)  # Update existing cart
+            request.session['cart_data_obj'] = cart_data
+        else:
+            request.session['cart_data_obj'] = cart_product  # Create new cart
+
+        return JsonResponse({
+            'data': request.session['cart_data_obj'],
+            'totalcartitems': len(request.session['cart_data_obj'])
+        })
+
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+def cart_view(request):        
+    return render(request, 'Land/cart.html')

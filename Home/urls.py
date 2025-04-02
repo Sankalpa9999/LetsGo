@@ -27,5 +27,9 @@ urlpatterns = [
     
     
     path('search/', views.search_view, name='search'),
+    
+    path("add-to-cart/", views.add_to_cart, name="add-to-cart"),
+    
+    path("cart/", views.cart_view, name="cart"),
 
 ]

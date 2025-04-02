@@ -10,6 +10,7 @@
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
 
+
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
 
@@ -45,6 +46,9 @@
 
 
 <body>
+
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
     <!-- Topbar Start -->
     <div class="container-fluid">
         <div class="row bg-secondary py-2 px-xl-5">
@@ -121,13 +125,19 @@
 
 
             <div class="col-lg-3 col-6 text-right">
-                <a href="" class="btn border">
+                <a href="#" class="btn border position-relative me-2">  <!-- Added me-2 (margin-end: 0.5rem) -->
                     <i class="fas fa-heart text-primary"></i>
-                    <span class="badge">0</span>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        0
+                        <span class="visually-hidden">items in heart</span>
+                    </span>
                 </a>
-                <a href="" class="btn border">
+                <a href="{% url 'cart' %}" class="btn border position-relative">
                     <i class="fas fa-shopping-cart text-primary"></i>
-                    <span class="badge">0</span>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count">
+                        {{ request.session.cart_data_obj|length }}
+                        <span class="visually-hidden">items in cart</span>
+                    </span>
                 </a>
             </div>
         </div>

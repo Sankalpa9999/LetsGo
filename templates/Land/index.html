@@ -4,138 +4,140 @@
 {% block content %}
 
 
-                <div id="header-carousel" class="carousel slide" data-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active" style="height: 410px;">
-                            <img class="img-fluid" src="{% static 'imgs/yellow.webp' %}" alt="Image">
-                            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                                <div class="p-3" style="max-width: 700px;">
-                                    <h4 class="text-light text-uppercase font-weight-medium mb-3">Special Offers in this Month</h4>
-                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">Top Vehicles</h3>
-                                    <a href="{% url 'product-list' %}" class="btn btn-light py-2 px-3">Book Now</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="carousel-item" style="height: 410px;">
-                            <img class="img-fluid" src="{% static 'imgs/toyota.jpg' %}" alt="Image">
-                            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                                <div class="p-3" style="max-width: 700px;">
-                                    <h4 class="text-light text-uppercase font-weight-medium mb-3">Special Offers in this Month</h4>
-                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">Reasonable Price</h3>
-                                    <a href="{% url 'product-list' %}" class="btn btn-light py-2 px-3">Book Now</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
-                        <div class="btn btn-dark" style="width: 45px; height: 45px;">
-                            <span class="carousel-control-prev-icon mb-n2"></span>
-                        </div>
-                    </a>
-                    <a class="carousel-control-next" href="#header-carousel" data-slide="next">
-                        <div class="btn btn-dark" style="width: 45px; height: 45px;">
-                            <span class="carousel-control-next-icon mb-n2"></span>
-                        </div>
-                    </a>
+<div id="header-carousel" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item active" style="height: 410px;">
+            <img class="img-fluid" src="{% static 'imgs/yellow.webp' %}" alt="Image">
+            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                <div class="p-3" style="max-width: 700px;">
+                    <h4 class="text-light text-uppercase font-weight-medium mb-3">Special Offers in this Month</h4>
+                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">Top Vehicles</h3>
+                    <a href="{% url 'product-list' %}" class="btn btn-light py-2 px-3">Book Now</a>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item" style="height: 410px;">
+            <img class="img-fluid" src="{% static 'imgs/toyota.jpg' %}" alt="Image">
+            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                <div class="p-3" style="max-width: 700px;">
+                    <h4 class="text-light text-uppercase font-weight-medium mb-3">Special Offers in this Month</h4>
+                    <h3 class="display-4 text-white font-weight-semi-bold mb-4">Reasonable Price</h3>
+                    <a href="{% url 'product-list' %}" class="btn btn-light py-2 px-3">Book Now</a>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Navbar End -->
+    <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
+        <div class="btn btn-dark" style="width: 45px; height: 45px;">
+            <span class="carousel-control-prev-icon mb-n2"></span>
+        </div>
+    </a>
+    <a class="carousel-control-next" href="#header-carousel" data-slide="next">
+        <div class="btn btn-dark" style="width: 45px; height: 45px;">
+            <span class="carousel-control-next-icon mb-n2"></span>
+        </div>
+    </a>
+</div>
+</div>
+</div>
+</div>
+<!-- Navbar End -->
 
 
-    <!-- Featured Start -->
-    <div class="container-fluid pt-3">
-        <div class="row px-xl-5 pb-3">
-            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
-                    <h1 class="fa fa-car text-primary m-0 mr-3"></h1>
-                    <h5 class="font-weight-semi-bold m-0">Wide Vehicle Selection</h5>
-                </div>
+<!-- Featured Start -->
+<div class="container-fluid pt-3">
+    <div class="row px-xl-5 pb-3">
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                <h1 class="fa fa-car text-primary m-0 mr-3"></h1>
+                <h5 class="font-weight-semi-bold m-0">Wide Vehicle Selection</h5>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
-                    <h1 class="fa fa-dollar-sign text-primary m-0 mr-2"></h1>
-                    <h5 class="font-weight-semi-bold m-0">Affordable Pricing</h5>
-                </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                <h1 class="fa fa-dollar-sign text-primary m-0 mr-2"></h1>
+                <h5 class="font-weight-semi-bold m-0">Affordable Pricing</h5>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
-                    <h1 class="fa fa-shield-alt text-primary m-0 mr-3"></h1>
-                    <h5 class="font-weight-semi-bold m-0">Insurance Coverage</h5>
-                </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                <h1 class="fa fa-shield-alt text-primary m-0 mr-3"></h1>
+                <h5 class="font-weight-semi-bold m-0">Insurance Coverage</h5>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
-                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
-                    <h1 class="fa fa-user-check text-primary m-0 mr-3"></h1>
-                    <h5 class="font-weight-semi-bold m-0">Verified Owners</h5>
-                </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                <h1 class="fa fa-user-check text-primary m-0 mr-3"></h1>
+                <h5 class="font-weight-semi-bold m-0">Verified Owners</h5>
             </div>
         </div>
     </div>
-    <!-- Featured End -->
+</div>
+<!-- Featured End -->
 
 
 
 
-    <!-- department start -->
-    <div class="container-fluid pt-3">
-        <div class="row featured__filter">
-            {% for d in departments %}
-            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                <div class="featured__item border rounded shadow-sm p-3 text-center">
-                    <!-- Product Image Section -->
-                    <div class="featured__item__pic-wrapper position-relative overflow-hidden rounded">
-                        <div class="featured__item__pic" style="background-image: url('{{ d.image.url }}'); background-size: cover; background-position: center; height: 250px; border-radius: 10px;">
-                        </div>
+<!-- department start -->
+<div class="container-fluid pt-3">
+    <div class="row featured__filter">
+        {% for d in departments %}
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="featured__item border rounded shadow-sm p-3 text-center">
+                <!-- Product Image Section -->
+                <div class="featured__item__pic-wrapper position-relative overflow-hidden rounded">
+                    <div class="featured__item__pic"
+                        style="background-image: url('{{ d.image.url }}'); background-size: cover; background-position: center; height: 250px; border-radius: 10px;">
                     </div>
-    
-                    <!-- Product Info -->
-                    <div class="featured__item__text mt-3">
-                        <h6 class="product-title font-weight-bold">
-                            <a href="{% url 'department-category-list' d.did %}" class="text-dark text-decoration-none">
-                                {{ d.title }}
-                            </a>
-                        </h6>
-                        <div class="text-muted small">
-                            <span>{{ d.department.count }} Vehicle{{ d.department.count|pluralize }}</span>
-                        </div>
+                </div>
+
+                <!-- Product Info -->
+                <div class="featured__item__text mt-3">
+                    <h6 class="product-title font-weight-bold">
+                        <a href="{% url 'department-category-list' d.did %}" class="text-dark text-decoration-none">
+                            {{ d.title }}
+                        </a>
+                    </h6>
+                    <div class="text-muted small">
+                        <span>{{ d.department.count }} Vehicle{{ d.department.count|pluralize }}</span>
                     </div>
                 </div>
             </div>
-            {% endfor %}
         </div>
+        {% endfor %}
     </div>
-    
-
-    <!-- department end -->
+</div>
 
 
-     <!-- Offer Start -->
+<!-- department end -->
+
+
+<!-- Offer Start -->
 <div class="container-fluid offer pt-3">
     <div class="row px-xl-5">
         {% for d in departments %}
-        
-            {% if d.title == 'Bike' or d.title == 'Car' %}
-                <div class="col-md-6 pb-4">
-                    <div class="position-relative bg-secondary text-center text-md-right text-white mb-2 py-5 px-5"
-                        style="height: 100%; min-height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                        {% if d.title == 'Bike'%}
-                            <img src="{% static 'imgs/Yahama.webp' %}" alt="{{ d.title }}" 
-                                style="width: 80%; max-width: 350px; height: auto; object-fit: contain;">
-                        {% else %}
-                            <img src="{% static 'imgs/bg car.png' %}" alt="{{ d.title }}" 
-                                style="width: 80%; max-width: 350px; height: auto; object-fit: contain;">
-                        {% endif %}
-                        
-                        <div class="position-relative" style="z-index: 1;">
-                            <h5 class="text-uppercase text-primary mb-3">Special Off on {{ d.title }} Rentals</h5>
-                            <h1 class="mb-4 font-weight-semi-bold">{{ d.title }} Rentals</h1>
-                            <a href="{% url 'department-category-list' d.did %}" class="btn btn-outline-primary py-md-2 px-md-3">Book Now</a>
-                        </div>
-                    </div>
+
+        {% if d.title == 'Bike' or d.title == 'Car' %}
+        <div class="col-md-6 pb-4">
+            <div class="position-relative bg-secondary text-center text-md-right text-white mb-2 py-5 px-5"
+                style="height: 100%; min-height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                {% if d.title == 'Bike'%}
+                <img src="{% static 'imgs/Yahama.webp' %}" alt="{{ d.title }}"
+                    style="width: 80%; max-width: 350px; height: auto; object-fit: contain;">
+                {% else %}
+                <img src="{% static 'imgs/bg car.png' %}" alt="{{ d.title }}"
+                    style="width: 80%; max-width: 350px; height: auto; object-fit: contain;">
+                {% endif %}
+
+                <div class="position-relative" style="z-index: 1;">
+                    <h5 class="text-uppercase text-primary mb-3">Special Off on {{ d.title }} Rentals</h5>
+                    <h1 class="mb-4 font-weight-semi-bold">{{ d.title }} Rentals</h1>
+                    <a href="{% url 'department-category-list' d.did %}"
+                        class="btn btn-outline-primary py-md-2 px-md-3">Book Now</a>
                 </div>
-            {% endif %}
+            </div>
+        </div>
+        {% endif %}
         {% endfor %}
     </div>
 </div>
@@ -147,7 +149,7 @@
 
 <!-- product start -->
 
-    <!-- <div class="container-fluid pt-5">
+<!-- <div class="container-fluid pt-5">
         <div class="text-center mb-4">
             <h2 class="section-title px-5"><span class="px-2">Trendy Products</span></h2>
         </div>
@@ -192,10 +194,10 @@
             {% endfor %}
         </div>
     </div> -->
-    
-    
+
+
 <!-- products end -->
- 
+
 <!-- related product -->
 <section class="featuredd">
     <div class="container">
@@ -204,57 +206,67 @@
                 <div class="text-center mb-4">
                     <h2 class="section-title px-5"><span class="px-2">Related Vehicles</span></h2>
                 </div>
-                
+
             </div>
         </div>
-    
+
 
         <div class="row featured__filter">
             {% for p in products %}
-                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                    <div class="featured__item card border-0 shadow-sm h-100">
-                        <!-- Product Image Section -->
-                        <div class="featured__item__pic-wrapper position-relative">
-                            <div class="hot-badge position-absolute bg-danger text-white p-2" style="top: 10px; right: 10px;">
-                                -{{ p.get_percentage | floatformat:0 }}%
-                            </div>
-                            <div class="featured__item__pic" 
-                                 style="background-image: url('{{ p.image.url }}'); height: 220px; background-size: cover; background-position: center;">
-                                <ul class="featured__item__pic__hover list-inline position-absolute" style="bottom: 10px; right: 10px;">
-                                    <li class="list-inline-item"><a href="#" class="text-white"><i class="fa fa-heart"></i></a></li>
-                                    <li class="list-inline-item"><a href="#" class="text-white"><i class="fa fa-retweet"></i></a></li>
-                                    <li class="list-inline-item"><a href="#" class="text-white"><i class="fa fa-shopping-cart"></i></a></li>
-                                </ul>
-                            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="featured__item card border-0 shadow-sm h-100">
+                    <!-- Product Image Section -->
+                    <div class="featured__item__pic-wrapper position-relative">
+                        <div class="hot-badge position-absolute bg-danger text-white p-2"
+                            style="top: 10px; right: 10px;">
+                            -{{ p.get_percentage | floatformat:0 }}%
                         </div>
+                        <div class="featured__item__pic"
+                            style="background-image: url('{{ p.image.url }}'); height: 220px; background-size: cover; background-position: center;">
+                            <ul class="featured__item__pic__hover list-inline position-absolute"
+                                style="bottom: 10px; right: 10px;">
+                                <li class="list-inline-item"><a href="#" class="text-white"><i
+                                            class="fa fa-heart"></i></a></li>
+                                <li class="list-inline-item"><a href="#" class="text-white"><i
+                                            class="fa fa-retweet"></i></a></li>
+                                            <li class="list-inline-item">
+                                                <a href="#" class="btn btn-sm btn-primary add-to-cart-btn" data-product-id="{{ p.id }}">
+                                                    <i class="fa fa-shopping-cart cart-icon"></i>
+                                                    <i class="fa fa-check success-icon d-none"></i>
+                                                </a>
+                                            </li>
+                            </ul>
+                        </div>
+                    </div>
 
-                        <!-- Product Info -->
-                        <div class="featured__item__text text-center p-3">
-                            <h4 class="category-name text-muted">{{ p.category.title }}</h4>
-                            <h6 class="product-title"><a href="#" class="text-dark">{{ p.title }}</a></h6>
-                            
-                            <h5 class="product-price">
-                                <span class="old-price text-muted"><del>${{ p.old_price }}</del></span> <br>
-                                <span class="discount-price text-success">${{ p.price }}</span>/day
-                            </h5>
+                    <!-- Product Info -->
+                    <div class="featured__item__text text-center p-3">
+                        <h4 class="category-name text-muted">{{ p.category.title }}</h4>
+                        <h6 class="product-title"><a href="#" class="text-dark">{{ p.title }}</a></h6>
 
-                            <h6 class="product-title text-muted">From: <a href="#" class="text-dark">{{ p.vendor }}</a></h6>
+                        <h5 class="product-price">
+                            <span class="old-price text-muted"><del>${{ p.old_price }}</del></span> <br>
+                            <span class="discount-price text-success">${{ p.price }}</span>/day
+                        </h5>
 
-                            <!-- Buttons Section -->
-                            <div class="d-flex justify-content-between mt-3">
-                                <a href="{% url 'product-detail' p.pid %}" class="btn btn-sm btn-outline-secondary">
-                                    <i class="fa fa-eye"></i> View Details
-                                </a>
-                                <a href="#" class="btn btn-sm btn-primary">
-                                    <i class="fa fa-shopping-cart"></i> Add to Cart
-                                </a>
-                            </div>
+                        <h6 class="product-title text-muted">From: <a href="#" class="text-dark">{{ p.vendor }}</a></h6>
+
+                        <!-- Buttons Section -->
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="{% url 'product-detail' p.pid %}" class="btn btn-sm btn-outline-secondary">
+                                <i class="fa fa-eye"></i> View Details
+                            </a>
+
+                            <a href="#" class="btn btn-sm btn-primary add-to-cart-btn" data-product-id="{{ p.id }}">
+                                <i class="fa fa-shopping-cart"></i> Add to Cart
+                            </a>
                         </div>
                     </div>
                 </div>
+            </div>
             {% endfor %}
         </div>
-        
+
     </div>
 </section>
 <!-- related product end  -->
@@ -262,56 +274,58 @@
 
 
 
-    <!-- Subscribe Start -->
-    <div class="container-fluid bg-secondary my-5">
-        <div class="row justify-content-md-center py-5 px-xl-5">
-            <div class="col-md-6 col-12 py-5">
-                <div class="text-center mb-2 pb-2">
-                    <h2 class="section-title px-5 mb-3"><span class="bg-secondary px-2">Stay Updated</span></h2>
-                    <p>Amet lorem at rebum amet dolores. Elitr lorem dolor sed amet diam labore at justo ipsum eirmod duo labore labore.</p>
-                </div>
-                <form action="">
-                    <div class="input-group">
-                        <input type="text" class="form-control border-white p-4" placeholder="Email Goes Here">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary px-4">Subscribe</button>
-                        </div>
+<!-- Subscribe Start -->
+<div class="container-fluid bg-secondary my-5">
+    <div class="row justify-content-md-center py-5 px-xl-5">
+        <div class="col-md-6 col-12 py-5">
+            <div class="text-center mb-2 pb-2">
+                <h2 class="section-title px-5 mb-3"><span class="bg-secondary px-2">Stay Updated</span></h2>
+                <p>Amet lorem at rebum amet dolores. Elitr lorem dolor sed amet diam labore at justo ipsum eirmod duo
+                    labore labore.</p>
+            </div>
+            <form action="">
+                <div class="input-group">
+                    <input type="text" class="form-control border-white p-4" placeholder="Email Goes Here">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary px-4">Subscribe</button>
                     </div>
-                </form>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Subscribe End -->
+
+
+
+<!-- Vendor Start -->
+
+
+
+<!-- ullullu -->
+<div class="container-fluid py-5">
+    <div class="row px-xl-5">
+        <div class="col">
+            <div class="owl-carousel vendor-carousel">
+                {% for v in vendors %}
+                <div class="vendor-item border p-4 text-center">
+                    <!-- Vendor Image -->
+                    <img src="{{ v.image.url }}" alt="{{ v.title }}" class="img-fluid rounded"
+                        style="height: 150px; object-fit: cover;">
+
+                    <!-- Vendor Name -->
+                    <h6 class="mt-2 font-weight-bold">{{ v.title }}</h6>
+                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
-    <!-- Subscribe End -->
+</div>
 
 
+<!-- Vendor End -->
 
-    <!-- Vendor Start -->
-
-
-
-    <!-- ullullu -->
-    <div class="container-fluid py-5">
-        <div class="row px-xl-5">
-            <div class="col">
-                <div class="owl-carousel vendor-carousel">
-                    {% for v in vendors %}
-                    <div class="vendor-item border p-4 text-center">
-                        <!-- Vendor Image -->
-                        <img src="{{ v.image.url }}" alt="{{ v.title }}" class="img-fluid rounded" style="height: 150px; object-fit: cover;">
-                        
-                        <!-- Vendor Name -->
-                        <h6 class="mt-2 font-weight-bold">{{ v.title }}</h6>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    
-    <!-- Vendor End -->
-
-    <!-- <div class="container-fluid bg-secondary text-dark mt-5 pt-5">
+<!-- <div class="container-fluid bg-secondary text-dark mt-5 pt-5">
         <div class="row px-xl-5 pt-5">
             <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
                 <a href="" class="text-decoration-none">
@@ -383,8 +397,8 @@
 
 
 
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+<!-- Back to Top -->
+<a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
 
-    {% endblock %}
+{% endblock %}
