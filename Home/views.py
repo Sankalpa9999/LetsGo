@@ -7,6 +7,7 @@ from Home.models import Product, Category, Department, Vendor, CartOrder, CartOr
 from django.contrib.auth.decorators import login_required
 
 from Home.forms import ProductReviewForm
+from django.contrib import messages
 from django.template.loader import render_to_string
 
 
@@ -248,5 +249,69 @@ def add_to_cart(request):
 
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
-def cart_view(request):        
-    return render(request, 'Land/cart.html')
+def update_cart(request):
+    if request.method == "POST":
+        product_id = str(request.POST.get('product_id'))
+        action = request.POST.get('action')
+        
+        if 'cart_data_obj' not in request.session:
+            return JsonResponse({'error': 'Cart not found'}, status=400)
+            
+        cart_data = request.session['cart_data_obj']
+        
+        if product_id not in cart_data:
+            return JsonResponse({'error': 'Product not in cart'}, status=400)
+
+        if action == 'remove':
+            del cart_data[product_id]
+            messages.success(request, "Item removed from cart")
+        elif action == 'toggle_select':
+            # Initialize selected if not exists
+            if 'selected' not in cart_data[product_id]:
+                cart_data[product_id]['selected'] = True
+            # Toggle selection
+            cart_data[product_id]['selected'] = not cart_data[product_id]['selected']
+        
+        request.session.modified = True
+        
+        # Calculate updated totals
+        selected_items = {k: v for k, v in cart_data.items() if v.get('selected', True)}
+        subtotal = sum(float(item['price']) for item in selected_items.values())
+        service_fee = 5.00
+        total = subtotal + service_fee
+        
+        return JsonResponse({
+            'success': True,
+            'subtotal': f"{subtotal:.2f}",
+            'total': f"{total:.2f}",
+            'selected_count': len(selected_items),
+            'has_selected_items': len(selected_items) > 0
+        })
+
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+
+def cart_view(request):
+    cart_data = request.session.get('cart_data_obj', {})
+    
+    # Ensure all items have a 'selected' key
+    for item in cart_data.values():
+        if 'selected' not in item:
+            item['selected'] = True
+    
+    # Calculate totals
+    selected_items = {k: v for k, v in cart_data.items() if v.get('selected', True)}
+    subtotal = sum(float(item['price']) for item in selected_items.values())
+    service_fee = 5.00
+    total = subtotal + service_fee
+    
+    context = {
+        'cart_data_obj': cart_data,
+        'selected_count': len(selected_items),
+        'subtotal': f"{subtotal:.2f}",
+        'service_fee': f"{service_fee:.2f}",
+        'total': f"{total:.2f}",
+        'has_selected_items': len(selected_items) > 0
+    }
+    return render(request, 'Land/rentlist.html', context)

@@ -13,57 +13,67 @@
                 <div class="text-center mb-4">
                     <h2 class="section-title px-5"><span class="px-2">{{ query }}</span></h2>
                 </div>
-                
+
             </div>
         </div>
-    
+
         <span>{{ products.count }} Vehicle{{ products.count|pluralize }} found.</span>
         <div class="row featured__filter">
             {% for p in products %}
-                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                    <div class="featured__item card border-0 shadow-sm h-100">
-                        <!-- Product Image Section -->
-                        <div class="featured__item__pic-wrapper position-relative">
-                            <div class="hot-badge position-absolute bg-danger text-white p-2" style="top: 10px; right: 10px;">
-                                -{{ p.get_percentage | floatformat:0 }}%
-                            </div>
-                            <div class="featured__item__pic" 
-                                 style="background-image: url('{{ p.image.url }}'); height: 220px; background-size: cover; background-position: center;">
-                                <ul class="featured__item__pic__hover list-inline position-absolute" style="bottom: 10px; right: 10px;">
-                                    <li class="list-inline-item"><a href="#" class="text-white"><i class="fa fa-heart"></i></a></li>
-                                    <li class="list-inline-item"><a href="#" class="text-white"><i class="fa fa-retweet"></i></a></li>
-                                    <li class="list-inline-item"><a href="#" class="text-white"><i class="fa fa-shopping-cart"></i></a></li>
-                                </ul>
-                            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="featured__item card border-0 shadow-sm h-100">
+                    <!-- Product Image Section -->
+                    <div class="featured__item__pic-wrapper position-relative">
+                        <div class="hot-badge position-absolute bg-danger text-white p-2"
+                            style="top: 10px; right: 10px;">
+                            -{{ p.get_percentage | floatformat:0 }}%
                         </div>
+                        <div class="featured__item__pic"
+                            style="background-image: url('{{ p.image.url }}'); height: 220px; background-size: cover; background-position: center;">
+                            <ul class="featured__item__pic__hover list-inline position-absolute"
+                                style="bottom: 10px; right: 10px;">
+                                <li class="list-inline-item"><a href="#" class="text-white"><i
+                                            class="fa fa-heart"></i></a></li>
+                                <li class="list-inline-item"><a href="#" class="text-white"><i
+                                            class="fa fa-retweet"></i></a></li>
+                                <li class="list-inline-item">
+                                    <a href="#" class="btn btn-sm btn-primary add-to-cart-btn"
+                                        data-product-id="{{ p.id }}">
+                                        <i class="fa fa-list cart-icon"></i>
+                                        <i class="fa fa-check success-icon d-none"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
 
-                        <!-- Product Info -->
-                        <div class="featured__item__text text-center p-3">
-                            <h4 class="category-name text-muted">{{ p.category.title }}</h4>
-                            <h6 class="product-title"><a href="#" class="text-dark">{{ p.title }}</a></h6>
-                            
-                            <h5 class="product-price">
-                                <span class="old-price text-muted"><del>${{ p.old_price }}</del></span> 
-                                <span class="discount-price text-success">${{ p.price }}</span>/day
-                            </h5>
+                    <!-- Product Info -->
+                    <div class="featured__item__text text-center p-3">
+                        <h4 class="category-name text-muted">{{ p.category.title }}</h4>
+                        <h6 class="product-title"><a href="#" class="text-dark">{{ p.title }}</a></h6>
 
-                            <h6 class="product-title text-muted">From: <a href="#" class="text-dark">{{ p.vendor }}</a></h6>
+                        <h5 class="product-price">
+                            <span class="old-price text-muted"><del>${{ p.old_price }}</del></span>
+                            <span class="discount-price text-success">${{ p.price }}</span>/day
+                        </h5>
 
-                            <!-- Buttons Section -->
-                            <div class="d-flex justify-content-between mt-3">
-                                <a href="{% url 'product-detail' p.pid %}" class="btn btn-sm btn-outline-secondary">
-                                    <i class="fa fa-eye"></i> View Details
-                                </a>
-                                <a href="#" class="btn btn-sm btn-primary add-to-cart-btn" data-product-id="{{ p.id }}">
-                                    <i class="fa fa-shopping-cart"></i> Add to Cart
-                                </a>
-                            </div>
+                        <h6 class="product-title text-muted">From: <a href="#" class="text-dark">{{ p.vendor }}</a></h6>
+
+                        <!-- Buttons Section -->
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="{% url 'product-detail' p.pid %}" class="btn btn-sm btn-outline-secondary">
+                                <i class="fa fa-eye"></i> View Details
+                            </a>
+                            <a href="#" class="btn btn-sm btn-primary add-to-cart-btn" data-product-id="{{ p.id }}">
+                                <i class="fa fa-list"></i> Add to queue
+                            </a>
                         </div>
                     </div>
                 </div>
+            </div>
             {% endfor %}
         </div>
-        
+
     </div>
 </section>
 

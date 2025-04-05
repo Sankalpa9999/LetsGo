@@ -126,3 +126,67 @@ $("#add-to-cart-btn").on("click",function() {
 //         });
 //     });
 // });
+
+$(document).ready(function () {
+    $(".add-to-cart-btn").on("click", function (e) {
+        e.preventDefault(); // Prevent default link behavior
+
+        let this_val = $(this);
+        let parent = this_val.closest(".featured__item, .product-container, .product-detail-container"); 
+
+        // Detect product information dynamically
+        let product_title = parent.find(".product-title, .product-name").first().text().trim() || "Unknown"; // Ensure only the product title is taken
+        let product_price = parent.find(".discount-price, .current-product-price, .price").first().text().trim() || "0"; // Get only the current price
+
+        let product_id = this_val.data("product-id");
+
+        // Remove $ or any currency symbol from the price
+        product_price = product_price.replace(/[^0-9.]/g, ""); 
+
+        // Try getting the image from background-image first
+        let product_image = parent.find(".featured__item__pic, .product-image").css("background-image");
+
+        // Clean up background-image URL
+        if (product_image && product_image !== "none") {
+            product_image = product_image.replace(/^url\(["']?/, "").replace(/["']?\)$/, ""); 
+        } else {
+            // If no background-image, look for an <img> tag
+            product_image = parent.find("img").attr("src") || "";
+        }
+
+        console.log("Title:", product_title);
+        console.log("Price:", product_price);
+        console.log("ID:", product_id);
+        console.log("Image:", product_image);
+
+        if (!product_id) {
+            alert("Product ID missing!");
+            return;
+        }
+
+        $.ajax({
+            url: "/add-to-cart/",
+            type: "POST",
+            data: {
+                id: product_id,
+                title: product_title,
+                price: product_price,
+                image: product_image,
+                csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+            },
+            dataType: "json",
+            beforeSend: function () {
+                console.log("Adding to cart...");
+            },
+            success: function (response) {
+                this_val.html("✅").prop("disabled", true);
+                $(".cart-count").text(response.totalcartitems);
+                console.log("Cart updated:", response);
+            },
+            error: function (error) {
+                alert("Error adding to cart.");
+                console.log(error);
+            }
+        });
+    });
+});
