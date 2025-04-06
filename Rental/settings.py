@@ -176,3 +176,5 @@ CKEDITOR_CONFIGS = {
         ),
     },
 }
+
+handler404 = 'Home.views.custom_404'

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from Home.models import Product, Category, Department, Vendor, CartOrder, CartOrderItems, ProductImages, ProductReview, wishlist, Address
+from Home.models import Product, Category, Department, Vendor, RentOrder, RentOrderItems, ProductImages, ProductReview, wishlist, Address
 
 # Register your models here.
 
@@ -19,10 +19,10 @@ class DepartmentAdmin(admin.ModelAdmin):
 class VendorAdmin(admin.ModelAdmin):
     list_display = ['title','vendor_image']
     
-class CartOrderAdmin(admin.ModelAdmin):
+class RentOrderAdmin(admin.ModelAdmin):
     list_display = ['user','price','paid_status','order_date', 'product_status']
     
-class CartOrderItemsAdmin(admin.ModelAdmin):
+class RentOrderItemsAdmin(admin.ModelAdmin):
     list_display = ['order','invoice_no','item','image','qty','price','total']
     
 class ProductReviewAdmin(admin.ModelAdmin):
@@ -39,8 +39,8 @@ admin.site.register(Product, ProductAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Department, DepartmentAdmin)
 admin.site.register(Vendor, VendorAdmin)
-admin.site.register(CartOrder, CartOrderAdmin)
-admin.site.register(CartOrderItems, CartOrderItemsAdmin)
+admin.site.register(RentOrder, RentOrderAdmin)
+admin.site.register(RentOrderItems, RentOrderItemsAdmin)
 admin.site.register(ProductReview, ProductReviewAdmin)
 admin.site.register(wishlist, wishlistAdmin)
 admin.site.register(Address, AddressAdmin)

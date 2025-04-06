@@ -99,7 +99,7 @@ class Product(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True, related_name='vendor')
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, related_name='department')
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='category')
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name='category')
     title = models.CharField(max_length=100)
     image = models.ImageField(upload_to=user_directory_path, default='product.jpg')
     
@@ -152,7 +152,7 @@ class ProductImages(models.Model):
     class Meta:
         verbose_name_plural = 'Product Images'
     
-class CartOrder(models.Model):
+class RentOrder(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=99999, decimal_places=2,default=100)
     paid_status = models.BooleanField(default=False)
@@ -160,22 +160,22 @@ class CartOrder(models.Model):
     product_status = models.CharField(choices= STATUS_CHOICE, max_length=100, default='Processing')
     
     class Meta:
-        verbose_name_plural = 'Cart Order'
+        verbose_name_plural = 'Rent Order'
         
 
-class CartOrderItems(models.Model):
-    order = models.ForeignKey(CartOrder, on_delete=models.CASCADE)
+class RentOrderItems(models.Model):
+    order = models.ForeignKey(RentOrder, on_delete=models.CASCADE)
     invoice_no = models.CharField(max_length=200)
     Product_status = models.CharField(max_length=200)
     item = models.CharField(max_length=200)
-    image = models.ImageField(upload_to="cart-order", default='product.jpg')
+    image = models.ImageField(upload_to="Rent-order", default='product.jpg')
     qty = models.IntegerField(default=0)
     price = models.DecimalField(max_digits=99999, decimal_places=2,default=100)
     total = models.DecimalField(max_digits=99999, decimal_places=2,default=100)
     
     
     class Meta:
-        verbose_name_plural = 'Cart Order Items'
+        verbose_name_plural = 'Rent Order Items'
         
     def order_image(self):
         return mark_safe('<img src="/media/%s" width="50" height="50" />'%(self.image))

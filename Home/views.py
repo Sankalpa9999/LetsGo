@@ -3,12 +3,13 @@ from django.shortcuts import render,redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.db.models import Avg, Count
 from stripe import Review
-from Home.models import Product, Category, Department, Vendor, CartOrder, CartOrderItems, ProductImages, ProductReview, wishlist, Address
+from Home.models import Product, Category, Department, Vendor, RentOrder, RentOrderItems, ProductImages, ProductReview, wishlist, Address
 from django.contrib.auth.decorators import login_required
 
 from Home.forms import ProductReviewForm
 from django.contrib import messages
 from django.template.loader import render_to_string
+from django.views.decorators.http import require_POST
 
 
 def index(request):
@@ -103,26 +104,52 @@ def vendor_detail_view(request, vid):
 
 
 
+# def product_detail_view(request, pid):
+#     product = Product.objects.get(pid = pid)
+#     product = get_object_or_404(Product, pid=pid)
+#     p_image = product.p_images.all()
+#     products = Product.objects.filter( product_status = "published", category = product.category).order_by('-id')
+    
+#     review_form = ProductReviewForm()
+    
+#     reviews = ProductReview.objects.filter(product=product).order_by('-date')
+#     average_rating = ProductReview.objects.filter(product=product).aggregate(rating = Avg('rating'))
+    
+#     context = {
+#         'p':product,
+#         'products':products,
+#         'p_image':p_image,
+#         'reviews': reviews,
+#         'average_rating': average_rating,
+#         'review_form': review_form,
+#         }
+#     return render(request,'Land/product-detail.html', context)
+
+
+
 def product_detail_view(request, pid):
-    product = Product.objects.get(pid = pid)
-    product = get_object_or_404(Product, pid=pid)
+    product = get_object_or_404(Product, pid=pid)  # This handles the 404 error automatically
+    
     p_image = product.p_images.all()
-    products = Product.objects.filter( product_status = "published", category = product.category).order_by('-id')
-    
+    products = Product.objects.filter(product_status="published", category=product.category).order_by('-id')
+
     review_form = ProductReviewForm()
-    
     reviews = ProductReview.objects.filter(product=product).order_by('-date')
-    average_rating = ProductReview.objects.filter(product=product).aggregate(rating = Avg('rating'))
-    
+    average_rating = ProductReview.objects.filter(product=product).aggregate(rating=Avg('rating'))
+
     context = {
-        'p':product,
-        'products':products,
-        'p_image':p_image,
+        'p': product,
+        'products': products,
+        'p_image': p_image,
         'reviews': reviews,
         'average_rating': average_rating,
         'review_form': review_form,
-        }
-    return render(request,'Land/product-detail.html', context)
+    }
+    return render(request, 'Land/product-detail.html', context)
+
+
+def custom_404(request, exception):
+    return render(request, 'Land/404.html', status=404)
 
 @login_required
 def ajax_add_review(request, pid):
@@ -179,139 +206,130 @@ def search_view(request):
     
 
 
+
 # def add_to_cart(request):
 #     if request.method == "POST":
-#         cart_product = {}
-        
 #         product_id = str(request.POST.get('id'))
 #         product_title = request.POST.get('title')
 #         product_price = request.POST.get('price')
-#         product_image = request.POST.get('image')
+#         product_image = request.POST.get('image')  # Ensure image is captured
 #         pid = request.POST.get('pid')
 
 #         if not product_id or not product_title or not product_price:
 #             return JsonResponse({'error': 'Invalid data'}, status=400)
 
-#         cart_product[product_id] = {
-#             'title': product_title,
-#             'price': product_price,
+#         cart_product = {
+#             product_id: {
+#                 'title': product_title,
+#                 'price': product_price,
+#                 'image': product_image  # Store image in session
+#             }
 #         }
 
 #         if 'cart_data_obj' in request.session:
 #             cart_data = request.session['cart_data_obj']
-#             if product_id in cart_data:
-#                 # If item is already in cart, do nothing or update quantity
-#                 pass
-#             else:
-#                 cart_data.update(cart_product)
-#                 request.session['cart_data_obj'] = cart_data
+#             cart_data.update(cart_product)  # Update existing cart
+#             request.session['cart_data_obj'] = cart_data
 #         else:
-#             request.session['cart_data_obj'] = cart_product
+#             request.session['cart_data_obj'] = cart_product  # Create new cart
 
 #         return JsonResponse({
 #             'data': request.session['cart_data_obj'],
 #             'totalcartitems': len(request.session['cart_data_obj'])
 #         })
-    
+
 #     return JsonResponse({'error': 'Invalid request'}, status=400)
 
 
-def add_to_cart(request):
-    if request.method == "POST":
-        product_id = str(request.POST.get('id'))
-        product_title = request.POST.get('title')
-        product_price = request.POST.get('price')
-        product_image = request.POST.get('image')  # Ensure image is captured
-        pid = request.POST.get('pid')
-
-        if not product_id or not product_title or not product_price:
-            return JsonResponse({'error': 'Invalid data'}, status=400)
-
-        cart_product = {
-            product_id: {
-                'title': product_title,
-                'price': product_price,
-                'image': product_image  # Store image in session
-            }
-        }
-
-        if 'cart_data_obj' in request.session:
-            cart_data = request.session['cart_data_obj']
-            cart_data.update(cart_product)  # Update existing cart
-            request.session['cart_data_obj'] = cart_data
-        else:
-            request.session['cart_data_obj'] = cart_product  # Create new cart
-
-        return JsonResponse({
-            'data': request.session['cart_data_obj'],
-            'totalcartitems': len(request.session['cart_data_obj'])
-        })
-
-    return JsonResponse({'error': 'Invalid request'}, status=400)
-
-def update_cart(request):
-    if request.method == "POST":
-        product_id = str(request.POST.get('product_id'))
-        action = request.POST.get('action')
+# @require_POST
+# def update_cart(request):
+#     if request.method == "POST":
+#         product_id = str(request.POST.get('product_id'))
+#         action = request.POST.get('action')
         
-        if 'cart_data_obj' not in request.session:
-            return JsonResponse({'error': 'Cart not found'}, status=400)
+#         if 'cart_data_obj' not in request.session:
+#             return JsonResponse({'error': 'Cart not found'}, status=400)
             
-        cart_data = request.session['cart_data_obj']
+#         cart_data = request.session['cart_data_obj']
         
-        if product_id not in cart_data:
-            return JsonResponse({'error': 'Product not in cart'}, status=400)
-
-        if action == 'remove':
-            del cart_data[product_id]
-            messages.success(request, "Item removed from cart")
-        elif action == 'toggle_select':
-            # Initialize selected if not exists
-            if 'selected' not in cart_data[product_id]:
-                cart_data[product_id]['selected'] = True
-            # Toggle selection
-            cart_data[product_id]['selected'] = not cart_data[product_id]['selected']
+#         if product_id not in cart_data:
+#             return JsonResponse({'error': 'Product not in cart'}, status=400)
+#         cart_data = request.session.get('cart_data_obj', {})
         
-        request.session.modified = True
+#         if action == 'remove':
+#             if product_id in cart_data:
+#                 del cart_data[product_id]
+#                 request.session['cart_data_obj'] = cart_data
+#                 request.session.modified = True
+                
+#                 # Calculate updated totals
+#                 selected_items = {k: v for k, v in cart_data.items() if v.get('selected', True)}
+#                 subtotal = sum(float(item['price']) for item in selected_items.values())
+#                 service_fee = 5.00
+#                 total = subtotal + service_fee
+                
+#                 return JsonResponse({
+#                     'success': True,
+#                     'subtotal': f"{subtotal:.2f}",
+#                     'total': f"{total:.2f}",
+#                     'selected_count': len(selected_items),
+#                     'has_selected_items': len(selected_items) > 0,
+#                     'totalcartitems': len(cart_data)
+#                 })
+#             return JsonResponse({'success': False, 'error': 'Product not in cart'})
+
+
+#         elif action == 'toggle_select':
+#             # Initialize selected if not exists
+#             if 'selected' not in cart_data[product_id]:
+#                 cart_data[product_id]['selected'] = True
+#             # Toggle selection
+#             cart_data[product_id]['selected'] = not cart_data[product_id]['selected']
         
-        # Calculate updated totals
-        selected_items = {k: v for k, v in cart_data.items() if v.get('selected', True)}
-        subtotal = sum(float(item['price']) for item in selected_items.values())
-        service_fee = 5.00
-        total = subtotal + service_fee
+#         request.session.modified = True
         
-        return JsonResponse({
-            'success': True,
-            'subtotal': f"{subtotal:.2f}",
-            'total': f"{total:.2f}",
-            'selected_count': len(selected_items),
-            'has_selected_items': len(selected_items) > 0
-        })
+#         # Calculate updated totals
+#         selected_items = {k: v for k, v in cart_data.items() if v.get('selected', True)}
+#         subtotal = sum(float(item['price']) for item in selected_items.values())
+#         service_fee = 5.00
+#         total = subtotal + service_fee
+        
+#         return JsonResponse({
+#             'success': True,
+#             'subtotal': f"{subtotal:.2f}",
+#             'total': f"{total:.2f}",
+#             'selected_count': len(selected_items),
+#             'has_selected_items': len(selected_items) > 0
+#         })
 
-    return JsonResponse({'error': 'Invalid request'}, status=400)
+#     return JsonResponse({'error': 'Invalid request'}, status=400)
 
 
 
-def cart_view(request):
-    cart_data = request.session.get('cart_data_obj', {})
+# def cart_view(request):
+#     cart_data = request.session.get('cart_data_obj', {})
     
-    # Ensure all items have a 'selected' key
-    for item in cart_data.values():
-        if 'selected' not in item:
-            item['selected'] = True
+#     # Ensure all items have a 'selected' key
+#     for item in cart_data.values():
+#         if 'selected' not in item:
+#             item['selected'] = True
     
-    # Calculate totals
-    selected_items = {k: v for k, v in cart_data.items() if v.get('selected', True)}
-    subtotal = sum(float(item['price']) for item in selected_items.values())
-    service_fee = 5.00
-    total = subtotal + service_fee
+#     # Calculate totals
+#     selected_items = {k: v for k, v in cart_data.items() if v.get('selected', True)}
+#     subtotal = sum(float(item['price']) for item in selected_items.values())
+#     service_fee = 100
+#     total = subtotal + service_fee
     
-    context = {
-        'cart_data_obj': cart_data,
-        'selected_count': len(selected_items),
-        'subtotal': f"{subtotal:.2f}",
-        'service_fee': f"{service_fee:.2f}",
-        'total': f"{total:.2f}",
-        'has_selected_items': len(selected_items) > 0
-    }
-    return render(request, 'Land/rentlist.html', context)
+#     context = {
+#         'cart_data_obj': cart_data,
+#         'selected_count': len(selected_items),
+#         'subtotal': f"{subtotal:.2f}",
+#         'service_fee': f"{service_fee:.2f}",
+#         'total': f"{total:.2f}",
+#         'has_selected_items': len(selected_items) > 0
+#     }
+#     return render(request, 'Land/rentlist.html', context)
+
+
+def rent_view(request):
+    return render(request, 'Land/rentlist.html')
