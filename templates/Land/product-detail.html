@@ -22,10 +22,10 @@
                 <button class="btn btn-outline-danger me-3" onclick="toggleWishlist(this)">
                     <i class="fas fa-heart"></i> Wishlist
                 </button>
-                <form method="post">
+                <form method="post" action="{% url 'add-to-rentlist' p.pid %}">
                     {% csrf_token %}
                     <button class="btn btn-outline-primary add-to-cart-btn" data-product-id="{{ p.id }}">
-                        <i class="fa fa-shopping-cart"></i> Add to Cart
+                        <i class="fa fa-shopping-cart"></i> Add to Rentlist 
                     </button>
                 </form>
             </div>
@@ -330,7 +330,6 @@
             toggleBtn.textContent = 'Show Reviews'; // Change button text back
         }
     });
-
 
 
 </script>

@@ -36,7 +36,8 @@ urlpatterns = [
     # path('checkout/', views.checkout_view, name='checkout'),
     
     
-    path('rentlist/', views.rent_view, name='rentlist'),
+    path('add-to-rentlist/<str:pid>/', views.add_to_rentlist, name='add-to-rentlist'),
+    path('rentlist/', views.rentlist_view, name='rentlist'),
     
     path('404/', views.custom_404, name='custom_404'),
     

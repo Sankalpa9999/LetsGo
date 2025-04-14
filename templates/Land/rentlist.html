@@ -1,1 +1,71 @@
-<h1>this is rentlist</h1>
+{% extends 'partial/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4">Your Rent List</h2>
+
+    {% if rent_items %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Image</th>
+                    <th>Vehicle</th>
+                    <th>Vendor</th>
+                    <th>Price/Day</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in rent_items %}
+                <tr>
+                    <td>
+                        <img src="{{ item.image.url }}" alt="{{ item.item }}" width="80" class="img-thumbnail">
+                    </td>
+                    <td>{{ item.item }}</td>
+                    <td>
+                        {% with product=item.order.product_set.first %}
+                        {% if product %}
+                        {{ product.vendor }}
+                        {% else %}
+                        N/A
+                        {% endif %}
+                        {% endwith %}
+                    </td>
+                    <td>${{ item.price }}</td>
+                    <td>
+                        <span class="badge bg-info text-dark">{{ item.Product_status }}</span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-danger remove-item" data-item-id="{{ item.id }}">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr class="table-active">
+                    <td colspan="3" class="text-end fw-bold">Total:</td>
+                    <td colspan="3" class="fw-bold">${{ rent_order.price }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="text-end">
+            <a href="#" class="btn btn-primary btn-lg">
+                <i class="fas fa-credit-card"></i> Proceed to Checkout
+            </a>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        Your rent list is empty. <a href="{% url 'home' %}">Browse vehicles</a> to add to your rent list.
+    </div>
+    {% endif %}
+</div>
+
+<script>
+
+</script>
+{% endblock %}

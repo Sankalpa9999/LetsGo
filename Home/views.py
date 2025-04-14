@@ -3,13 +3,15 @@ from django.shortcuts import render,redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.db.models import Avg, Count
 from stripe import Review
-from Home.models import Product, Category, Department, Vendor, RentOrder, RentOrderItems, ProductImages, ProductReview, wishlist, Address
+from Home.models import Product, Category, Department, Vendor, RentOrder, RentOrderItems, ProductImages, ProductReview, wishlist, Address, RentOrderItems
 from django.contrib.auth.decorators import login_required
 
 from Home.forms import ProductReviewForm
 from django.contrib import messages
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
+from userauths import views
+
 
 
 def index(request):
@@ -331,5 +333,54 @@ def search_view(request):
 #     return render(request, 'Land/rentlist.html', context)
 
 
-def rent_view(request):
-    return render(request, 'Land/rentlist.html')
+
+def add_to_rentlist(request, pid):
+    if request.method == 'POST':
+        product = get_object_or_404(Product, pid=pid)
+        rent_order, created = RentOrder.objects.get_or_create(
+            user=request.user,
+            paid_status=False,
+            defaults={'price': product.price}
+        )
+        
+        RentOrderItems.objects.create(
+            order=rent_order,
+            item=product.title,
+            Product_status='Processing',
+            image=product.image,
+            qty=1,
+            price=product.price,
+            total=product.price,
+            invoice_no=f"INV-{rent_order.id}-{RentOrderItems.objects.count() + 1}"
+        )
+        
+        return redirect('rentlist')
+    return redirect('product-detail', pid=pid)
+def rentlist_view(request):
+    if request.user.is_authenticated:
+        rent_order = RentOrder.objects.filter(
+            user=request.user, 
+            paid_status=False
+        ).prefetch_related(
+            'rentorderitems_set'
+        ).first()
+        
+        rent_items = []
+        if rent_order:
+            rent_items = RentOrderItems.objects.filter(
+                order=rent_order
+            ).select_related('order')
+            
+            # Add product to each rent item if available
+            for item in rent_items:
+                try:
+                    item.product = Product.objects.get(title=item.item)
+                except Product.DoesNotExist:
+                    item.product = None
+        
+        context = {
+            'rent_order': rent_order,
+            'rent_items': rent_items,
+        }
+        return render(request, 'Land/rentlist.html', context)
+    return redirect('login')

@@ -84,6 +84,7 @@ function showNotification(message, type) {
 
 
 // $(document).ready(function() {
+
 //     // Add to cart functionality
 //     $(".add-to-cart-btn").on("click", function(e) {
 //         e.preventDefault();
@@ -209,3 +210,19 @@ function showNotification(message, type) {
 //         setTimeout(() => toast.remove(), 3000);
 //     }
 // });
+
+
+function changeImage(element) {
+    document.getElementById('mainProductImage').src = element.src;
+}
+
+// Debug function to show what's being added to rentlist
+document.querySelector('.add-to-cart-btn').addEventListener('click', function(e) {
+    const productId = this.getAttribute('data-product-id');
+    console.log("Adding to rentlist:", {
+        id: productId,
+        title: "{{ p.title }}",
+        vendor: "{{ p.vendor.title }}",
+        image: "{{ p.image.url }}"
+    });
+});
