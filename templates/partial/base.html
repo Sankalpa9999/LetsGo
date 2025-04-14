@@ -135,10 +135,11 @@
                 <i class="fas fa-list text-primary"></i>
                 <span
                     class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger rent-count">
-                    {{ request.session.rent_data_obj|length }}
+                    {{ request.session.rent_data_count|default:0 }}
                     <span class="visually-hidden">items in rent list</span>
                 </span>
             </a>
+
         </div>
     </div>
     </div>

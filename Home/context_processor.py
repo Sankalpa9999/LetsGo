@@ -18,3 +18,19 @@ def default(request):
         'user_address': user_address,  # Pass as user_address
         'Products':Products,
         }
+    
+    
+# def rent_data_count(request):
+#     rent_data_obj = request.session.get('rent_data_obj', [])
+    
+#     return {'rent_data_count': len(rent_data_obj)}
+
+# def rent_list_count(request):
+#     rent_count = 0
+#     if request.user.is_authenticated:
+#         try:
+#             rent_order = RentOrder.objects.get(user=request.user, paid_status=False)
+#             rent_count = RentOrderItems.objects.filter(order=rent_order).count()
+#         except RentOrder.DoesNotExist:
+#             pass
+#     return {'rent_data_count': rent_count}

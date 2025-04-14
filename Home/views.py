@@ -357,6 +357,11 @@ def add_to_rent(request, pid):
         total=product.price,
     )
     
+    # Update session variable for rent data
+    rent_data = request.session.get('rent_data_obj', [])
+    rent_data.append({'title': product.title, 'pid': product.pid})
+    request.session['rent_data_obj'] = rent_data  # Save updated session
+
     return JsonResponse({"message": f"{product.title} added to your rent list!", "status": "success"})
 
 
@@ -383,9 +388,16 @@ def rent_list_view(request):
         rent_order = None
         item_list = []
 
+
+    rent_data_obj = request.session.get('rent_data_obj', [])
+    request.session['rent_data_count'] = len(rent_data_obj)  # Update session count
+    
+
+    
     context = {
         'rent_order': rent_order,
         'items': item_list,
+        'rent_data_count': len(rent_data_obj),  # Pass the count of items in the rent list
     }
     return render(request, 'Land/rentlist.html', context)
 

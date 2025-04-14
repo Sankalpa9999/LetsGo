@@ -6,7 +6,7 @@
 
 
 <h2>Your Rent List</h2>
-<span>{{ items.count }} Vehicle{{ items.count|pluralize:"s" }}</span>
+<span>{{ items|length }} Vehicle{{ items|length|pluralize }}</span>
 {% if items %}
 <table class="table">
     <thead>
