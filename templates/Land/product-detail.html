@@ -37,9 +37,9 @@
             <p class="text-muted">Category: <span class="fw-semibold">{{ p.category }}</span></p>
             <p class="text-muted">License Plate: <strong>{{ p.numberp }}</strong></p>
 
-            <h4 class="text-success current-product-price">$ {{ p.price }}/day</h4> <!-- Added class for price -->
+            <h4 class="text-success current-product-price">रु. {{ p.price }}/day</h4> <!-- Added class for price -->
             {% if product.old_price > p.price %}
-            <p class="text-danger"><del>Was: ${{ p.old_price }}/day</del></p>
+            <p class="text-danger"><del>Was: रु.{{ p.old_price }}/day</del></p>
             <span class="badge bg-warning text-dark">{{ p.get_percentage }}% OFF</span>
             {% endif %}
 
@@ -273,8 +273,8 @@
                         <h6 class="product-title"><a href="#" class="text-dark">{{ p.title }}</a></h6>
 
                         <h5 class="product-price">
-                            <span class="old-price text-muted"><del>${{ p.old_price }}</del></span><br>
-                            <span class="discount-price text-success">${{ p.price }}</span>/day
+                            <span class="old-price text-muted"><del>रु.{{ p.old_price }}</del></span><br>
+                            <span class="discount-price text-success">रु.{{ p.price }}</span>/day
                         </h5>
 
                         <h6 class="product-title text-muted">From: <a href="#" class="text-dark">{{ p.vendor }}</a></h6>

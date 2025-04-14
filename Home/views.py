@@ -209,129 +209,6 @@ def search_view(request):
 
 
 
-# def add_to_cart(request):
-#     if request.method == "POST":
-#         product_id = str(request.POST.get('id'))
-#         product_title = request.POST.get('title')
-#         product_price = request.POST.get('price')
-#         product_image = request.POST.get('image')  # Ensure image is captured
-#         pid = request.POST.get('pid')
-
-#         if not product_id or not product_title or not product_price:
-#             return JsonResponse({'error': 'Invalid data'}, status=400)
-
-#         cart_product = {
-#             product_id: {
-#                 'title': product_title,
-#                 'price': product_price,
-#                 'image': product_image  # Store image in session
-#             }
-#         }
-
-#         if 'cart_data_obj' in request.session:
-#             cart_data = request.session['cart_data_obj']
-#             cart_data.update(cart_product)  # Update existing cart
-#             request.session['cart_data_obj'] = cart_data
-#         else:
-#             request.session['cart_data_obj'] = cart_product  # Create new cart
-
-#         return JsonResponse({
-#             'data': request.session['cart_data_obj'],
-#             'totalcartitems': len(request.session['cart_data_obj'])
-#         })
-
-#     return JsonResponse({'error': 'Invalid request'}, status=400)
-
-
-# @require_POST
-# def update_cart(request):
-#     if request.method == "POST":
-#         product_id = str(request.POST.get('product_id'))
-#         action = request.POST.get('action')
-        
-#         if 'cart_data_obj' not in request.session:
-#             return JsonResponse({'error': 'Cart not found'}, status=400)
-            
-#         cart_data = request.session['cart_data_obj']
-        
-#         if product_id not in cart_data:
-#             return JsonResponse({'error': 'Product not in cart'}, status=400)
-#         cart_data = request.session.get('cart_data_obj', {})
-        
-#         if action == 'remove':
-#             if product_id in cart_data:
-#                 del cart_data[product_id]
-#                 request.session['cart_data_obj'] = cart_data
-#                 request.session.modified = True
-                
-#                 # Calculate updated totals
-#                 selected_items = {k: v for k, v in cart_data.items() if v.get('selected', True)}
-#                 subtotal = sum(float(item['price']) for item in selected_items.values())
-#                 service_fee = 5.00
-#                 total = subtotal + service_fee
-                
-#                 return JsonResponse({
-#                     'success': True,
-#                     'subtotal': f"{subtotal:.2f}",
-#                     'total': f"{total:.2f}",
-#                     'selected_count': len(selected_items),
-#                     'has_selected_items': len(selected_items) > 0,
-#                     'totalcartitems': len(cart_data)
-#                 })
-#             return JsonResponse({'success': False, 'error': 'Product not in cart'})
-
-
-#         elif action == 'toggle_select':
-#             # Initialize selected if not exists
-#             if 'selected' not in cart_data[product_id]:
-#                 cart_data[product_id]['selected'] = True
-#             # Toggle selection
-#             cart_data[product_id]['selected'] = not cart_data[product_id]['selected']
-        
-#         request.session.modified = True
-        
-#         # Calculate updated totals
-#         selected_items = {k: v for k, v in cart_data.items() if v.get('selected', True)}
-#         subtotal = sum(float(item['price']) for item in selected_items.values())
-#         service_fee = 5.00
-#         total = subtotal + service_fee
-        
-#         return JsonResponse({
-#             'success': True,
-#             'subtotal': f"{subtotal:.2f}",
-#             'total': f"{total:.2f}",
-#             'selected_count': len(selected_items),
-#             'has_selected_items': len(selected_items) > 0
-#         })
-
-#     return JsonResponse({'error': 'Invalid request'}, status=400)
-
-
-
-# def cart_view(request):
-#     cart_data = request.session.get('cart_data_obj', {})
-    
-#     # Ensure all items have a 'selected' key
-#     for item in cart_data.values():
-#         if 'selected' not in item:
-#             item['selected'] = True
-    
-#     # Calculate totals
-#     selected_items = {k: v for k, v in cart_data.items() if v.get('selected', True)}
-#     subtotal = sum(float(item['price']) for item in selected_items.values())
-#     service_fee = 100
-#     total = subtotal + service_fee
-    
-#     context = {
-#         'cart_data_obj': cart_data,
-#         'selected_count': len(selected_items),
-#         'subtotal': f"{subtotal:.2f}",
-#         'service_fee': f"{service_fee:.2f}",
-#         'total': f"{total:.2f}",
-#         'has_selected_items': len(selected_items) > 0
-#     }
-#     return render(request, 'Land/rentlist.html', context)
-
 def add_to_rent(request, pid):
     if not request.user.is_authenticated:
         if request.headers.get("x-requested-with") == "XMLHttpRequest":
@@ -422,6 +299,8 @@ def remove_from_rent_list(request, item_id):
         messages.error(request, "Unauthorized action.")
 
     return redirect('rentlist')
+
+
 
 
 

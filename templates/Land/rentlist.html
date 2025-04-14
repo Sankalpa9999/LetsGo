@@ -2,61 +2,318 @@
 {% load static %}
 
 {% block content %}
+<div class="container py-3 py-md-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="h4 mb-0"><i class="fas fa-shopping-cart me-2"></i>Your Rent List</h2>
+                <span class="badge bg-light text-dark">{{ items|length }} Vehicle{{ items|length|pluralize }}</span>
+            </div>
+        </div>
 
+        <div class="card-body p-0">
+            {% if items %}
+            <form id="rentForm" method="post" action="#">
+                {% csrf_token %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light d-none d-md-table-header-group">
+                            <tr>
+                                <th width="50px">
+                                    <input type="checkbox" id="selectAll" class="form-check-input" checked>
+                                </th>
+                                <th style="min-width: 100px">Image</th>
+                                <th>Vehicle Details</th>
+                                <th>Owner</th>
+                                <th class="text-nowrap">Daily Price</th>
+                                <th class="text-nowrap">Rental Days</th>
+                                <th class="text-nowrap">Item Total</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entry in items %}
+                            <tr class="rent-item">
+                                <!-- Checkbox (visible on all devices) -->
+                                <td data-label="Select" class="ps-3">
+                                    <input type="checkbox" 
+                                           name="selected_items" 
+                                           value="{{ entry.item.id }}" 
+                                           class="form-check-input item-checkbox" 
+                                           data-price="{{ entry.item.price }}"
+                                           checked>
+                                </td>
+                                
+                                <!-- Image (stacked on mobile) -->
+                                <td data-label="Vehicle" class="d-md-table-cell">
+                                    <div class="d-flex align-items-center">
+                                        <img src="{{ entry.item.image.url }}" 
+                                             class="img-thumbnail me-3" 
+                                             alt="{{ entry.item.item }}"
+                                             style="width: 60px; height: 45px; object-fit: cover;">
+                                        <div class="d-md-none">
+                                            <h6 class="mb-1">
+                                                {% if entry.pid %}
+                                                <a href="{% url 'product-detail' entry.pid %}" class="text-decoration-none">
+                                                    {{ entry.item.item }}
+                                                </a>
+                                                {% else %}
+                                                {{ entry.item.item }}
+                                                {% endif %}
+                                            </h6>
+                                            <small class="text-muted">ID: {{ entry.item.id }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                
+                                <!-- Details (hidden on mobile since shown with image) -->
+                                <td data-label="Details" class="d-none d-md-table-cell">
+                                    <h6 class="mb-1">
+                                        {% if entry.pid %}
+                                        <a href="{% url 'product-detail' entry.pid %}" class="text-decoration-none">
+                                            {{ entry.item.item }}
+                                        </a>
+                                        {% else %}
+                                        {{ entry.item.item }}
+                                        {% endif %}
+                                    </h6>
+                                    <small class="text-muted">ID: {{ entry.item.id }}</small>
+                                </td>
+                                
+                                <!-- Vendor -->
+                                <td data-label="Vendor">
+                                    {% if entry.vendor %}
+                                    <a href="{% url 'vendor-detail' entry.vendor.vid %}" class="text-decoration-none">
+                                        <span class="badge bg-info text-dark">
+                                            <i class="fas fa-store me-1"></i>
+                                            <span class="d-none d-md-inline">{{ entry.vendor.title }}</span>
+                                            <span class="d-md-none">Owner</span>
+                                        </span>
+                                    </a>
+                                    {% else %}
+                                    <span class="text-muted">N/A</span>
+                                    {% endif %}
+                                </td>
+                                
+                                <!-- Daily Price -->
+                                <td data-label="Daily Price" class="text-nowrap">
+                                    <span class="d-md-none">Price: </span>
+                                    रु.<span class="item-price">{{ entry.item.price }}</span>
+                                </td>
+                                
+                                <!-- Rental Days -->
+                                <td data-label="Rental Days">
+                                    <div class="d-flex align-items-center">
+                                        <span class="d-md-none me-2">Days: </span>
+                                        <input type="number" 
+                                               name="item_days_{{ entry.item.id }}" 
+                                               class="form-control item-days" 
+                                               min="1" 
+                                               value="1" 
+                                               style="width: 70px;"
+                                               data-item-id="{{ entry.item.id }}">
+                                    </div>
+                                </td>
+                                
+                                <!-- Item Total -->
+                                <td data-label="Item Total" class="text-nowrap fw-bold">
+                                    <span class="d-md-none">Total: </span>
+                                    रु.<span class="item-total" data-price="{{ entry.item.price }}">{{ entry.item.price }}</span>
+                                </td>
+                                
+                                <!-- Actions -->
+                                <td data-label="Actions">
+                                    <form action="{% url 'remove-from-rent' entry.item.id %}" method="post" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash-alt"></i>
+                                            <span class="d-none d-md-inline"> Remove</span>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
 
+                <div class="p-3 bg-light border-top">
+                    <div class="row">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <h5 class="mb-1">Selected <span id="selectedCount">{{ items|length }}</span> item{{ items|length|pluralize }}</h5>
+                            <small class="text-muted">(Price updates in real-time)</small>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <h4 class="mb-0 text-primary">Grand Total: रु.<span id="grandTotal">{{ rent_order.price }}</span></h4>
+                        </div>
+                    </div>
+                </div>
 
-<h2>Your Rent List</h2>
-<span>{{ items|length }} Vehicle{{ items|length|pluralize }}</span>
-{% if items %}
-<table class="table">
-    <thead>
-        <tr>
-            <th>Image</th>
-            <th>Item</th>
-            <th>Vendor</th>
+                <div class="p-3 border-top">
+                    <div class="d-flex flex-column flex-md-row justify-content-end">
+                        <a href="{% url 'product-list' %}" class="btn btn-outline-secondary mb-2 mb-md-0 me-md-3">
+                            <i class="fas fa-chevron-left me-1"></i>Continue Shopping
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-credit-card me-1"></i>Proceed to Checkout
+                        </button>
+                    </div>
+                </div>
+            </form>
+            {% else %}
+            <div class="text-center py-5">
+                <div class="mb-4">
+                    <i class="fas fa-shopping-cart fa-3x text-muted"></i>
+                </div>
+                <h4 class="h5 mb-3">Your Rent List is Empty</h4>
+                <p class="text-muted mb-4">You haven't added any vehicles to your rent list yet.</p>
+                <a href="{% url 'product-list' %}" class="btn btn-primary">
+                    <i class="fas fa-car me-1"></i>Browse Vehicles
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
 
-            <th>Price</th>
-            <th>Action</th>
+<style>
+    .rent-item:hover {
+        background-color: rgba(0, 123, 255, 0.03);
+    }
+    .card {
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+    .card-header {
+        border-radius: 0.5rem 0.5rem 0 0 !important;
+    }
+    .img-thumbnail {
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+    }
+    #selectAll, .item-checkbox {
+        cursor: pointer;
+    }
+    
+    /* Mobile-specific styles */
+    @media (max-width: 767.98px) {
+        .table {
+            margin-bottom: 0;
+        }
+        .table tr {
+            display: block;
+            padding: 0.75rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .table td {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border: none;
+        }
+        .table td::before {
+            content: attr(data-label);
+            font-weight: 500;
+            margin-right: 1rem;
+            color: #6c757d;
+        }
+        .table td:first-child {
+            padding-top: 0;
+        }
+        .table td:last-child {
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .table td[data-label="Actions"] {
+            justify-content: flex-end;
+        }
+        .table .form-control {
+            width: 70px;
+        }
+    }
+    
+    /* Tablet-specific adjustments */
+    @media (min-width: 768px) and (max-width: 991.98px) {
+        .table td, .table th {
+            padding: 0.75rem;
+        }
+        .table .form-control {
+            width: 60px;
+        }
+    }
+</style>
 
-        </tr>
-    </thead>
-    <tbody>
-        {% for entry in items %}
-        <tr>
-            <td><img src="{{ entry.item.image.url }}" width="50"></td>
-            <td>
-                {% if entry.pid %}
-                <a href="{% url 'product-detail' entry.pid %}">{{ entry.item.item }}</a>
-                {% else %}
-                {{ entry.item.item }}
-                {% endif %}
-            </td>
-            <td>
-                {% if entry.vendor %}
-                <a href="{% url 'vendor-detail' entry.vendor.vid %}">{{ entry.vendor.title }}</a>
-                {% else %}
-                N/A
-                {% endif %}
-            </td>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Select all checkbox functionality
+    const selectAll = document.getElementById('selectAll');
+    const itemCheckboxes = document.querySelectorAll('.item-checkbox');
+    const dayInputs = document.querySelectorAll('.item-days');
+    
+    // Toggle all checkboxes
+    selectAll.addEventListener('change', function() {
+        itemCheckboxes.forEach(checkbox => {
+            checkbox.checked = selectAll.checked;
+            toggleRowHighlight(checkbox.closest('tr'), checkbox.checked);
+        });
+        calculateTotal();
+    });
 
-            <td>${{ entry.item.price }}</td>
-            <td>
-                <form action="{% url 'remove-from-rent' entry.item.id %}" method="post" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-danger">Remove</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    // Individual checkbox functionality
+    itemCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            toggleRowHighlight(this.closest('tr'), this.checked);
+            selectAll.checked = [...itemCheckboxes].every(cb => cb.checked);
+            calculateTotal();
+        });
+    });
 
+    // Day inputs change functionality
+    dayInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            const days = Math.max(1, parseInt(this.value) || 1);
+            this.value = days; // Ensure minimum 1 day
+            
+            const price = parseFloat(this.closest('tr').querySelector('.item-price').textContent);
+            const totalElement = this.closest('tr').querySelector('.item-total');
+            
+            totalElement.textContent = (price * days).toFixed(2);
+            calculateTotal();
+        });
+    });
 
-<p><strong>Total Price: ${{ rent_order.price }}</strong></p>
+    // Toggle row highlight based on selection
+    function toggleRowHighlight(row, isChecked) {
+        row.style.backgroundColor = isChecked ? '' : 'rgba(0,0,0,0.02)';
+        row.style.opacity = isChecked ? '1' : '0.8';
+    }
 
-{% else %}
-<p>You haven't added anything to your rent list yet.</p>
-{% endif %}
+    // Calculate total price
+    function calculateTotal() {
+        let grandTotal = 0;
+        let selectedCount = 0;
+        
+        itemCheckboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                const row = checkbox.closest('tr');
+                const price = parseFloat(row.querySelector('.item-price').textContent);
+                const days = parseInt(row.querySelector('.item-days').value);
+                grandTotal += price * days;
+                selectedCount++;
+            }
+        });
+        
+        // Update UI
+        document.getElementById('selectedCount').textContent = selectedCount;
+        document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
+    }
 
-
+    // Initial calculation and setup
+    itemCheckboxes.forEach(checkbox => {
+        toggleRowHighlight(checkbox.closest('tr'), checkbox.checked);
+    });
+    calculateTotal();
+});
+</script>
 {% endblock %}
