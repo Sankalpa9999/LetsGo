@@ -226,3 +226,130 @@ document.querySelector('.add-to-cart-btn').addEventListener('click', function(e)
         image: "{{ p.image.url }}"
     });
 });
+
+
+// document.addEventListener("DOMContentLoaded", function() {
+//     const addToCartBtns = document.querySelectorAll(".add-to-cart-btn");
+
+//     addToCartBtns.forEach(function(btn) {
+//         btn.addEventListener("click", function(e) {
+//             e.preventDefault();
+
+//             const productId = this.getAttribute("data-product-id");
+
+//             fetch(`/add-to-rentlist/${productId}/`, {
+//                 method: "POST",
+//                 headers: {
+//                     "X-CSRFToken": getCookie("csrftoken"),
+//                 },
+//             })
+//             .then(response => {
+//                 if (response.redirected) {
+//                     window.location.href = response.url;
+//                 } else {
+//                     alert("Vehicle added to rent list!");
+//                 }
+//             })
+//             .catch(error => {
+//                 console.error("Error adding to rent list:", error);
+//             });
+//         });
+//     });
+
+//     // CSRF token helper
+//     function getCookie(name) {
+//         let cookieValue = null;
+//         if (document.cookie && document.cookie !== "") {
+//             const cookies = document.cookie.split(";");
+//             for (let i = 0; i < cookies.length; i++) {
+//                 const cookie = cookies[i].trim();
+//                 // Does this cookie string begin with the name we want?
+//                 if (cookie.substring(0, name.length + 1) === name + "=") {
+//                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+//                     break;
+//                 }
+//             }
+//         }
+//         return cookieValue;
+//     }
+// });
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".rent-form").forEach((form) => {
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+  
+        const csrfToken = form.querySelector("[name=csrfmiddlewaretoken]").value;
+        const url = form.action;
+  
+        fetch(url, {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": csrfToken,
+            "X-Requested-With": "XMLHttpRequest",
+          },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            showToast(data.message, data.status);
+          })
+          .catch(() => {
+            showToast("Something went wrong!", "error");
+          });
+      });
+    });
+  
+    function showToast(message, status) {
+      const toast = document.createElement("div");
+      toast.innerText = message;
+  
+      toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${
+          status === "success" ? "#28a745" : status === "info" ? "#007bff" : "#dc3545"
+        };
+        color: white;
+        padding: 12px 20px;
+        border-radius: 6px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+      `;
+  
+      document.body.appendChild(toast);
+      setTimeout(() => (toast.style.opacity = "1"), 100);
+      setTimeout(() => (toast.style.opacity = "0"), 3500);
+      setTimeout(() => toast.remove(), 4000);
+    }
+  });
+
+
+  function showToast(message, status) {
+    const toast = document.createElement("div");
+    toast.innerText = message;
+
+    toast.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: ${
+        status === "success" ? "#28a745" : status === "info" ? "#007bff" : "#dc3545"
+      };
+      color: white;
+      padding: 12px 20px;
+      border-radius: 6px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    `;
+
+    document.body.appendChild(toast);
+    setTimeout(() => (toast.style.opacity = "1"), 100);
+    setTimeout(() => (toast.style.opacity = "0"), 3500);
+    setTimeout(() => toast.remove(), 4000);
+  }

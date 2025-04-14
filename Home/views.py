@@ -332,55 +332,84 @@ def search_view(request):
 #     }
 #     return render(request, 'Land/rentlist.html', context)
 
+def add_to_rent(request, pid):
+    if not request.user.is_authenticated:
+        if request.headers.get("x-requested-with") == "XMLHttpRequest":
+            return JsonResponse({"message": "You need to login to rent a product.", "status": "error"})
+        messages.warning(request, "You need to login to rent a product.")
+        return redirect('login')
+
+    product = get_object_or_404(Product, pid=pid)
+    rent_order, created = RentOrder.objects.get_or_create(user=request.user, paid_status=False)
+
+    existing_item = RentOrderItems.objects.filter(order=rent_order, item=product.title).first()
+    if existing_item:
+        return JsonResponse({"message": f"{product.title} is already in your rent list!", "status": "info"})
+
+    RentOrderItems.objects.create(
+        order=rent_order,
+        invoice_no=f"INV{rent_order.id}{product.id}",
+        Product_status=product.product_status,
+        item=product.title,
+        image=product.image,
+        qty=1,
+        price=product.price,
+        total=product.price,
+    )
+    
+    return JsonResponse({"message": f"{product.title} added to your rent list!", "status": "success"})
 
 
-def add_to_rentlist(request, pid):
-    if request.method == 'POST':
-        product = get_object_or_404(Product, pid=pid)
-        rent_order, created = RentOrder.objects.get_or_create(
-            user=request.user,
-            paid_status=False,
-            defaults={'price': product.price}
-        )
+def rent_list_view(request):
+    if not request.user.is_authenticated:
+        messages.warning(request, "Please log in to view your rent list.")
+        return redirect('login')
+
+    try:
+        rent_order = RentOrder.objects.get(user=request.user, paid_status=False)
+        items = RentOrderItems.objects.filter(order=rent_order)
+
+        # Map each item to the corresponding product pid
+        item_list = []
+        for item in items:
+            product = Product.objects.filter(title=item.item).first()
+            item_list.append({
+                'item': item,
+                'pid': product.pid if product else None,
+                'vendor': product.vendor if product else None,
+            })
+
+    except RentOrder.DoesNotExist:
+        rent_order = None
+        item_list = []
+
+    context = {
+        'rent_order': rent_order,
+        'items': item_list,
+    }
+    return render(request, 'Land/rentlist.html', context)
+
+
+
+def remove_from_rent_list(request, item_id):
+    if not request.user.is_authenticated:
+        messages.warning(request, "You need to log in to perform this action.")
+        return redirect('login')
+
+    item = get_object_or_404(RentOrderItems, id=item_id)
+
+    if item.order.user == request.user:
+        item.delete()
+        # Remove item from session as well
+        rent_data = request.session.get('rent_data_obj', [])
+        rent_data = [entry for entry in rent_data if entry['title'] != item.item]
+        request.session['rent_data_obj'] = rent_data  # Save updated session
         
-        RentOrderItems.objects.create(
-            order=rent_order,
-            item=product.title,
-            Product_status='Processing',
-            image=product.image,
-            qty=1,
-            price=product.price,
-            total=product.price,
-            invoice_no=f"INV-{rent_order.id}-{RentOrderItems.objects.count() + 1}"
-        )
-        
-        return redirect('rentlist')
-    return redirect('product-detail', pid=pid)
-def rentlist_view(request):
-    if request.user.is_authenticated:
-        rent_order = RentOrder.objects.filter(
-            user=request.user, 
-            paid_status=False
-        ).prefetch_related(
-            'rentorderitems_set'
-        ).first()
-        
-        rent_items = []
-        if rent_order:
-            rent_items = RentOrderItems.objects.filter(
-                order=rent_order
-            ).select_related('order')
-            
-            # Add product to each rent item if available
-            for item in rent_items:
-                try:
-                    item.product = Product.objects.get(title=item.item)
-                except Product.DoesNotExist:
-                    item.product = None
-        
-        context = {
-            'rent_order': rent_order,
-            'rent_items': rent_items,
-        }
-        return render(request, 'Land/rentlist.html', context)
-    return redirect('login')
+        messages.success(request, "Item removed from your rent list.")
+    else:
+        messages.error(request, "Unauthorized action.")
+
+    return redirect('rentlist')
+
+
+

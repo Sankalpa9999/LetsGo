@@ -18,9 +18,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
 
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
-      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" 
-      crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" />
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -47,6 +47,8 @@
 
 <body>
 
+
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
     <div class="toast-container position-fixed bottom-0 end-0 p-3"></div>
@@ -70,79 +72,75 @@
                 <a class="text-dark pl-2" href="">
                     <i class="fab fa-youtube"></i>
                 </a>
-                 
+
             </div>
 
             <div class="col-lg-6 text-center text-lg-right">
                 <div class="d-inline-flex align-items-center">
                     {% if user.is_authenticated %}
-                <a class="text-dark" href="mailto:{{ user.email }}"><i class="fa fa-envelope"></i> {{user.email}}</a>
-                <span class="text-muted px-2">|</span>
-                {% else %}
-                <span><i class="fa fa-envelope"></i> Guest</span>
-                <span class="text-muted px-2">|</span>
-                {% endif %}
-                 <a class="text-dark" href="">FAQs</a>
-                <span class="text-muted px-2">|</span>
-                <a class="text-dark" href="">Help</a>
-                <!-- <span class="text-muted px-2">|</span>
-                <a class="text-dark" href="">Support</a> -->  
-                        
-                    </div>
+                    <a class="text-dark" href="mailto:{{ user.email }}"><i class="fa fa-envelope"></i>
+                        {{user.email}}</a>
+                    <span class="text-muted px-2">|</span>
+                    {% else %}
+                    <span><i class="fa fa-envelope"></i> Guest</span>
+                    <span class="text-muted px-2">|</span>
+                    {% endif %}
+                    <a class="text-dark" href="">FAQs</a>
+                    <span class="text-muted px-2">|</span>
+                    <a class="text-dark" href="">Help</a>
+                    <!-- <span class="text-muted px-2">|</span>
+                <a class="text-dark" href="">Support</a> -->
+
                 </div>
             </div>
         </div>
-        <div class="row align-items-center py-3 px-xl-5">
-            <div class="col-lg-3 d-none d-lg-block">
-                <a href="{% url 'index' %}" class="text-decoration-none">
-                    <h1 class="m-0 display-5 font-weight-semi-bold"><span
-                            class="text-primary font-weight-bold border px-2 mr-1">Lets</span>Go</h1>
-                </a>
-            </div>
-            <div class="col-lg-6 col-6 text-left">
-                <form method="GET" action="{% url 'search' %}" class="d-flex position-relative">
-                    <input 
-                        type="text" 
-                        class="form-control rounded-pill shadow-sm ps-4 border-0" 
-                        placeholder="Search for products..." 
-                        name="q"
-                        style="
+    </div>
+    <div class="row align-items-center py-3 px-xl-5">
+        <div class="col-lg-3 d-none d-lg-block">
+            <a href="{% url 'index' %}" class="text-decoration-none">
+                <h1 class="m-0 display-5 font-weight-semi-bold"><span
+                        class="text-primary font-weight-bold border px-2 mr-1">Lets</span>Go</h1>
+            </a>
+        </div>
+        <div class="col-lg-6 col-6 text-left">
+            <form method="GET" action="{% url 'search' %}" class="d-flex position-relative">
+                <input type="text" class="form-control rounded-pill shadow-sm ps-4 border-0"
+                    placeholder="Search for products..." name="q" style="
                             font-size: 16px; 
                             height: 50px;
                             padding-right: 50px;
                             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
                             transition: all 0.3s ease;
-                        "
-                        onfocus="this.style.boxShadow='0 4px 12px rgba(59, 59, 59, 0.2)'"
-                        onblur="this.style.boxShadow='0 4px 12px rgba(0, 0, 0, 0.1)'"
-                    />
-                    <button type="submit" class="btn btn-primary rounded-circle position-absolute end-0 me-2" 
-                            style="width: 40px; height: 40px; top: 50%; transform: translateY(-50%);">
-                        <i class="fa fa-search"></i>
-                    </button>
-                </form>
-            </div>
-
-            
-
-
-            <div class="col-lg-3 col-6 text-right">
-                <a href="#" class="btn border position-relative me-2">  <!-- Added me-2 (margin-end: 0.5rem) -->
-                    <i class="fas fa-heart text-primary"></i>
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        0
-                        <span class="visually-hidden">items in heart</span>
-                    </span>
-                </a>
-                <a href="{% url 'rentlist' %}" class="btn border position-relative">
-                    <i class="fas fa-list text-primary"></i>
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count">
-                        {{ request.session.cart_data_obj|length }}
-                        <span class="visually-hidden">items in rentlist</span>
-                    </span>
-                </a>
-            </div>
+                        " onfocus="this.style.boxShadow='0 4px 12px rgba(59, 59, 59, 0.2)'"
+                    onblur="this.style.boxShadow='0 4px 12px rgba(0, 0, 0, 0.1)'" />
+                <button type="submit" class="btn btn-primary rounded-circle position-absolute end-0 me-2"
+                    style="width: 40px; height: 40px; top: 50%; transform: translateY(-50%);">
+                    <i class="fa fa-search"></i>
+                </button>
+            </form>
         </div>
+
+
+
+
+        <div class="col-lg-3 col-6 text-right">
+            <a href="#" class="btn border position-relative me-2"> <!-- Added me-2 (margin-end: 0.5rem) -->
+                <i class="fas fa-heart text-primary"></i>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    0
+                    <span class="visually-hidden">items in heart</span>
+                </span>
+            </a>
+            <a href="{% url 'rentlist' %}" class="btn border position-relative">
+                <i class="fas fa-list text-primary"></i>
+                <span
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger rent-count">
+                    {{ request.session.rent_data_obj|length }}
+                    <span class="visually-hidden">items in rent list</span>
+                </span>
+            </a>
+        </div>
+    </div>
     </div>
     <!-- Topbar End -->
 
@@ -211,17 +209,19 @@
             </div>
         </div>
     </div>
-</div>
+    </div>
 
 
-                    <!-- Footer Start -->
+    <!-- Footer Start -->
     <div class="container-fluid bg-secondary text-dark mt-5 pt-5">
         <div class="row px-xl-5 pt-5">
             <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
                 <a href="" class="text-decoration-none">
-                    <h1 class="mb-4 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border border-white px-3 mr-1">Lets</span>Go</h1>
+                    <h1 class="mb-4 display-5 font-weight-semi-bold"><span
+                            class="text-primary font-weight-bold border border-white px-3 mr-1">Lets</span>Go</h1>
                 </a>
-                <p>Dolore erat dolor sit lorem vero amet. Sed sit lorem magna, ipsum no sit erat lorem et magna ipsum dolore amet erat.</p>
+                <p>Dolore erat dolor sit lorem vero amet. Sed sit lorem magna, ipsum no sit erat lorem et magna ipsum
+                    dolore amet erat.</p>
                 <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>Pokhara, Nepal</p>
                 <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>letsgo@example.com</p>
                 <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+977 061 00000</p>
@@ -232,36 +232,48 @@
                         <h5 class="font-weight-bold text-dark mb-4">Quick Links</h5>
                         <div class="d-flex flex-column justify-content-start">
                             <a class="text-dark mb-2" href="index.html"><i class="fa fa-angle-right mr-2"></i>Home</a>
-                            <a class="text-dark mb-2" href="shop.html"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
-                            <a class="text-dark mb-2" href="detail.html"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
-                            <a class="text-dark mb-2" href="cart.html"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
-                            <a class="text-dark mb-2" href="checkout.html"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
-                            <a class="text-dark" href="contact.html"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
+                            <a class="text-dark mb-2" href="shop.html"><i class="fa fa-angle-right mr-2"></i>Our
+                                Shop</a>
+                            <a class="text-dark mb-2" href="detail.html"><i class="fa fa-angle-right mr-2"></i>Shop
+                                Detail</a>
+                            <a class="text-dark mb-2" href="cart.html"><i class="fa fa-angle-right mr-2"></i>Shopping
+                                Cart</a>
+                            <a class="text-dark mb-2" href="checkout.html"><i
+                                    class="fa fa-angle-right mr-2"></i>Checkout</a>
+                            <a class="text-dark" href="contact.html"><i class="fa fa-angle-right mr-2"></i>Contact
+                                Us</a>
                         </div>
                     </div>
                     <div class="col-md-4 mb-5">
                         <h5 class="font-weight-bold text-dark mb-4">Quick Links</h5>
                         <div class="d-flex flex-column justify-content-start">
                             <a class="text-dark mb-2" href="index.html"><i class="fa fa-angle-right mr-2"></i>Home</a>
-                            <a class="text-dark mb-2" href="shop.html"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
-                            <a class="text-dark mb-2" href="detail.html"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
-                            <a class="text-dark mb-2" href="cart.html"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
-                            <a class="text-dark mb-2" href="checkout.html"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
-                            <a class="text-dark" href="contact.html"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
+                            <a class="text-dark mb-2" href="shop.html"><i class="fa fa-angle-right mr-2"></i>Our
+                                Shop</a>
+                            <a class="text-dark mb-2" href="detail.html"><i class="fa fa-angle-right mr-2"></i>Shop
+                                Detail</a>
+                            <a class="text-dark mb-2" href="cart.html"><i class="fa fa-angle-right mr-2"></i>Shopping
+                                Cart</a>
+                            <a class="text-dark mb-2" href="checkout.html"><i
+                                    class="fa fa-angle-right mr-2"></i>Checkout</a>
+                            <a class="text-dark" href="contact.html"><i class="fa fa-angle-right mr-2"></i>Contact
+                                Us</a>
                         </div>
                     </div>
                     <div class="col-md-4 mb-5">
                         <h5 class="font-weight-bold text-dark mb-4">Newsletter</h5>
                         <form action="">
                             <div class="form-group">
-                                <input type="text" class="form-control border-0 py-4" placeholder="Your Name" required="required" />
+                                <input type="text" class="form-control border-0 py-4" placeholder="Your Name"
+                                    required="required" />
                             </div>
                             <div class="form-group">
                                 <input type="email" class="form-control border-0 py-4" placeholder="Your Email"
                                     required="required" />
                             </div>
                             <div>
-                                <button class="btn btn-primary btn-block border-0 py-3" type="submit">Subscribe Now</button>
+                                <button class="btn btn-primary btn-block border-0 py-3" type="submit">Subscribe
+                                    Now</button>
                             </div>
                         </form>
                     </div>
@@ -285,22 +297,22 @@
     <!-- Footer End -->
 
 
-                <!-- JavaScript Libraries -->
-                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-                <script src="{% static 'lib/easing/easing.min.js' %}"></script>
-                <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
 
-                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 
-                <!-- Contact Javascript File -->
-                <script src="{% static 'mail/jqBootstrapValidation.min.js' %}"></script>
-                <script src="{% static 'mail/contact.js' %}"></script>
+    <!-- Contact Javascript File -->
+    <script src="{% static 'mail/jqBootstrapValidation.min.js' %}"></script>
+    <script src="{% static 'mail/contact.js' %}"></script>
 
-                <!-- Template Javascript -->
-                <script src="{% static 'js/custom.js' %}"></script>
-                <script src="{% static 'js/main.js' %}"></script>
+    <!-- Template Javascript -->
+    <script src="{% static 'js/custom.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
 </body>
 
 </html>
