@@ -5,7 +5,7 @@ def default(request):
     departments = Department.objects.all()
     vendors = Vendor.objects.all()
     Products = Product.objects.all()
-    Wishlist = Wishlist.objects.all()
+
     
     
     user_address = None
@@ -18,7 +18,7 @@ def default(request):
         'vendors':vendors,
         'user_address': user_address,  # Pass as user_address
         'Products':Products,
-        'Wishlist':Wishlist,
+
         }
     
     

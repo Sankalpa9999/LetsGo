@@ -1,20 +1,141 @@
 {% extends 'partial/base.html' %}
+{% load static %}
+
 {% block content %}
-<h2 class="my-4">My Wishlist</h2>
-<div class="row">
-    {% for item in wishlist_items %}
-    <div class="col-md-4 mb-4">
-        <div class="card">
-            <img src="{{ item.product.image.url }}" class="card-img-top" alt="{{ item.product.title }}">
-            <div class="card-body">
-                <h5 class="card-title">{{ item.product.title }}</h5>
-                <p class="card-text">{{ item.product.description|truncatewords:20 }}</p>
-                <a href="{% url 'product_detail' item.product.id %}" class="btn btn-primary">View Product</a>
-            </div>
-        </div>
+<div class="container py-5">
+  <h2 class="mb-4">My Wishlist</h2>
+
+  {% if w %}
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">Image</th>
+            <th scope="col">Product</th>
+            <th scope="col">Price</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in w %}
+            <tr id="wishlist-row-{{ item.product.id }}">
+              <td style="width: 120px;">
+                {% if item.product.image %}
+                  <img src="{{ item.product.image.url }}" class="img-thumbnail" alt="{{ item.product.title }}" style="max-height: 80px;">
+                {% else %}
+                  <img src="{% static 'images/default-product.jpg' %}" class="img-thumbnail" alt="No image" style="max-height: 80px;">
+                {% endif %}
+              </td>
+              <td>
+                <strong>{{ item.product.title }}</strong><br>
+                <a href="{% url 'product-detail' item.product.pid %}" class="btn btn-sm btn-link px-0">View</a>
+              </td>
+              <td>${{ item.product.price }}</td>
+              <td>
+                <div class="d-flex gap-2">
+                  <form method="post" action="{% url 'add-to-rent' item.product.pid %}" class="rent-form">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-primary">
+                      <i class="fa fa-list"></i> Add to Rentlist
+                    </button>
+                  </form>
+                  <button class="btn btn-sm btn-outline-danger remove-from-wishlist" 
+                          data-id="{{ item.product.id }}"
+                          data-csrf="{{ csrf_token }}">
+                    <i class="fas fa-trash-alt me-1"></i> Remove
+                  </button>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-    {% empty %}
-    <p>You have no items in your wishlist.</p>
-    {% endfor %}
+  {% else %}
+    <div class="alert alert-info mt-4" role="alert">
+      Your wishlist is empty. Start exploring products!
+    </div>
+  {% endif %}
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+  // Remove from wishlist
+  $(document).on("click", ".remove-from-wishlist", function() {
+    const product_id = $(this).data("id");
+    const csrf_token = $(this).data("csrf");
+    const $button = $(this);
+    const $row = $("#wishlist-row-" + product_id);
+
+    // Show loading state
+    $button.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Removing...');
+    $button.prop('disabled', true);
+
+    $.ajax({
+      url: "{% url 'remove-from-wishlist' %}",
+      type: "POST",
+      data: {
+        id: product_id,
+        csrfmiddlewaretoken: csrf_token
+      },
+      dataType: "json",
+      success: function(response) {
+        if (response.bool === true) {
+          // Remove row with animation
+          $row.fadeOut(300, function() {
+            $(this).remove();
+            
+            // Check if wishlist is empty
+            if ($("tbody tr").length === 0) {
+              $(".table-responsive").html(`
+                <div class="alert alert-info mt-4" role="alert">
+                  Your wishlist is empty. Start exploring products!
+                </div>
+              `);
+            }
+          });
+          
+          showToast(response.message, "success");
+        } else {
+          showToast(response.message, "error");
+          // Reset button
+          $button.html('<i class="fas fa-trash-alt me-1"></i> Remove');
+          $button.prop('disabled', false);
+        }
+      },
+      error: function(xhr, status, error) {
+        showToast("Error: " + error, "error");
+        // Reset button
+        $button.html('<i class="fas fa-trash-alt me-1"></i> Remove');
+        $button.prop('disabled', false);
+      }
+    });
+  });
+
+  // Toast notification function
+  function showToast(message, type = "success") {
+    const toast = $(`
+      <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div class="toast align-items-center text-white bg-${type === 'success' ? 'success' : 'danger'} border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="d-flex">
+            <div class="toast-body">
+              ${message}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+        </div>
+      </div>
+    `);
+    
+    $("body").append(toast);
+    
+    // Auto-hide after 3 seconds
+    setTimeout(() => {
+      toast.remove();
+    }, 3000);
+  }
+});
+</script>
 {% endblock %}

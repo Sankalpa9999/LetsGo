@@ -312,8 +312,12 @@ def remove_from_rent_list(request, item_id):
 @login_required
 def wishlist_view(request):
     wishlist_items = Wishlist.objects.filter(user=request.user)
+    request.session['wishlist_data_count'] = wishlist_items.count() 
+
+        
     context = {
         'w': wishlist_items,
+     
     }
     return render(request, 'Land/wishlist.html', context)
 
@@ -331,3 +335,28 @@ def add_to_wishlist(request):
     else:
         Wishlist.objects.create(product=product, user=request.user)
         return JsonResponse({"bool": True, "message": "Added to wishlist"})
+
+@login_required
+@require_POST
+def remove_from_wishlist(request):
+    product_id = request.POST.get('id')
+    
+    try:
+        product = Product.objects.get(id=product_id)
+        wishlist_item = Wishlist.objects.get(product=product, user=request.user)
+        wishlist_item.delete()
+
+        return JsonResponse({
+            "bool": True, 
+            "message": "Product removed from your wishlist"
+        })
+    except Wishlist.DoesNotExist:
+        return JsonResponse({
+            "bool": False, 
+            "message": "Item not found in your wishlist"
+        }, status=404)
+    except Product.DoesNotExist:
+        return JsonResponse({
+            "bool": False, 
+            "message": "Product not found"
+        }, status=404)

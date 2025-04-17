@@ -217,15 +217,15 @@ function changeImage(element) {
 }
 
 // Debug function to show what's being added to rentlist
-document.querySelector('.add-to-cart-btn').addEventListener('click', function(e) {
-    const productId = this.getAttribute('data-product-id');
-    console.log("Adding to rentlist:", {
-        id: productId,
-        title: "{{ p.title }}",
-        vendor: "{{ p.vendor.title }}",
-        image: "{{ p.image.url }}"
-    });
-});
+// document.querySelector('.add-to-cart-btn').addEventListener('click', function(e) {
+//     const productId = this.getAttribute('data-product-id');
+//     console.log("Adding to rentlist:", {
+//         id: productId,
+//         title: "{{ p.title }}",
+//         vendor: "{{ p.vendor.title }}",
+//         image: "{{ p.image.url }}"
+//     });
+// });
 
 
 
@@ -318,6 +318,13 @@ $(document).on("click", ".add-to-wishlist", function () {
   let product_id = $(this).attr("data-product-item");
   let this_val = $(this);
 
+  console.log("Product ID:", product_id);
+  if (!product_id) {
+    showToast("Product ID is missing!", "error");
+    return;
+  }
+
+
   $.ajax({
     url: "/add-to-wishlist/",
     data: {
@@ -341,3 +348,5 @@ $(document).on("click", ".add-to-wishlist", function () {
     },
   });
 });
+
+
