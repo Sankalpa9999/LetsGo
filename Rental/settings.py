@@ -46,6 +46,10 @@ INSTALLED_APPS = [
     'taggit',
     'ckeditor', 
     
+    
+    'crispy_forms',
+    'crispy_bootstrap4',
+    
     'Home',
     'userauths',
 ]
@@ -179,3 +183,7 @@ CKEDITOR_CONFIGS = {
 }
 
 handler404 = 'Home.views.custom_404'
+
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+CRISPY_TEMPLATE_PACK = "bootstrap4"

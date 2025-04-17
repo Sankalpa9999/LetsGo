@@ -1,0 +1,16 @@
+{% extends 'partial/base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+
+<div class="container mt-5 text-center">
+    <img src="{{ profile.image.url }}" class="rounded-circle" width="150" height="150" alt="Profile Image">
+    <h2>{{ profile.full_name }}</h2>
+    <p><strong>Email:</strong> {{ request.user.email }}</p>
+    <p><strong>Phone:</strong> {{ profile.phone }}</p>
+    <p><strong>Bio:</strong> {{ profile.bio }}</p>
+    <a href="{% url 'user:edit_profile' %}" class="btn btn-primary">Edit Profile</a>
+</div>
+{% endblock %}
