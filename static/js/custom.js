@@ -228,51 +228,6 @@ document.querySelector('.add-to-cart-btn').addEventListener('click', function(e)
 });
 
 
-// document.addEventListener("DOMContentLoaded", function() {
-//     const addToCartBtns = document.querySelectorAll(".add-to-cart-btn");
-
-//     addToCartBtns.forEach(function(btn) {
-//         btn.addEventListener("click", function(e) {
-//             e.preventDefault();
-
-//             const productId = this.getAttribute("data-product-id");
-
-//             fetch(`/add-to-rentlist/${productId}/`, {
-//                 method: "POST",
-//                 headers: {
-//                     "X-CSRFToken": getCookie("csrftoken"),
-//                 },
-//             })
-//             .then(response => {
-//                 if (response.redirected) {
-//                     window.location.href = response.url;
-//                 } else {
-//                     alert("Vehicle added to rent list!");
-//                 }
-//             })
-//             .catch(error => {
-//                 console.error("Error adding to rent list:", error);
-//             });
-//         });
-//     });
-
-//     // CSRF token helper
-//     function getCookie(name) {
-//         let cookieValue = null;
-//         if (document.cookie && document.cookie !== "") {
-//             const cookies = document.cookie.split(";");
-//             for (let i = 0; i < cookies.length; i++) {
-//                 const cookie = cookies[i].trim();
-//                 // Does this cookie string begin with the name we want?
-//                 if (cookie.substring(0, name.length + 1) === name + "=") {
-//                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-//                     break;
-//                 }
-//             }
-//         }
-//         return cookieValue;
-//     }
-// });
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -327,32 +282,62 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+// ✅ Unified Toast Function (Place this only ONCE)
+function showToast(message, status) {
+  const toast = document.createElement("div");
+  toast.innerText = message;
 
-  function showToast(message, status) {
-    const toast = document.createElement("div");
-    toast.innerText = message;
+  toast.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: ${
+      status === "success"
+        ? "#28a745"   // green
+        : status === "info"
+        ? "#0dcaf0"   // sky blue
+        : "#dc3545"   // red
+    };
+    color: white;
+    padding: 12px 20px;
+    border-radius: 6px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  `;
 
-    toast.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: ${
-        status === "success" ? "#28a745" : status === "info" ? "#007bff" : "#dc3545"
-      };
-      color: white;
-      padding: 12px 20px;
-      border-radius: 6px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-      z-index: 9999;
-      opacity: 0;
-      transition: opacity 0.4s ease;
-    `;
+  document.body.appendChild(toast);
+  setTimeout(() => (toast.style.opacity = "1"), 100);
+  setTimeout(() => (toast.style.opacity = "0"), 3500);
+  setTimeout(() => toast.remove(), 4000);
+}
 
-    document.body.appendChild(toast);
-    setTimeout(() => (toast.style.opacity = "1"), 100);
-    setTimeout(() => (toast.style.opacity = "0"), 3500);
-    setTimeout(() => toast.remove(), 4000);
-  }
+// ✅ Wishlist Button Handler
+$(document).on("click", ".add-to-wishlist", function () {
+  let product_id = $(this).attr("data-product-item");
+  let this_val = $(this);
 
-
-  
+  $.ajax({
+    url: "/add-to-wishlist/",
+    data: {
+      id: product_id,
+    },
+    dataType: "json",
+    beforeSend: function () {
+      console.log("Adding to wishlist...");
+    },
+    success: function (response) {
+      if (response.bool === true) {
+        showToast(response.message, response.status); // ← use dynamic status
+        this_val.addClass("in-wishlist");
+        this_val.html("💖"); // Optional: Change button content
+      } else {
+        showToast("Something went wrong.", "error");
+      }
+    },
+    error: function () {
+      showToast("Failed to add to wishlist. Please try again.", "error");
+    },
+  });
+});

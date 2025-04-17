@@ -124,11 +124,11 @@
 
 
         <div class="col-lg-3 col-6 text-right">
-            <a href="#" class="btn border position-relative me-2"> <!-- Added me-2 (margin-end: 0.5rem) -->
+            <a href="{% url 'wishlist' %}" class="btn border position-relative me-2"> <!-- Added me-2 (margin-end: 0.5rem) -->
                 <i class="fas fa-heart text-primary"></i>
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                     0
-                    <span class="visually-hidden">items in heart</span>
+                    <span class="visually-hidden">wishlist</span>
                 </span>
             </a>
             <a href="{% url 'rentlist' %}" class="btn border position-relative">

@@ -151,7 +151,7 @@ class ProductImages(models.Model):
     
     class Meta:
         verbose_name_plural = 'Product Images'
-    
+   
 class RentOrder(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=99999, decimal_places=2,default=100)
@@ -162,7 +162,7 @@ class RentOrder(models.Model):
     class Meta:
         verbose_name_plural = 'Rent Order'
         
-
+        
 class RentOrderItems(models.Model):
     order = models.ForeignKey(RentOrder, on_delete=models.CASCADE)
     invoice_no = models.CharField(max_length=200)
@@ -179,6 +179,7 @@ class RentOrderItems(models.Model):
         
     def order_image(self):
         return mark_safe('<img src="/media/%s" width="50" height="50" />'%(self.image))
+    
     
 class ProductReview(models.Model): 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
@@ -198,14 +199,14 @@ class ProductReview(models.Model):
     def get_rating(self):
         return self.rating
     
-class wishlist(models.Model):
+class Wishlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
     date = models.DateTimeField(auto_now_add=True)
     
     class Meta:
-        verbose_name_plural = 'wishlist'
-        
+        verbose_name_plural = 'Wishlist'
+         
     def __str__ (self):
         return self.product.title
     

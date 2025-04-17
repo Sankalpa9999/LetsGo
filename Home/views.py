@@ -3,7 +3,7 @@ from django.shortcuts import render,redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.db.models import Avg, Count
 from stripe import Review
-from Home.models import Product, Category, Department, Vendor, RentOrder, RentOrderItems, ProductImages, ProductReview, wishlist, Address, RentOrderItems
+from Home.models import Product, Category, Department, Vendor, RentOrder, RentOrderItems, ProductImages, ProductReview, Wishlist, Address, RentOrderItems
 from django.contrib.auth.decorators import login_required
 
 from Home.forms import ProductReviewForm
@@ -201,13 +201,10 @@ def search_view(request):
     }
     return render(request, 'Land/search.html', context)
 
-
-
-    
-    
     
 
 
+# views.py
 
 def add_to_rent(request, pid):
     if not request.user.is_authenticated:
@@ -240,6 +237,7 @@ def add_to_rent(request, pid):
     request.session['rent_data_obj'] = rent_data  # Save updated session
 
     return JsonResponse({"message": f"{product.title} added to your rent list!", "status": "success"})
+
 
 
 def rent_list_view(request):
@@ -304,3 +302,32 @@ def remove_from_rent_list(request, item_id):
 
 
 
+
+
+
+
+    
+    
+    
+@login_required
+def wishlist_view(request):
+    wishlist_items = Wishlist.objects.filter(user=request.user)
+    context = {
+        'w': wishlist_items,
+    }
+    return render(request, 'Land/wishlist.html', context)
+
+
+@login_required
+def add_to_wishlist(request):
+    product_id = request.GET.get('id')
+    product = get_object_or_404(Product, id=product_id)
+
+    # Check if product is already in wishlist
+    exists = Wishlist.objects.filter(product=product, user=request.user).exists()
+
+    if exists:
+        return JsonResponse({"bool": True, "message": "Already in wishlist"})
+    else:
+        Wishlist.objects.create(product=product, user=request.user)
+        return JsonResponse({"bool": True, "message": "Added to wishlist"})
