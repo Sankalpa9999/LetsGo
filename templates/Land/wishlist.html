@@ -18,7 +18,7 @@
         </thead>
         <tbody>
           {% for item in w %}
-            <tr id="wishlist-row-{{ item.product.id }}">
+            <tr id="wishlist-row-{{ item.product.pid }}">
               <td style="width: 120px;">
                 {% if item.product.image %}
                   <img src="{{ item.product.image.url }}" class="img-thumbnail" alt="{{ item.product.title }}" style="max-height: 80px;">
@@ -39,11 +39,15 @@
                       <i class="fa fa-list"></i> Add to Rentlist
                     </button>
                   </form>
-                  <button class="btn btn-sm btn-outline-danger remove-from-wishlist" 
-                          data-id="{{ item.product.id }}"
-                          data-csrf="{{ csrf_token }}">
-                    <i class="fas fa-trash-alt me-1"></i> Remove
-                  </button>
+                  <form method="post" action="{% url 'remove-from-wishlist' item.product.pid %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-danger">
+                      <i class="fas fa-trash-alt me-1"></i> Remove
+                    </button>
+                  </form>
+                  
+                  
+
                 </div>
               </td>
             </tr>
@@ -66,6 +70,7 @@ $(document).ready(function() {
   $(document).on("click", ".remove-from-wishlist", function() {
     const product_id = $(this).data("id");
     const csrf_token = $(this).data("csrf");
+    
     const $button = $(this);
     const $row = $("#wishlist-row-" + product_id);
 
@@ -104,6 +109,7 @@ $(document).ready(function() {
           $button.html('<i class="fas fa-trash-alt me-1"></i> Remove');
           $button.prop('disabled', false);
         }
+        
       },
       error: function(xhr, status, error) {
         showToast("Error: " + error, "error");

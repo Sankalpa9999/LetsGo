@@ -50,7 +50,8 @@ urlpatterns = [
 
 path('wishlist/', views.wishlist_view, name='wishlist'),
 path('add-to-wishlist/', views.add_to_wishlist, name='add-to-wishlist'),
-path('remove-from-wishlist/', views.remove_from_wishlist, name='remove-from-wishlist'),
+path('wishlist/remove/<str:pid>/', views.remove_from_wishlist, name='remove-from-wishlist'),
+
 
 
     # path('toggle-wishlist/', views.toggle_wishlist, name='toggle_wishlist'),

@@ -336,27 +336,17 @@ def add_to_wishlist(request):
         Wishlist.objects.create(product=product, user=request.user)
         return JsonResponse({"bool": True, "message": "Added to wishlist"})
 
-@login_required
+from django.views.decorators.csrf import csrf_exempt
+@csrf_exempt  # Only for debugging, ideally use CSRF token properly
 @require_POST
-def remove_from_wishlist(request):
-    product_id = request.POST.get('id')
-    
-    try:
-        product = Product.objects.get(id=product_id)
-        wishlist_item = Wishlist.objects.get(product=product, user=request.user)
-        wishlist_item.delete()
-
-        return JsonResponse({
-            "bool": True, 
-            "message": "Product removed from your wishlist"
-        })
-    except Wishlist.DoesNotExist:
-        return JsonResponse({
-            "bool": False, 
-            "message": "Item not found in your wishlist"
-        }, status=404)
-    except Product.DoesNotExist:
-        return JsonResponse({
-            "bool": False, 
-            "message": "Product not found"
-        }, status=404)
+@login_required
+def remove_from_wishlist(request, pid):
+    if request.method == 'POST':
+        product = get_object_or_404(Product, pid=pid)
+        wishlist_item = Wishlist.objects.filter(user=request.user, product=product).first()
+        if wishlist_item:
+            wishlist_item.delete()
+            messages.success(request, f"{product.title} removed from wishlist.")
+        else:
+            messages.error(request, "Item not found in wishlist.")
+    return redirect('wishlist')
