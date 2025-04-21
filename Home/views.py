@@ -181,8 +181,7 @@ def ajax_add_review(request, pid):
         'user_has_reviewed': ProductReview.objects.filter(product=product, user=user).exists()
     })
     
-def contact(request):
-    return render(request,'Land/contact.html')
+
 
 
 def search_view(request):

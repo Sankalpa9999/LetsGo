@@ -84,8 +84,12 @@ class Vendor(models.Model):
     date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     authentic_rating = models.CharField(max_length=100, null=True, blank=True, default='100')
     
+    
     class Meta:
-        verbose_name_plural = 'Vendors'
+        verbose_name = 'Owner'
+        verbose_name_plural = 'Owners'
+
+        
         
     def vendor_image(self):
         return mark_safe('<img src="%s" width="50" height="50" />'%(self.image.url))

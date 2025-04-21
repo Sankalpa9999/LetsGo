@@ -3,7 +3,7 @@ from userauths.forms import UserRegisterForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.conf import settings
-from userauths.models import User, Profile
+from userauths.models import User, Profile, ContactUs
 from .forms import ProfileUpdateForm
 from .models import Profile
 from django.contrib.auth.decorators import login_required
@@ -12,6 +12,8 @@ from django.contrib.auth import update_session_auth_hash
 from .forms import PasswordChangeCustomForm
 from .forms import UserUpdateForm
 from django.contrib.auth import update_session_auth_hash
+
+from django.contrib import messages
 
 # user = settings.AUTH_USER_MODEL
 
@@ -130,3 +132,37 @@ def change_password(request):
     else:
         form = PasswordChangeCustomForm(request.user)
     return render(request, 'userauths/change_password.html', {'form': form})
+
+
+
+
+def contactUs(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
+        phone = request.POST.get('phone')
+        
+        ContactUs.objects.create(
+            name=name,
+            email=email,
+            subject=subject,
+            message=message,
+            phone=phone
+        )
+        
+        messages.success(request, "Thank you for contacting us. We will get back to you soon.")
+        return redirect('userauths:contact')  # Changed from render to redirect
+    
+    # Pre-fill form for logged-in users
+    initial_data = {}
+    if request.user.is_authenticated:
+        profile = Profile.objects.filter(user=request.user).first()
+        initial_data = {
+            'name': request.user.username,
+            'email': request.user.email,
+            'phone': profile.phone if profile else ''
+        }
+    
+    return render(request, 'userauths/contact.html', {'initial_data': initial_data})

@@ -23,5 +23,9 @@ urlpatterns = [
     path('profile/', views.user_profile, name='profile'),
     path('edit-profile/', views.edit_profile, name='edit_profile'),
     path('change-password/', views.change_password, name='change_password'),
+    
+    
+    
+    path('contact/', views.contactUs, name='contact'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
