@@ -106,8 +106,9 @@ class Product(models.Model):
     # description = models.TextField(null=True, blank=True)
     description = RichTextUploadingField(null=True, blank=True)
     
-    price = models.DecimalField(max_digits=99999, decimal_places=2,default=100)
-    old_price = models.DecimalField(max_digits=99999, decimal_places=2,default=100)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    old_price = models.DecimalField(max_digits=10, decimal_places=2)
     
     # specifications = models.TextField(null=True, blank=True)
     specifications = RichTextUploadingField(null=True, blank=True)
@@ -154,7 +155,7 @@ class ProductImages(models.Model):
    
 class RentOrder(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    price = models.DecimalField(max_digits=99999, decimal_places=2,default=100)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     paid_status = models.BooleanField(default=False)
     order_date = models.DateTimeField(auto_now_add=True)
     product_status = models.CharField(choices= STATUS_CHOICE, max_length=100, default='Processing')
@@ -170,8 +171,8 @@ class RentOrderItems(models.Model):
     item = models.CharField(max_length=200)
     image = models.ImageField(upload_to="Rent-order", default='product.jpg')
     qty = models.IntegerField(default=0)
-    price = models.DecimalField(max_digits=99999, decimal_places=2,default=100)
-    total = models.DecimalField(max_digits=99999, decimal_places=2,default=100)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    total = models.DecimalField(max_digits=10, decimal_places=2,default=100)
     
     
     class Meta:
@@ -185,7 +186,7 @@ class ProductReview(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, related_name='reviews')
     
-    rating = models.CharField(choices=RATING, default='3', max_length=1)  # Use CharField instead of IntegerField
+    rating = models.PositiveSmallIntegerField(choices=RATING, default=3)  # Use CharField instead of IntegerField
     
     review = models.TextField(null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
@@ -198,6 +199,9 @@ class ProductReview(models.Model):
     
     def get_rating(self):
         return self.rating
+
+
+
     
 class Wishlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
