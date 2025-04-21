@@ -282,6 +282,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+
+
+
 // ✅ Unified Toast Function (Place this only ONCE)
 function showToast(message, status) {
   const toast = document.createElement("div");

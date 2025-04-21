@@ -60,3 +60,12 @@ class PasswordChangeCustomForm(PasswordChangeForm):
             'placeholder': 'Confirm your new password'
         })
     )
+    
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your username'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email'}),
+        }

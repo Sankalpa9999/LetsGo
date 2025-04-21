@@ -47,6 +47,16 @@
                             <!-- Hidden file input triggered by the edit button -->
                             <input type="file" name="image" id="id_image" accept="image/*" class="d-none">
                             
+                            <!-- Email and Username Fields -->
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}">
+                            </div>
+
                             {{ profile_form|crispy }}
                             
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
@@ -60,21 +70,10 @@
                     <hr class="my-4">
                     
                     <!-- Password Change Section -->
-                    <div class="mt-5">
-                        <h4 class="text-warning mb-4">
-                            <i class="fas fa-key me-2"></i>Password Settings
-                        </h4>
-                        
-                        <form method="POST">
-                            {% csrf_token %}
-                            {{ password_form|crispy }}
-                            
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                                <button type="submit" name="change_password" class="btn btn-warning px-4">
-                                    <i class="fas fa-lock me-2"></i>Change Password
-                                </button>
-                            </div>
-                        </form>
+                    <div class="text-end">
+                        <a href="{% url 'userauths:change_password' %}" class="btn btn-outline-warning btn-sm">
+                            <i class="fas fa-key me-1"></i> Change Password
+                        </a>
                     </div>
                 </div>
                 

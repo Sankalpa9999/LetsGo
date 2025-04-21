@@ -211,7 +211,7 @@ def add_to_rent(request, pid):
         if request.headers.get("x-requested-with") == "XMLHttpRequest":
             return JsonResponse({"message": "You need to login to rent a product.", "status": "error"})
         messages.warning(request, "You need to login to rent a product.")
-        return redirect('login')
+        return redirect('userauths/sign-in.html')
 
     product = get_object_or_404(Product, pid=pid)
     rent_order, created = RentOrder.objects.get_or_create(user=request.user, paid_status=False)
@@ -243,7 +243,7 @@ def add_to_rent(request, pid):
 def rent_list_view(request):
     if not request.user.is_authenticated:
         messages.warning(request, "Please log in to view your rent list.")
-        return redirect('login')
+        return redirect('userauths/sign-in.html')
 
     try:
         rent_order = RentOrder.objects.get(user=request.user, paid_status=False)
@@ -281,7 +281,7 @@ def rent_list_view(request):
 def remove_from_rent_list(request, item_id):
     if not request.user.is_authenticated:
         messages.warning(request, "You need to log in to perform this action.")
-        return redirect('login')
+        return redirect('userauths/sign-in.html')
 
     item = get_object_or_404(RentOrderItems, id=item_id)
 

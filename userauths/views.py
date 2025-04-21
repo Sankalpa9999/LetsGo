@@ -7,9 +7,10 @@ from userauths.models import User, Profile
 from .forms import ProfileUpdateForm
 from .models import Profile
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import PasswordChangeForm
+
 from django.contrib.auth import update_session_auth_hash
 from .forms import PasswordChangeCustomForm
+from .forms import UserUpdateForm
 from django.contrib.auth import update_session_auth_hash
 
 # user = settings.AUTH_USER_MODEL
@@ -81,30 +82,51 @@ def user_profile(request):
 
 
 
+@login_required
 def edit_profile(request):
     profile = Profile.objects.get(user=request.user)
     
     if request.method == 'POST':
-        # Handle profile update form
+        user_form = UserUpdateForm(request.POST, instance=request.user)
         profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
-        # Handle password change form
         password_form = PasswordChangeCustomForm(request.user, request.POST)
-        
-        if 'save_profile' in request.POST and profile_form.is_valid():
-            profile_form.save()
-            messages.success(request, "Profile updated successfully.")
+
+        if 'save_profile' in request.POST:
+            if user_form.is_valid() and profile_form.is_valid():
+                user_form.save()
+                profile_form.save()
+                messages.success(request, "Profile updated successfully.")
+            else:
+                messages.error(request, "Please correct the errors in the form.")
+
         elif 'change_password' in request.POST and password_form.is_valid():
             user = password_form.save()
-            update_session_auth_hash(request, user)  # Important to keep the user logged in after password change
+            update_session_auth_hash(request, user)
             messages.success(request, "Password changed successfully.")
-        else:
-            messages.error(request, "Please correct the errors below.")
 
     else:
+        user_form = UserUpdateForm(instance=request.user)
         profile_form = ProfileUpdateForm(instance=profile)
         password_form = PasswordChangeCustomForm(request.user)
 
     return render(request, 'userauths/edit_profile.html', {
+        'user_form': user_form,
         'profile_form': profile_form,
         'password_form': password_form,
     })
+    
+    
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeCustomForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('userauths:edit_profile')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeCustomForm(request.user)
+    return render(request, 'userauths/change_password.html', {'form': form})
