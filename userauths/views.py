@@ -104,7 +104,7 @@ def edit_profile(request):
         profile_form = ProfileUpdateForm(instance=profile)
         password_form = PasswordChangeCustomForm(request.user)
 
-    return render(request, 'userauths/edit_profile.html', {
+    return redirect(request, 'userauths/edit_profile.html', {
         'profile_form': profile_form,
         'password_form': password_form,
     })

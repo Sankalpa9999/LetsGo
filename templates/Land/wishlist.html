@@ -30,7 +30,7 @@
                 <strong>{{ item.product.title }}</strong><br>
                 <a href="{% url 'product-detail' item.product.pid %}" class="btn btn-sm btn-link px-0">View</a>
               </td>
-              <td>${{ item.product.price }}</td>
+              <td>रु.{{ item.product.price }}/day</td>
               <td>
                 <div class="d-flex gap-2">
                   <form method="post" action="{% url 'add-to-rent' item.product.pid %}" class="rent-form">

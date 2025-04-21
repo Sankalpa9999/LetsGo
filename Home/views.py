@@ -306,6 +306,7 @@ def remove_from_rent_list(request, item_id):
 
 
 
+
     
     
     
