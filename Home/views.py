@@ -106,48 +106,64 @@ def vendor_detail_view(request, vid):
 
 
 
+
+
 # def product_detail_view(request, pid):
-#     product = Product.objects.get(pid = pid)
-#     product = get_object_or_404(Product, pid=pid)
+#     product = get_object_or_404(Product, pid=pid)  # This handles the 404 error automatically
+    
 #     p_image = product.p_images.all()
-#     products = Product.objects.filter( product_status = "published", category = product.category).order_by('-id')
-    
+#     products = Product.objects.filter(product_status="published", category=product.category).order_by('-id')
+
 #     review_form = ProductReviewForm()
-    
 #     reviews = ProductReview.objects.filter(product=product).order_by('-date')
-#     average_rating = ProductReview.objects.filter(product=product).aggregate(rating = Avg('rating'))
-    
+#     average_rating = ProductReview.objects.filter(product=product).aggregate(rating=Avg('rating'))
+
 #     context = {
-#         'p':product,
-#         'products':products,
-#         'p_image':p_image,
+#         'p': product,
+#         'products': products,
+#         'p_image': p_image,
 #         'reviews': reviews,
 #         'average_rating': average_rating,
 #         'review_form': review_form,
-#         }
-#     return render(request,'Land/product-detail.html', context)
+#     }
+#     return render(request, 'Land/product-detail.html', context)
 
 
 
 def product_detail_view(request, pid):
-    product = get_object_or_404(Product, pid=pid)  # This handles the 404 error automatically
-    
-    p_image = product.p_images.all()
-    products = Product.objects.filter(product_status="published", category=product.category).order_by('-id')
+    product = get_object_or_404(Product, pid=pid)
 
+    # Fetch related images, documents, and terms
+    p_images = product.p_images.all()
+    documents = product.documents.all()
+    terms = product.terms.all()
+
+    # Fetch related products from same category
+    related_products = Product.objects.filter(
+        product_status="published",
+        category=product.category
+    ).exclude(id=product.id).order_by('-id')
+
+    # Review related data
     review_form = ProductReviewForm()
     reviews = ProductReview.objects.filter(product=product).order_by('-date')
-    average_rating = ProductReview.objects.filter(product=product).aggregate(rating=Avg('rating'))
+    average_rating = reviews.aggregate(rating=Avg('rating'))
 
     context = {
         'p': product,
-        'products': products,
-        'p_image': p_image,
+        'products': related_products,
+        'p_images': p_images,
+        'documents': documents,
+        'terms': terms,
         'reviews': reviews,
         'average_rating': average_rating,
         'review_form': review_form,
     }
     return render(request, 'Land/product-detail.html', context)
+
+
+
+
 
 
 def custom_404(request, exception):
