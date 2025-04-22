@@ -16,7 +16,8 @@ from userauths import views
 
 def index(request):
     # products = Product.objects.all().order_by('-id')
-    products = Product.objects.filter(featured = True).order_by('-id')
+    products = Product.objects.filter( product_status = "published").order_by('-id')
+    # products = Product.objects.filter(featured = True, product_status = "Published").order_by('-id')
     context = {
         'products':products
         }
@@ -27,7 +28,8 @@ def index(request):
 
 
 def product_list_view(request):
-    products = Product.objects.all().order_by('-id')
+    products = Product.objects.filter( product_status = "published").order_by('-id')
+
     # products = Product.objects.filter(product_status = "Published").order_by('-id')
     context = {
         'products':products
