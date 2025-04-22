@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     
     'Home',
     'userauths',
+    'useradmin',
 ]
 
 MIDDLEWARE = [

@@ -72,7 +72,7 @@ class Vendor(models.Model):
     title = models.CharField(max_length=100)
     image = models.ImageField(upload_to=user_directory_path, default='vendor.jpg')
     cover_image = models.ImageField(upload_to=user_directory_path, default='vendor.jpg')
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     # description = models.TextField(null=True, blank=True)
     
     description = RichTextUploadingField(null=True, blank=True)
@@ -88,19 +88,17 @@ class Vendor(models.Model):
     class Meta:
         verbose_name = 'Owner'
         verbose_name_plural = 'Owners'
-
-        
-        
+     
     def vendor_image(self):
         return mark_safe('<img src="%s" width="50" height="50" />'%(self.image.url))
     
-    def __str__ (self):
-        return self.title
+    def __str__(self):
+        return self.title 
     
 
 class Product(models.Model):
     pid = ShortUUIDField(unique=True, length=10, max_length=20,alphabet='abcdefgh12345')
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True, related_name='vendor')
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, related_name='department')
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name='category')

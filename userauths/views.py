@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from userauths.forms import UserRegisterForm
+from userauths.forms import UserRegisterForm,VendorRegistrationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.conf import settings
@@ -12,6 +12,7 @@ from django.contrib.auth import update_session_auth_hash
 from .forms import PasswordChangeCustomForm
 from .forms import UserUpdateForm
 from django.contrib.auth import update_session_auth_hash
+from Home.models import Vendor
 
 from django.contrib import messages
 
@@ -166,3 +167,25 @@ def contactUs(request):
         }
     
     return render(request, 'userauths/contact.html', {'initial_data': initial_data})
+
+
+@login_required
+def register_as_vendor(request):
+    if Vendor.objects.filter(user=request.user).exists():
+        return redirect('/useradmin/dashboard/')
+
+    if request.method == 'POST':
+        form = VendorRegistrationForm(request.POST, request.FILES)
+        if form.is_valid():
+            vendor = form.save(commit=False)
+            vendor.user = request.user
+            vendor.save()
+            messages.success(request, "Vendor registration successful!")
+
+            return redirect('/useradmin/dashboard/')  # redirect after success
+    else:
+        form = VendorRegistrationForm()
+    
+    return render(request, 'userauths/vendor_register.html', {'form': form})
+
+

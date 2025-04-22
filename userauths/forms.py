@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from userauths.models import User, Profile
+from Home.models import Vendor
 from django.contrib.auth.forms import PasswordChangeForm
 
 class UserRegisterForm(UserCreationForm):
@@ -69,3 +70,9 @@ class UserUpdateForm(forms.ModelForm):
             'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your username'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email'}),
         }
+        
+        
+class VendorRegistrationForm(forms.ModelForm):
+    class Meta:
+        model = Vendor
+        fields = ['title', 'image', 'cover_image', 'description', 'address', 'contact', 'chat_resp_time']

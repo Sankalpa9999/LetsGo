@@ -25,6 +25,10 @@ urlpatterns = [
     path('change-password/', views.change_password, name='change_password'),
     
     
+    path('register-vendor/', views.register_as_vendor, name='vendor_register'),
+
+    
+    
     
     path('contact/', views.contactUs, name='contact'),
 ]
