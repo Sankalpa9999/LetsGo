@@ -202,3 +202,7 @@ handler404 = 'Home.views.custom_404'
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 CRISPY_TEMPLATE_PACK = "bootstrap4"
+
+
+
+LOGIN_URL = '/user/sign-in/'

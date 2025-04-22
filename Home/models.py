@@ -23,11 +23,11 @@ STATUS = (
     ('published', 'Published'),
 )
 RATING = (
-    ('1', '★☆☆☆☆'),
-    ('2', '★★☆☆☆'),
-    ('3', '★★★☆☆'),
-    ('4', '★★★★☆'),
-    ('5', '★★★★★'),
+    (1, '★☆☆☆☆'),
+    (2, '★★☆☆☆'),
+    (3, '★★★☆☆'),
+    (4, '★★★★☆'),
+    (5, '★★★★★'),
 )
 
 def user_directory_path(instance, filename):
@@ -105,6 +105,9 @@ class Product(models.Model):
     title = models.CharField(max_length=100)
     image = models.ImageField(upload_to=user_directory_path, default='product.jpg')
     
+    
+
+    
     # description = models.TextField(null=True, blank=True)
     description = RichTextUploadingField(null=True, blank=True)
     
@@ -137,6 +140,10 @@ class Product(models.Model):
     def product_image(self):
         return mark_safe('<img src="%s" width="50" height="50" />'%(self.image.url))
     
+
+
+    
+    
     def __str__ (self):
         return self.title
     
@@ -148,12 +155,38 @@ class Product(models.Model):
 
     
 class ProductImages(models.Model):
-    product = models.ForeignKey(Product, related_name='p_images', on_delete=models.SET_NULL, null=True)
-    image = models.ImageField(upload_to="product-images", default='product.jpg')
-    date = models.DateTimeField(auto_now_add=True)
+    product = models.ForeignKey(Product, related_name='p_images', on_delete=models.SET_NULL, null=True, blank=True)
+    image = models.ImageField(upload_to="product-images", default='product.jpg', null = True,)
+    date = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     
     class Meta:
         verbose_name_plural = 'Product Images'
+        
+class DocumentImage(models.Model):
+    product = models.ForeignKey(Product, related_name='documents', on_delete=models.SET_NULL, null=True)
+    document = models.FileField(upload_to="product-images", null=True, blank=True)
+    doc_image = models.ImageField(upload_to="product-images", default='doc.jpg')
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = 'Product Documents'
+
+    def __str__(self):
+        return f"Document for {self.product.title}"
+    
+class TermsAndConditions(models.Model):
+    product = models.ForeignKey(Product, related_name='terms', on_delete=models.CASCADE)  # Add this line
+    term_image = models.ImageField(upload_to="product-images", default='terms.jpg')
+    description = RichTextUploadingField(null=True, blank=True)
+    date = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name_plural = 'Terms and Conditions'
+        
+    def __str__(self):
+        return f"Terms for {self.product.title}"
+
+
    
 class RentOrder(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -197,7 +230,7 @@ class ProductReview(models.Model):
         verbose_name_plural = 'Product Reviews'
                 
     def __str__(self):
-        return self.rating
+        return str(self.rating)
     
     def get_rating(self):
         return self.rating

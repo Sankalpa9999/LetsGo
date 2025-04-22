@@ -1,13 +1,23 @@
 from django.contrib import admin
-from Home.models import Product, Category, Department, Vendor, RentOrder, RentOrderItems, ProductImages, ProductReview, Wishlist, Address
+from Home.models import Product, Category, Department, Vendor, RentOrder, RentOrderItems, ProductImages, ProductReview, Wishlist, Address, DocumentImage, TermsAndConditions
 
 # Register your models here.
 
 class ProductImagesAdmin(admin.TabularInline):
     model = ProductImages
     
+class DocumentImageAdmin(admin.TabularInline):
+    model = DocumentImage
+    extra = 1
+
+class TermsAndConditionsAdmin(admin.TabularInline):
+    model = TermsAndConditions
+    extra = 1
+
+    
 class ProductAdmin(admin.ModelAdmin):
-    inlines = [ProductImagesAdmin]
+    inlines = [ProductImagesAdmin, DocumentImageAdmin, TermsAndConditionsAdmin]
+    
     list_display = ['pid','title', 'product_image', 'price','category','vendor', 'featured', 'product_status']
     
 class CategoryAdmin(admin.ModelAdmin):
@@ -26,7 +36,7 @@ class RentOrderItemsAdmin(admin.ModelAdmin):
     list_display = ['order','invoice_no','item','image','qty','price','total']
     
 class ProductReviewAdmin(admin.ModelAdmin):
-    list_display = ['user','product','rating','review']
+    list_display = ('user', 'product', 'rating', 'review')
     
 class wishlistAdmin(admin.ModelAdmin):
     list_display = ['user','product','date']
@@ -44,3 +54,4 @@ admin.site.register(RentOrderItems, RentOrderItemsAdmin)
 admin.site.register(ProductReview, ProductReviewAdmin)
 admin.site.register(Wishlist, wishlistAdmin)
 admin.site.register(Address, AddressAdmin)
+# admin.site.register(ProductDocuments)
