@@ -4,7 +4,7 @@ def default(request):
     categories = Category.objects.all()
     departments = Department.objects.all()
     vendors = Vendor.objects.all()
-    Products = Product.objects.filter(product_status = "Published")
+    Products = Product.objects.all()
 
     
     

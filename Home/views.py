@@ -140,11 +140,24 @@ def product_detail_view(request, pid):
     documents = product.documents.all()
     terms = product.terms.all()
 
-    # Fetch related products from same category
-    related_products = Product.objects.filter(
-        product_status="published",
-        category=product.category
-    ).exclude(id=product.id).order_by('-id')
+    # Fetch related products from same 
+    # related_products = Product.objects.filter(product_status="published",
+    #     category=product.category
+    # ).exclude(id=product.id).order_by('-id')
+    
+    # Fetch related products from the same department, even if the product doesn't have a category
+    if product.category:
+        related_products = Product.objects.filter(
+            product_status="published",
+            category__department=product.category.department
+        ).exclude(id=product.id).order_by('-id')
+    else:
+        # If no category, fetch related products directly from the same department
+        related_products = Product.objects.filter(
+            product_status="published",
+            department=product.department
+        ).exclude(id=product.id).order_by('-id')
+
 
     # Review related data
     review_form = ProductReviewForm()

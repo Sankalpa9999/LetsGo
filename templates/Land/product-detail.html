@@ -278,7 +278,7 @@
             </div>
         </div>
 
-        <span>{{ products.count }} Product{{ products.count|pluralize }} found.</span>
+        <span>{{ products.count }} Vehicle{{ products.count|pluralize }} found.</span>
         <div class="row featured__filter">
             {% for p in products %}
             <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
@@ -310,7 +310,7 @@
 
                     <!-- Product Info -->
                     <div class="featured__item__text text-center p-3">
-                        <h4 class="category-name text-muted">{{ p.category.title }}</h4>
+                        <h4 class="category-name text-muted">{{ p.department.title }}</h4>
                         <h6 class="product-title"><a href="#" class="text-dark">{{ p.title }}</a></h6>
 
                         <h5 class="product-price">
