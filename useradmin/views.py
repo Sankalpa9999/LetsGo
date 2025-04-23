@@ -1,8 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from Home.models import Product, Category, Department, Vendor, RentOrder, RentOrderItems, ProductImages, ProductReview, Wishlist, Address, RentOrderItems 
-from django.db.models import Sum
-from userauths.models import User, Profile
+
 from django.contrib import messages
+
+
+
+from django.contrib.auth.decorators import login_required
+from useradmin.forms import ProductForm, ProductImageFormSet, DocumentImageFormSet, TermsAndConditionsFormSet
+
 
 
 import datetime
@@ -10,3 +15,104 @@ import datetime
 
 def dashboard(request):
     return render(request, 'useradmin/dashboard.html')
+
+@login_required
+def vendor_product_list(request):
+    vendors = Vendor.objects.filter(user=request.user)
+    
+    if not vendors.exists():
+        messages.error(request, "No vendor accounts found.")
+        return redirect('dashboard')
+
+    # Optionally, pick the first one for now
+    vendor = vendors.first()  # or prompt the user to select a vendor
+    products = Product.objects.filter(vendor=vendor)
+    return render(request, 'useradmin/vendor_product_list.html', {
+        'products': products,
+        'vendors': vendors,  # Send all if you want to let user choose
+        'active_vendor': vendor,
+    })
+
+
+
+@login_required
+def add_product(request):
+    vendor = get_object_or_404(Vendor, user=request.user)
+
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        image_formset = ProductImageFormSet(request.POST, request.FILES, prefix='images')
+        doc_formset = DocumentImageFormSet(request.POST, request.FILES, prefix='docs')
+        terms_formset = TermsAndConditionsFormSet(request.POST, request.FILES, prefix='terms')
+
+        if form.is_valid() and image_formset.is_valid() and doc_formset.is_valid() and terms_formset.is_valid():
+            product = form.save(commit=False)
+            product.vendor = vendor
+            product.user = request.user
+            product.save()
+            form.save_m2m()
+
+            image_formset.instance = product
+            image_formset.save()
+
+            doc_formset.instance = product
+            doc_formset.save()
+
+            terms_formset.instance = product
+            terms_formset.save()
+
+            messages.success(request, "Product added successfully.")
+            return redirect('/useradmin/my-products/')
+    else:
+        form = ProductForm()
+        image_formset = ProductImageFormSet(prefix='images')
+        doc_formset = DocumentImageFormSet(prefix='docs')
+        terms_formset = TermsAndConditionsFormSet(prefix='terms')
+
+    return render(request, 'useradmin/add_product.html', {
+        'form': form,
+        'image_formset': image_formset,
+        'doc_formset': doc_formset,
+        'terms_formset': terms_formset
+    })
+
+
+@login_required
+def edit_product(request, pid):
+    product = get_object_or_404(Product, pid=pid, vendor__user=request.user)
+
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES, instance=product)
+        image_formset = ProductImageFormSet(request.POST, request.FILES, instance=product, prefix='images')
+        doc_formset = DocumentImageFormSet(request.POST, request.FILES, instance=product, prefix='docs')
+        terms_formset = TermsAndConditionsFormSet(request.POST, request.FILES, instance=product, prefix='terms')
+
+        if form.is_valid() and image_formset.is_valid() and doc_formset.is_valid() and terms_formset.is_valid():
+            form.save()
+            image_formset.save()
+            doc_formset.save()
+            terms_formset.save()
+            messages.success(request, "Product updated successfully.")
+            return redirect('/useradmin/my-products/')
+    else:
+        form = ProductForm(instance=product)
+        image_formset = ProductImageFormSet(instance=product, prefix='images')
+        doc_formset = DocumentImageFormSet(instance=product, prefix='docs')
+        terms_formset = TermsAndConditionsFormSet(instance=product, prefix='terms')
+
+    return render(request, 'useradmin/edit_product.html', {
+        'form': form,
+        'product': product,
+        'image_formset': image_formset,
+        'doc_formset': doc_formset,
+        'terms_formset': terms_formset
+    })
+    
+    
+    
+@login_required
+def delete_product(request, pid):
+    product = get_object_or_404(Product, pid=pid, vendor__user=request.user)
+    product.delete()
+    messages.success(request, "Product deleted successfully.")
+    return redirect('/useradmin/my-products/')

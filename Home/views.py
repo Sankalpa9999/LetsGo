@@ -1,17 +1,19 @@
 from math import prod
-from django.shortcuts import render,redirect, get_object_or_404
-from django.http import HttpResponse, JsonResponse
-from django.db.models import Avg, Count
-from stripe import Review
-from Home.models import Product, Category, Department, Vendor, RentOrder, RentOrderItems, ProductImages, ProductReview, Wishlist, Address, RentOrderItems
-from django.contrib.auth.decorators import login_required
 
-from Home.forms import ProductReviewForm
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.db.models import Avg, Count
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
-from userauths import views
+from stripe import Review
 
+from Home.forms import ProductReviewForm
+from Home.models import (Address, Category, Department, Product, ProductImages,
+                         ProductReview, RentOrder, RentOrderItems, Vendor,
+                         Wishlist)
+from userauths import views
 
 
 def index(request):
@@ -368,6 +370,8 @@ def add_to_wishlist(request):
         return JsonResponse({"bool": True, "message": "Added to wishlist"})
 
 from django.views.decorators.csrf import csrf_exempt
+
+
 @csrf_exempt  # Only for debugging, ideally use CSRF token properly
 @require_POST
 @login_required

@@ -38,8 +38,8 @@ class RentOrderItemsAdmin(admin.ModelAdmin):
 class ProductReviewAdmin(admin.ModelAdmin):
     list_display = ('user', 'product', 'rating', 'review')
     
-class wishlistAdmin(admin.ModelAdmin):
-    list_display = ['user','product','date']
+class WishlistAdmin(admin.ModelAdmin):
+    list_display = ['user', 'product', 'date']
     
 class AddressAdmin(admin.ModelAdmin):
     list_display = ['user','address','status']
@@ -52,6 +52,6 @@ admin.site.register(Vendor, VendorAdmin)
 admin.site.register(RentOrder, RentOrderAdmin)
 admin.site.register(RentOrderItems, RentOrderItemsAdmin)
 admin.site.register(ProductReview, ProductReviewAdmin)
-admin.site.register(Wishlist, wishlistAdmin)
+admin.site.register(Wishlist, WishlistAdmin)
 admin.site.register(Address, AddressAdmin)
 # admin.site.register(ProductDocuments)

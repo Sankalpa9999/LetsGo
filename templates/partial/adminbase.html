@@ -37,6 +37,7 @@
 
     <!-- Libraries Stylesheet -->
     <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}">
 
     <!-- Customized Bootstrap Stylesheet -->
 
@@ -169,7 +170,7 @@
                     <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
                         
                         <div class="nav-item dropdown">
-                            <a href="" class="nav-link">Vehicle</a>
+                            <a href="{% url 'useradmin:vendor_product_list' %}" class="nav-link">Vehicle</a>
                         </div>
                         <div class="nav-item dropdown">
                             <a href="" class="nav-link">Chat</a>

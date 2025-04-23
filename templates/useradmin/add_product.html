@@ -1,0 +1,41 @@
+{% extends 'partial/adminbase.html' %}
+{% load static %}
+
+{% block content %}
+<h2>{% if product %}Edit{% else %}Add{% endif %} Product</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <fieldset>
+        <legend>Product Details</legend>
+        {{ form.as_p }}
+    </fieldset>
+
+    <fieldset>
+        <legend>Product Images</legend>
+        {{ image_formset.management_form }}
+        {% for form in image_formset %}
+            {{ form.as_p }}
+        {% endfor %}
+    </fieldset>
+
+    <fieldset>
+        <legend>Product Documents</legend>
+        {{ doc_formset.management_form }}
+        {% for form in doc_formset %}
+            {{ form.as_p }}
+        {% endfor %}
+    </fieldset>
+
+    <fieldset>
+        <legend>Terms & Conditions</legend>
+        {{ terms_formset.management_form }}
+        {% for form in terms_formset %}
+            {{ form.as_p }}
+        {% endfor %}
+    </fieldset>
+
+    <button type="submit">Save</button>
+</form>
+{% endblock %}

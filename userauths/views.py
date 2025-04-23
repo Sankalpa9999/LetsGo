@@ -1,16 +1,15 @@
 from django.shortcuts import redirect, render
-from userauths.forms import UserRegisterForm,VendorRegistrationForm
+from userauths.forms import UserRegisterForm,VendorRegistrationForm,UserUpdateForm,ProfileUpdateForm, PasswordChangeCustomForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.conf import settings
 from userauths.models import User, Profile, ContactUs
-from .forms import ProfileUpdateForm
+
 from .models import Profile
 from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth import update_session_auth_hash
-from .forms import PasswordChangeCustomForm
-from .forms import UserUpdateForm
+
 from django.contrib.auth import update_session_auth_hash
 from Home.models import Vendor
 

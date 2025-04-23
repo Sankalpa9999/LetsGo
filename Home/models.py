@@ -72,7 +72,8 @@ class Vendor(models.Model):
     title = models.CharField(max_length=100)
     image = models.ImageField(upload_to=user_directory_path, default='vendor.jpg')
     cover_image = models.ImageField(upload_to=user_directory_path, default='vendor.jpg')
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    # user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True)
     # description = models.TextField(null=True, blank=True)
     
     description = RichTextUploadingField(null=True, blank=True)
@@ -99,7 +100,7 @@ class Vendor(models.Model):
 class Product(models.Model):
     pid = ShortUUIDField(unique=True, length=10, max_length=20,alphabet='abcdefgh12345')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True, related_name='vendor')
+    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, null=True, related_name='vendor')
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, related_name='department')
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name='category')
     title = models.CharField(max_length=100)
@@ -122,14 +123,14 @@ class Product(models.Model):
     # Tags = models.ForeignKey(Tags, on_delete=models.SET_NULL, null=True)
     product_status = models.CharField(choices= STATUS, max_length=100, default='in_review')
     status = models.BooleanField(default=True)
-    in_stock = models.BooleanField(default=False)
-    digital = models.BooleanField(default=False)
+    # in_stock = models.BooleanField(default=False)
+    # digital = models.BooleanField(default=False)
     featured = models.BooleanField(default=False)
     sku = ShortUUIDField(unique=True, length=10, max_length=20, prefix = "sku", alphabet='abcdefgh12345')
     date = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(null=True, blank=True) 
     numberp = models.CharField(max_length=100, null=True, blank=True, default='ga 1 pa 1111')
-    stock_count = models.IntegerField(default=1)
+    # stock_count = models.IntegerField(default=1)
     
     tags = TaggableManager(blank=True)
     
@@ -155,7 +156,7 @@ class Product(models.Model):
 
     
 class ProductImages(models.Model):
-    product = models.ForeignKey(Product, related_name='p_images', on_delete=models.SET_NULL, null=True, blank=True)
+    product = models.ForeignKey(Product, related_name='p_images', on_delete=models.CASCADE, null=True, blank=True)
     image = models.ImageField(upload_to="product-images", default='product.jpg', null = True,)
     date = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     
@@ -163,9 +164,9 @@ class ProductImages(models.Model):
         verbose_name_plural = 'Product Images'
         
 class DocumentImage(models.Model):
-    product = models.ForeignKey(Product, related_name='documents', on_delete=models.SET_NULL, null=True)
+    product = models.ForeignKey(Product, related_name='documents', on_delete=models.CASCADE, null=True)
     document = models.FileField(upload_to="product-images", null=True, blank=True)
-    doc_image = models.ImageField(upload_to="product-images", default='doc.jpg')
+    # doc_image = models.ImageField(upload_to="product-images", default='doc.jpg')
     date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -219,7 +220,7 @@ class RentOrderItems(models.Model):
     
 class ProductReview(models.Model): 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, related_name='reviews')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, related_name='reviews')
     
     rating = models.PositiveSmallIntegerField(choices=RATING, default=3)  # Use CharField instead of IntegerField
     
@@ -239,21 +240,41 @@ class ProductReview(models.Model):
 
     
 class Wishlist(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
     date = models.DateTimeField(auto_now_add=True)
     
     class Meta:
         verbose_name_plural = 'Wishlist'
          
-    def __str__ (self):
-        return self.product.title
+    def __str__(self):
+        return self.product.title if self.product else "No Product"
     
 class Address(models.Model):
-    user= models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    user= models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     address = models.CharField(max_length=200 , null=True, blank=True)
     status = models.BooleanField(default=False)
     
     class Meta:
         verbose_name_plural = 'Address'
+        
+        
+class RentalRequest(models.Model):
+    STATUS_CHOICES = (
+        ('Pending', 'Pending'),
+        ('Accepted', 'Accepted'),
+        ('Rejected', 'Rejected'),
+    )
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    rent_date = models.DateField()
+    return_date = models.DateField()
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.product.item} ({self.status})"
     
