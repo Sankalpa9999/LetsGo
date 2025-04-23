@@ -106,7 +106,10 @@
             </p>
 
             <div class="d-flex flex-wrap gap-3 mt-4">
-                <a href="#" class="btn btn-primary px-3 py-1 small-btn me-2"><i class="fas fa-car"></i> Request To Rent</a>
+                <a href="{% url 'request_form' p.pid %}" class="btn btn-primary px-3 py-1 small-btn me-2">
+                    <i class="fas fa-car"></i> Request To Rent
+                </a>
+                
                 <a href="#" class="btn btn-outline-secondary px-3 py-1 small-btn"><i class="fas fa-comments"></i> Chat with Owner</a>
             </div>
         </div>

@@ -9,11 +9,12 @@ from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
 from stripe import Review
 
-from Home.forms import ProductReviewForm
+from Home.forms import ProductReviewForm, RentalRequestForm
 from Home.models import (Address, Category, Department, Product, ProductImages,
                          ProductReview, RentOrder, RentOrderItems, Vendor,
-                         Wishlist)
+                         Wishlist, RentalRequest)
 from userauths import views
+from datetime import timedelta
 
 
 def index(request):
@@ -310,28 +311,57 @@ def rent_list_view(request):
 
 
 
+# def remove_from_rent_list(request, item_id):
+#     if not request.user.is_authenticated:
+#         messages.warning(request, "You need to log in to perform this action.")
+#         return redirect('/user/sign-in/')
+
+#     item = get_object_or_404(RentOrderItems, id=item_id)
+
+#     if item.order.user == request.user:
+#         item.delete()
+#         # Remove item from session as well
+#         rent_data = request.session.get('rent_data_obj', [])
+#         rent_data = [entry for entry in rent_data if entry['title'] != item.item]
+#         request.session['rent_data_obj'] = rent_data  # Save updated session
+        
+#         messages.success(request, "Item removed from your rent list.")
+#     else:
+#         messages.error(request, "Unauthorized action.")
+
+#     return redirect('rentlist')
+
+
+
+
+
 def remove_from_rent_list(request, item_id):
+    # Check if the user is authenticated
     if not request.user.is_authenticated:
         messages.warning(request, "You need to log in to perform this action.")
         return redirect('/user/sign-in/')
-
+    
+    # Get the RentOrderItem object based on item_id
     item = get_object_or_404(RentOrderItems, id=item_id)
 
+    # Check if the item belongs to the logged-in user
     if item.order.user == request.user:
+        # Remove the item from the database
         item.delete()
-        # Remove item from session as well
+
+        # Remove the item from the session data
         rent_data = request.session.get('rent_data_obj', [])
-        rent_data = [entry for entry in rent_data if entry['title'] != item.item]
-        request.session['rent_data_obj'] = rent_data  # Save updated session
-        
+        rent_data = [entry for entry in rent_data if entry['pid'] != item.id]  # Use the item ID here instead of title
+        request.session['rent_data_obj'] = rent_data  # Save the updated session
+
+        # Add a success message
         messages.success(request, "Item removed from your rent list.")
     else:
+        # If the item does not belong to the user
         messages.error(request, "Unauthorized action.")
 
+    # Redirect to the rent list page (ensure this URL name is correct)
     return redirect('rentlist')
-
-
-
 
 
 
@@ -385,3 +415,62 @@ def remove_from_wishlist(request, pid):
         else:
             messages.error(request, "Item not found in wishlist.")
     return redirect('wishlist')
+
+@login_required
+def request_to_rent(request, pid):
+    product = get_object_or_404(Product, pid=pid)
+
+    # Check if user has already requested this product
+    existing_rental = RentalRequest.objects.filter(user=request.user, product=product).first()
+    if existing_rental:
+        messages.warning(request, 'You have already requested this product.')
+        return redirect('rent-request')
+     
+    
+    if request.method == 'POST':
+        form = RentalRequestForm(request.POST)
+        if form.is_valid():
+            rental = form.save(commit=False)
+            rental.user = request.user
+            rental.product = product
+
+            rental.save()
+            messages.success(request, 'Your rental request has been submitted!')
+            return redirect('rent-request')
+    else:
+        form = RentalRequestForm()
+
+    return render(request, 'land/request_form.html', {'form': form, 'product': product})
+
+
+
+@login_required
+def rentrequest_view(request):
+    rental_requests = RentalRequest.objects.filter(user=request.user).order_by('-created_at')
+    request.session['rental_request_data_count'] = rental_requests.count() 
+    return render(request, 'land/rent-request.html', {'rental_requests': rental_requests})
+
+
+@login_required
+def edit_rent_request(request, id):
+    rent_request = get_object_or_404(RentalRequest, id=id, user=request.user)
+
+    if request.method == 'POST':
+        form = RentalRequestForm(request.POST, instance=rent_request)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Rental request updated successfully.')
+            return redirect('rent-request')
+    else:
+        form = RentalRequestForm(instance=rent_request)
+
+    return render(request, 'land/request_form.html', {'form': form, 'product': rent_request.product, 'edit_mode': True})
+
+@login_required
+def delete_rent_request(request, id):
+    rent_request = get_object_or_404(RentalRequest, id=id, user=request.user)
+
+    # Delete directly (GET or POST — since no confirmation needed)
+    rent_request.delete()
+    messages.success(request, 'Rental request deleted.')
+    return redirect('rent-request')

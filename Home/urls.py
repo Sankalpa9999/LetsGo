@@ -38,6 +38,7 @@ urlpatterns = [
 
     path('rent/add/<str:pid>/', views.add_to_rent, name='add-to-rent'),
     path('rent/list/', views.rent_list_view, name='rentlist'),
+
     path('rent/remove/<int:item_id>/', views.remove_from_rent_list, name='remove-from-rent'),
 
 
@@ -57,6 +58,12 @@ path('add-to-wishlist/', views.add_to_wishlist, name='add-to-wishlist'),
 path('wishlist/remove/<str:pid>/', views.remove_from_wishlist, name='remove-from-wishlist'),
 
 
+path('request_form/<str:pid>/', views.request_to_rent, name='request_form'),
+
+path('rent-request/', views.rentrequest_view, name='rent-request'),
+
+path('rent-request/edit/<int:id>/', views.edit_rent_request, name='edit_rent_request'),
+path('rent-request/delete/<int:id>/', views.delete_rent_request, name='delete_rent_request'),
 
     # path('toggle-wishlist/', views.toggle_wishlist, name='toggle_wishlist'),
     

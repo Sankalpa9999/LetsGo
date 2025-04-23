@@ -259,6 +259,7 @@ class Address(models.Model):
         verbose_name_plural = 'Address'
         
         
+        
 class RentalRequest(models.Model):
     STATUS_CHOICES = (
         ('Pending', 'Pending'),
@@ -272,9 +273,20 @@ class RentalRequest(models.Model):
     return_date = models.DateField()
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    address = models.TextField()  # New field to store address
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.product.item} ({self.status})"
-    
+        return f"{self.user.username} - {self.product.title} ({self.status})"
+
+    def calculate_days(self):
+        """Automatically calculate the total days for rental."""
+        return (self.return_date - self.rent_date).days
+
+    def save(self, *args, **kwargs):
+        """Override save method to calculate price before saving."""
+        if self.rent_date and self.return_date:
+            days = self.calculate_days()
+            self.total_price = days * self.product.price
+        super().save(*args, **kwargs)

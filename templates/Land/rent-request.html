@@ -1,0 +1,54 @@
+{% extends 'partial/base.html' %}
+
+{% block content %}
+<div class="container my-4">
+    <h2>Your Rental Requests</h2>
+    {% if rental_requests %}
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Product</th>
+                    <th>Rent Date</th>
+                    <th>Return Date</th>
+                    <th>Total Days</th>
+                    <th>Total Price</th>
+                    <th>Status</th>
+                    <th>Address</th>
+                    <th>Requested At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in rental_requests %}
+                <tr>
+                    <td>{{ request.product.title }}</td>
+                    <td>{{ request.rent_date }}</td>
+                    <td>{{ request.return_date }}</td>
+                    <td>{{ request.calculate_days }}</td>
+                    <td>{{ request.total_price }}</td>
+                    <td>
+                        {% if request.status == 'Pending' %}
+                            <span class="badge bg-warning">{{ request.status }}</span>
+                        {% elif request.status == 'Accepted' %}
+                            <span class="badge bg-success">{{ request.status }}</span>
+                        {% elif request.status == 'Rejected' %}
+                            <span class="badge bg-danger">{{ request.status }}</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ request.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ request.address }}</td>
+                    <td>{{ request.created_at|date:"Y-m-d H:i" }}</td>
+                    <td>
+                        <a href="{% url 'edit_rent_request' request.id %}" class="btn btn-sm btn-primary">Edit</a>
+                        <a href="{% url 'delete_rent_request' request.id %}" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>You have not made any rental requests yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

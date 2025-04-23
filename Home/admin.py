@@ -1,5 +1,5 @@
 from django.contrib import admin
-from Home.models import Product, Category, Department, Vendor, RentOrder, RentOrderItems, ProductImages, ProductReview, Wishlist, Address, DocumentImage, TermsAndConditions
+from Home.models import Product, Category, Department, Vendor, RentOrder, RentOrderItems, ProductImages, ProductReview, Wishlist, Address, DocumentImage, TermsAndConditions, RentalRequest
 
 # Register your models here.
 
@@ -45,6 +45,22 @@ class AddressAdmin(admin.ModelAdmin):
     list_display = ['user','address','status']
     
     
+    
+
+
+
+class RentalRequestAdmin(admin.ModelAdmin):
+    list_display = ('user', 'product', 'rent_date', 'return_date', 'total_days', 'status', 'total_price')
+    list_filter = ('status',)
+    search_fields = ('user__username', 'product__title')
+
+    def total_days(self, obj):
+        """Calculate the total days of the rental."""
+        return (obj.return_date - obj.rent_date).days
+    total_days.short_description = 'Total Days'  # Set column name in the admin list view
+
+    
+    
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Department, DepartmentAdmin)
@@ -54,4 +70,5 @@ admin.site.register(RentOrderItems, RentOrderItemsAdmin)
 admin.site.register(ProductReview, ProductReviewAdmin)
 admin.site.register(Wishlist, WishlistAdmin)
 admin.site.register(Address, AddressAdmin)
+admin.site.register(RentalRequest, RentalRequestAdmin)
 # admin.site.register(ProductDocuments)

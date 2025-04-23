@@ -141,7 +141,7 @@
                     <span class="visually-hidden">wishlist</span>
                 </span>
             </a>
-            <a href="{% url 'rentlist' %}" class="btn border position-relative">
+            <a href="{% url 'rentlist' %}" class="btn border position-relative me-2">
                 <i class="fas fa-list text-primary"></i>
                 <span
                     class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger rent-count">
@@ -149,6 +149,14 @@
                     <span class="visually-hidden">items in rent list</span>
                 </span>
             </a>
+            <a href="{% url 'rent-request' %}" class="btn border position-relative me-2">
+                <i class="fa fa-clipboard-list text-primary"></i>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {{ request.session.rental_request_data_count|default:0 }}
+                    <span class="visually-hidden">Rent request list</span>
+                </span>
+            </a>
+
 
         </div>
     </div>
