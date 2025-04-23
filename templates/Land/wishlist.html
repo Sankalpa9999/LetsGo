@@ -74,13 +74,9 @@
                             <!-- Actions -->
                             <td data-label="Actions">
                                 <div class="d-flex gap-2">
-                                    <form method="post" action="{% url 'add-to-rent' item.product.pid %}" class="rent-form">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-sm btn-primary rounded-pill px-3">
-                                            <i class="fas fa-list me-md-1"></i>
-                                            <span class="d-none d-md-inline">Add to Rent</span>
-                                        </button>
-                                    </form>
+                                    <a href="{% url 'request_form' item.product.pid %}" class="btn btn-primary px-3 py-1 small-btn me-2">
+                                        <i class="fas fa-car"></i> Request To Rent
+                                    </a>
                                     <form method="post" action="{% url 'remove-from-wishlist' item.product.pid %}">
                                         {% csrf_token %}
                                         <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3 remove-from-wishlist">
@@ -106,9 +102,9 @@
                             <small class="text-muted d-block">Need help?</small>
                             <a href="#" class="text-decoration-none">Contact Support</a>
                         </div>
-                        <a href="{% url 'rentlist' %}" class="btn btn-success rounded-pill px-4 py-2 shadow-sm">
+                        <!-- <a href="{% url 'rentlist' %}" class="btn btn-success rounded-pill px-4 py-2 shadow-sm">
                             <i class="fas fa-shopping-cart me-2"></i>View Rent List
-                        </a>
+                        </a> -->
                     </div>
                 </div>
             </div>
@@ -216,87 +212,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-$(document).ready(function() {
-    // Remove from wishlist with AJAX
-    $(document).on("submit", "form[action*='remove-from-wishlist']", function(e) {
-        e.preventDefault();
-        const form = $(this);
-        const product_id = form.attr('action').split('/').pop();
-        const button = form.find('button[type="submit"]');
-        const row = $("#wishlist-row-" + product_id);
 
-        // Show loading state
-        button.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
-        button.prop('disabled', true);
-
-        $.ajax({
-            url: form.attr('action'),
-            type: "POST",
-            data: form.serialize(),
-            dataType: "json",
-            success: function(response) {
-                if (response.bool === true) {
-                    // Remove row with animation
-                    row.fadeOut(300, function() {
-                        $(this).remove();
-                        
-                        // Check if wishlist is empty
-                        if ($("tbody tr").length === 0) {
-                            $(".card-body").html(`
-                                <div class="text-center py-5 px-3">
-                                    <div class="mb-4">
-                                        <img src="{% static 'images/empty-wishlist.svg' %}" alt="Empty wishlist" style="width: 180px; opacity: 0.7;">
-                                    </div>
-                                    <h4 class="h5 mb-3">Your Wishlist is Empty</h4>
-                                    <p class="text-muted mb-4">You haven't saved any vehicles yet. Start browsing our collection to find your perfect ride.</p>
-                                    <a href="{% url 'product-list' %}" class="btn btn-primary rounded-pill px-4 py-2">
-                                        <i class="fas fa-car me-2"></i>Explore Vehicles
-                                    </a>
-                                </div>
-                            `);
-                        }
-                    });
-                    
-                    showToast(response.message || "Item removed from wishlist", "success");
-                } else {
-                    showToast(response.message || "Error removing item", "error");
-                    // Reset button
-                    button.html('<i class="fas fa-trash-alt me-md-1"></i><span class="d-none d-md-inline">Remove</span>');
-                    button.prop('disabled', false);
-                }
-            },
-            error: function(xhr, status, error) {
-                showToast("Error: " + error, "error");
-                // Reset button
-                button.html('<i class="fas fa-trash-alt me-md-1"></i><span class="d-none d-md-inline">Remove</span>');
-                button.prop('disabled', false);
-            }
-        });
-    });
-
-    // Toast notification function
-    function showToast(message, type = "success") {
-        const toast = $(`
-            <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-                <div class="toast align-items-center text-white bg-${type === 'success' ? 'success' : 'danger'} border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="d-flex">
-                        <div class="toast-body">
-                            ${message}
-                        </div>
-                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                    </div>
-                </div>
-            </div>
-        `);
-        
-        $("body").append(toast);
-        
-        // Auto-hide after 3 seconds
-        setTimeout(() => {
-            toast.remove();
-        }, 3000);
-    }
-});
-</script>
 {% endblock %}

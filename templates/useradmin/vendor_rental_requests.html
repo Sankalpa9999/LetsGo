@@ -1,0 +1,119 @@
+{% extends 'partial/adminbase.html' %}
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary">Rental Requests Management</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                {% if rental_requests %}
+                <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Product</th>
+                            <th>User</th>
+                            <th>Rent Date</th>
+                            <th>Return Date</th>
+                            <th>Address</th>
+                            <th>Total Price</th>
+                            <th>Status</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for request in rental_requests %}
+                        <tr>
+                            <td>{{ request.product.title }}</td>
+                            <td>{{ request.user.username }}</td>
+                            <td>{{ request.rent_date|date:"M d, Y" }}</td>
+                            <td>{{ request.return_date|date:"M d, Y" }}</td>
+                            <td>{{ request.address|truncatechars:20 }}</td>
+                            <td class="font-weight-bold">${{ request.total_price }}</td>
+                            <td>
+                                <span class="badge 
+                                    {% if request.status == 'Accepted' %}badge-success
+                                    {% elif request.status == 'Rejected' %}badge-danger
+                                    {% else %}badge-warning{% endif %}">
+                                    {{ request.status }}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center">
+                                    {% if request.status != 'Accepted' %}
+                                    <a href="{% url 'useradmin:update_rental_status' request.id 'accept' %}"
+                                        class="btn btn-sm btn-success mr-2"
+                                        title="Accept Request">
+                                        <i class="fas fa-check"></i>
+                                    </a>
+                                    {% endif %}
+                                    {% if request.status != 'Rejected' %}
+                                    <a href="{% url 'useradmin:update_rental_status' request.id 'reject' %}"
+                                        class="btn btn-sm btn-danger mr-2"
+                                        title="Reject Request">
+                                        <i class="fas fa-times"></i>
+                                    </a>
+                                    {% endif %}
+                                    {% if request.status == 'Rejected' %}
+                                    <a href="{% url 'useradmin:delete_rental_request' request.id %}"
+                                        class="btn btn-sm btn-outline-secondary"
+                                        title="Delete Request"
+                                        onclick="return confirm('Are you sure you want to permanently delete this request?');">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle mr-2"></i> No rental requests found.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<style>
+    .badge {
+        padding: 0.5em 0.75em;
+        font-size: 0.875em;
+        font-weight: 600;
+        border-radius: 0.25rem;
+        text-transform: capitalize;
+    }
+    .badge-success {
+        background-color: #28a745;
+        color: white;
+    }
+    .badge-warning {
+        background-color: #ffc107;
+        color: #212529;
+    }
+    .badge-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.02);
+    }
+    .thead-light {
+        background-color: #f8f9fa;
+    }
+    .btn-sm {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.75rem;
+        border-radius: 0.2rem;
+    }
+    .btn-outline-secondary {
+        border-color: #ddd;
+    }
+    .btn-outline-secondary:hover {
+        background-color: #f8f9fa;
+    }
+</style>

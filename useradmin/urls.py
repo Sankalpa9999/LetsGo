@@ -12,7 +12,17 @@ urlpatterns = [
     path('add-product/', views.add_product, name='add_product'),
     path('edit-product/<str:pid>/', views.edit_product, name='edit_product'),
     path('delete-product/<str:pid>/', views.delete_product, name='delete_product'),
+    
+    
+    
+    
+    path('requests/', views.vendor_rental_requests, name='vendor_rental_requests'),
+    path('requests/<int:request_id>/<str:action>/', views.update_rental_status, name='update_rental_status'),
+    path('requests/delete/<int:request_id>/', views.delete_rental_request, name='delete_rental_request'),
+
+
+
 
     
-    # Add other useradmin URLs here
+
 ]

@@ -27,12 +27,12 @@
                         <i class="fas fa-heart"></i> Wishlist
                     </button>
                 </form>
-                <form method="post" action="{% url 'add-to-rent' p.pid %}" style="display:inline;" class="rent-form">
+                <!-- <form method="post" action="{% url 'add-to-rent' p.pid %}" style="display:inline;" class="rent-form">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-outline-primary px-3">
                         <i class="fa fa-list"></i> Add to Rentlist
                     </button>
-                </form>
+                </form> -->
             </div>
 
             <!-- Product Documents (Just View) -->
@@ -324,16 +324,23 @@
                         <h6 class="product-title text-muted">From: <a href="#" class="text-dark">{{ p.vendor }}</a></h6>
 
                         <!-- Buttons Section -->
-                        <div class="d-flex justify-content-between mt-3">
-                            <a href="{% url 'product-detail' p.pid %}" class="btn btn-sm btn-outline-secondary">
+                        <div class="d-flex justify-content-between mt-3 gap-2">
+                            <a href="{% url 'product-detail' p.pid %}" class="btn btn-sm btn-outline-secondary flex-fill text-center">
                                 <i class="fa fa-eye"></i> View Details
                             </a>
-                            <form method="post" action="{% url 'add-to-rent' p.pid %}" style="display:inline;" class="rent-form">
+                        
+                            <form id="wishlist-form" class="flex-fill">
+                                {% csrf_token %}
+                                <button type="button" class="btn btn-sm btn-outline-danger w-100 wishlist-btn add-to-wishlist" data-product-item="{{ p.id }}">
+                                    <i class="fas fa-heart"></i> Wishlist
+                                </button>
+                            </form>
+                                                        <!-- <form method="post" action="{% url 'add-to-rent' p.pid %}" style="display:inline;" class="rent-form">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-sm btn-primary">
                                     <i class="fa fa-list"></i> Add to Rentlist
                                 </button>
-                            </form>
+                            </form> -->
                         </div>
                     </div>
                 </div>

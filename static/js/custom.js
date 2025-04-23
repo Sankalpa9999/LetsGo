@@ -202,7 +202,7 @@ $(document).on("click", ".add-to-wishlist", function () {
       if (response.bool === true) {
         showToast(response.message, response.status); // ← use dynamic status
         this_val.addClass("in-wishlist");
-        this_val.html("💖"); // Optional: Change button content
+        this_val.html("💖 Added"); // Optional: Change button content
       } else {
         showToast("Something went wrong.", "error");
       }

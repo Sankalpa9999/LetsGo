@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from Home.models import Product, Category, Department, Vendor, RentOrder, RentOrderItems, ProductImages, ProductReview, Wishlist, Address, RentOrderItems 
+from Home.models import Product, Category, Department, Vendor, RentOrder, RentOrderItems, ProductImages, ProductReview, Wishlist, Address, RentOrderItems, RentalRequest
 
 from django.contrib import messages
 
@@ -116,3 +116,42 @@ def delete_product(request, pid):
     product.delete()
     messages.success(request, "Product deleted successfully.")
     return redirect('/useradmin/my-products/')
+
+
+
+
+@login_required
+def vendor_rental_requests(request):
+    vendor = get_object_or_404(Vendor, user=request.user)
+    rental_requests = RentalRequest.objects.filter(product__vendor=vendor).order_by('-created_at')
+    return render(request, 'useradmin/vendor_rental_requests.html', {'rental_requests': rental_requests})
+
+@login_required
+def update_rental_status(request, request_id, action):
+    vendor = get_object_or_404(Vendor, user=request.user)
+    rental_request = get_object_or_404(RentalRequest, id=request_id, product__vendor=vendor)
+
+    if action == 'accept':
+        rental_request.status = 'Accepted'
+        messages.success(request, "Request has been accepted successfully.")
+    elif action == 'reject':
+        rental_request.status = 'Rejected'
+        messages.success(request, "Request has been rejected successfully.")
+    
+    rental_request.save()
+    return redirect('/useradmin/requests/')
+
+
+
+@login_required
+def delete_rental_request(request, request_id):
+    vendor = get_object_or_404(Vendor, user=request.user)
+    rental_request = get_object_or_404(RentalRequest, id=request_id, product__vendor=vendor)
+
+    if rental_request.status != 'Rejected':
+        messages.warning(request, "You can only delete rejected requests.")
+    else:
+        rental_request.delete()
+        messages.success(request, "Request deleted successfully.")
+
+    return redirect('/useradmin/requests/')
