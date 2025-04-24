@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-# Create your models here.
+# Custom User model
 class User(AbstractUser):
     email = models.EmailField(unique=True, null=False)
     username = models.CharField(max_length=50, unique=True)
@@ -11,14 +11,18 @@ class User(AbstractUser):
 
     Bio = models.TextField(max_length=500, blank=True, null=True)
 
-    # Only in User model
+    # Profile image field
     profile_image = models.ImageField(upload_to='user_profile_images/', default='default.jpg', blank=True, null=True)
-    document_image = models.ImageField(upload_to='user_documents/', blank=True, null=True)
+    
+    # Updated document fields
+    license_image = models.ImageField(upload_to='user_licenses/', blank=True, null=True)
+    citizenship_image = models.ImageField(upload_to='user_citizenships/', blank=True, null=True)
 
     def __str__(self):
         return self.username
 
 
+# User Profile model
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=100, blank=True, null=True)
@@ -32,14 +36,17 @@ class Profile(models.Model):
         return self.user.profile_image
 
     @property
-    def document(self):
-        # Access the document image from the user
-        return self.user.document_image
+    def license(self):
+        # Access license image from the user
+        return self.user.license_image
+
+    @property
+    def citizenship(self):
+        # Access citizenship image from the user
+        return self.user.citizenship_image
 
     def __str__(self):
         return self.full_name or self.user.username
-    
-    
     
 class ContactUs(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)

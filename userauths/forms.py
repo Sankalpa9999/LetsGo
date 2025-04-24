@@ -63,15 +63,22 @@ class PasswordChangeCustomForm(PasswordChangeForm):
     )
     
 class UserUpdateForm(forms.ModelForm):
+    remove_profile_image = forms.BooleanField(required=False, label='Remove Profile Image')
+    remove_license_image = forms.BooleanField(required=False, label='Remove License Image')
+    remove_citizenship_image = forms.BooleanField(required=False, label='Remove Citizenship Image')
+
     class Meta:
         model = User
-        fields = ['username', 'email', 'profile_image']
+        fields = ['username', 'email', 'profile_image', 'license_image', 'citizenship_image']
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your username'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email'}),
             'profile_image': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
+            'license_image': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
+            'citizenship_image': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
         }
-        
+
+
         
 class VendorRegistrationForm(forms.ModelForm):
     class Meta:

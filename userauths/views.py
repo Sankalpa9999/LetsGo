@@ -77,47 +77,77 @@ def user_profile(request):
     try:
         profile = Profile.objects.get(user=request.user)
     except Profile.DoesNotExist:
-        # Create a profile if it doesn't exist
         profile = Profile.objects.create(user=request.user)
     
-    return render(request, 'userauths/profile.html', {'profile': profile})
-
+    return render(request, 'userauths/profile.html', {
+        'profile': profile,
+        'license_image': profile.user.license_image,
+        'citizenship_image': profile.user.citizenship_image
+    })
 
 
 @login_required
 def edit_profile(request):
+    """
+    Handle the user's profile editing, including updating personal details,
+    profile image, and password change functionality.
+    """
+    # Retrieve the user's profile instance
     profile = Profile.objects.get(user=request.user)
     
     if request.method == 'POST':
-        # user_form = UserUpdateForm(request.POST, instance=request.user)
+        # Initialize forms with POST data and files
         user_form = UserUpdateForm(request.POST, request.FILES, instance=request.user)
-
         profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
         password_form = PasswordChangeCustomForm(request.user, request.POST)
 
+        # Handle saving the profile updates
         if 'save_profile' in request.POST:
             if user_form.is_valid() and profile_form.is_valid():
-                user_form.save()
-                profile_form.save()
-                messages.success(request, "Profile updated successfully.")
-            else:
-                messages.error(request, "Please correct the errors in the form.")
+                # Save user form and update user instance
+                user = user_form.save(commit=False)
 
+                # Handle file uploads for images if provided
+                if 'profile_image' in request.FILES:
+                    user.profile_image = request.FILES['profile_image']
+                if 'license_image' in request.FILES:
+                    user.license_image = request.FILES['license_image']
+                if 'citizenship_image' in request.FILES:
+                    user.citizenship_image = request.FILES['citizenship_image']
+                
+                # Save the updated user instance
+                user.save()
+                # Save the associated profile form
+                profile_form.save()
+
+                # Display success message
+                messages.success(request, "Your profile has been updated successfully.")
+            else:
+                # Display error message if form validation fails
+                messages.error(request, "Please correct the errors in the form before submitting.")
+
+        # Handle password change request
         elif 'change_password' in request.POST and password_form.is_valid():
+            # Save the new password and update session
             user = password_form.save()
             update_session_auth_hash(request, user)
-            messages.success(request, "Password changed successfully.")
+            messages.success(request, "Your password has been changed successfully.")
 
     else:
+        # Initialize forms with existing user and profile data
         user_form = UserUpdateForm(instance=request.user)
         profile_form = ProfileUpdateForm(instance=profile)
         password_form = PasswordChangeCustomForm(request.user)
 
+    # Render the profile edit template with forms and necessary context
     return render(request, 'userauths/edit_profile.html', {
         'user_form': user_form,
         'profile_form': profile_form,
         'password_form': password_form,
+        'license_image': request.user.license_image,
+        'citizenship_image': request.user.citizenship_image,
     })
+
     
     
 @login_required
