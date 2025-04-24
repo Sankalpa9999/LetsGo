@@ -44,8 +44,9 @@
                         
                         <form method="POST" enctype="multipart/form-data">
                             {% csrf_token %}
-                            <!-- Hidden file input triggered by the edit button -->
-                            <input type="file" name="image" id="id_image" accept="image/*" class="d-none">
+
+                            <!-- File input for image upload (should match form field name) -->
+                            <input type="file" name="profile_image" id="id_image" accept="image/*" class="d-none">
                             
                             <!-- Email and Username Fields -->
                             <div class="mb-3">
@@ -86,7 +87,7 @@
 </div>
 
 <script>
-    // Preview profile picture when selected
+    // Live preview of profile picture
     document.getElementById('id_image').addEventListener('change', function(event) {
         const file = event.target.files[0];
         if (file) {
@@ -127,8 +128,3 @@
     }
 </style>
 {% endblock %}
-
-
-
-
-

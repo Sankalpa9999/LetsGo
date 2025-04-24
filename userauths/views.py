@@ -89,7 +89,9 @@ def edit_profile(request):
     profile = Profile.objects.get(user=request.user)
     
     if request.method == 'POST':
-        user_form = UserUpdateForm(request.POST, instance=request.user)
+        # user_form = UserUpdateForm(request.POST, instance=request.user)
+        user_form = UserUpdateForm(request.POST, request.FILES, instance=request.user)
+
         profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
         password_form = PasswordChangeCustomForm(request.user, request.POST)
 

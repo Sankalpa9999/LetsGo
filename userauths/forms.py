@@ -39,7 +39,7 @@ class UserRegisterForm(UserCreationForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['image', 'full_name', 'bio', 'phone']
+        fields = ['full_name', 'bio', 'phone']
         
         
 class PasswordChangeCustomForm(PasswordChangeForm):
@@ -65,10 +65,11 @@ class PasswordChangeCustomForm(PasswordChangeForm):
 class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'email']
+        fields = ['username', 'email', 'profile_image']
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your username'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email'}),
+            'profile_image': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
         }
         
         
