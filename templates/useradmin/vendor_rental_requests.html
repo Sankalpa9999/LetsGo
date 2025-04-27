@@ -1,4 +1,8 @@
 {% extends 'partial/adminbase.html' %}
+{% load static %}
+
+
+
 {% block content %}
 <div class="container-fluid">
     <div class="card shadow mb-4">
@@ -24,8 +28,9 @@
                     <tbody>
                         {% for request in rental_requests %}
                         <tr>
-                            <td>{{ request.product.title }}</td>
-                            <td>{{ request.user.username }}</td>
+                            <td> {{ request.product.title }}</td>
+                            <td> <a href="{% url 'useradmin:requested_user_profile' request.user.id %}">{{ request.user.username }}</a>
+                                </td>
                             <td>{{ request.rent_date|date:"M d, Y" }}</td>
                             <td>{{ request.return_date|date:"M d, Y" }}</td>
                             <td>{{ request.address|truncatechars:20 }}</td>
@@ -77,7 +82,7 @@
         </div>
     </div>
 </div>
-{% endblock %}
+
 
 <style>
     .badge {
@@ -117,3 +122,4 @@
         background-color: #f8f9fa;
     }
 </style>
+{% endblock %}

@@ -12,7 +12,7 @@ class User(AbstractUser):
     Bio = models.TextField(max_length=500, blank=True, null=True)
 
     # Profile image field
-    profile_image = models.ImageField(upload_to='user_profile_images/', default='default.jpg', blank=True, null=True)
+    profile_image = models.ImageField(upload_to='user_profile_images/', blank=True, null=True)
     
     # Updated document fields
     license_image = models.ImageField(upload_to='user_licenses/', blank=True, null=True)

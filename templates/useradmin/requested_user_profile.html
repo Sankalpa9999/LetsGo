@@ -1,0 +1,81 @@
+{% extends 'partial/adminbase.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <!-- Profile Image with Default Icon -->
+                    <div class="position-relative d-inline-block">
+                        {% if profile.image %}
+                            <img src="{{ profile.image.url }}" alt="Profile Picture" class="rounded-circle shadow" width="150" height="150">
+                        {% else %}
+                            <div class="rounded-circle bg-light d-flex justify-content-center align-items-center shadow" style="width: 150px; height: 150px;">
+                                <i class="fas fa-user-circle text-muted" style="font-size: 120px;"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <h2 class="mt-4 mb-1">{{ profile.full_name|default:request.user.username }}</h2>
+                    {% if profile.bio %}
+                        <p class="text-muted mb-4">{{ profile.bio }}</p>
+                    {% endif %}
+                    
+                    <div class="d-flex justify-content-center">
+                        <div class="text-start">
+                            <div class="mb-3">
+                                <span class="d-block text-muted small">Email</span>
+                                <span class="d-block fw-bold">{{ request.user.email }}</span>
+                            </div>
+                            {% if profile.phone %}
+                            <div class="mb-3">
+                                <span class="d-block text-muted small">Phone</span>
+                                <span class="d-block fw-bold">{{ profile.phone }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- License Image -->
+                    {% if profile.user.license_image %}
+                        <div class="mb-3">
+                            <span class="d-block text-muted small">License Image</span>
+                            <a href="{{ profile.user.license_image.url }}" target="_blank">
+                                <img src="{{ profile.user.license_image.url }}" alt="License Image" class="img-thumbnail" style="max-width: 150px;">
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="mb-3">
+                            <span class="d-block text-muted small">License Image</span>
+                            <span class="d-block text-muted">No license image uploaded</span>
+                        </div>
+                    {% endif %}
+
+                    <!-- Citizenship Image -->
+                    {% if profile.user.citizenship_image %}
+                        <div class="mb-3">
+                            <span class="d-block text-muted small">Citizenship Image</span>
+                            <a href="{{ profile.user.citizenship_image.url }}" target="_blank">
+                                <img src="{{ profile.user.citizenship_image.url }}" alt="Citizenship Image" class="img-thumbnail" style="max-width: 150px;">
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="mb-3">
+                            <span class="d-block text-muted small">Citizenship Image</span>
+                            <span class="d-block text-muted">No citizenship image uploaded</span>
+                        </div>
+                    {% endif %}
+                    
+                    <!-- Chat Button -->
+                    <div class="mt-4">
+                        <a href="#" class="btn btn-primary">Chat with User</a>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -14,7 +14,7 @@ class ProductForm(forms.ModelForm):
         fields = [
             'title', 'image', 'description', 'price', 'old_price',
             'specifications', 'department', 'category',
-            'featured'
+            'featured',"numberplate"
         ]
         # widgets = {
         #     'tags': forms.TextInput(attrs={'placeholder': 'Enter comma-separated tags'}),

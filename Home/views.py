@@ -19,7 +19,7 @@ from datetime import timedelta
 
 def index(request):
     # products = Product.objects.all().order_by('-id')
-    products = Product.objects.filter( product_status = "published").order_by('-id')
+    products = Product.objects.filter( product_status = "published",featured = True).order_by('-id')
     # products = Product.objects.filter(featured = True, product_status = "Published").order_by('-id')
     context = {
         'products':products
@@ -31,7 +31,7 @@ def index(request):
 
 
 def product_list_view(request):
-    products = Product.objects.filter( product_status = "published").order_by('-id')
+    products = Product.objects.filter( product_status = "published",featured = True).order_by('-id')
 
     # products = Product.objects.filter(product_status = "Published").order_by('-id')
     context = {
@@ -63,7 +63,7 @@ def department_list_view(request):
 def category_product_list_view(request, cid):
     category = Category.objects.get(cid = cid)
     department = Department.objects.filter(category = category).order_by('-id')
-    products = Product.objects.filter( product_status = "published", category = category).order_by('-id')
+    products = Product.objects.filter( product_status = "published",featured = True, category = category).order_by('-id')
     context = {
         'category':category,
         'products':products,
@@ -76,7 +76,7 @@ def category_product_list_view(request, cid):
 def department_category_list_view(request, did):
     department = Department.objects.get(did = did)
     category = Category.objects.filter(department = department).order_by('-id')
-    products = Product.objects.filter( product_status = "published", department = department).order_by('-id')
+    products = Product.objects.filter( product_status = "published", featured = True, department = department).order_by('-id')
 
     context = {
         'category':category,
@@ -97,7 +97,7 @@ def vendor_list_view(request):
 
 def vendor_detail_view(request, vid):
     vendor = Vendor.objects.get(vid = vid)
-    products = Product.objects.filter( product_status = "published", vendor = vendor).order_by('-id')
+    products = Product.objects.filter( product_status = "published",featured = True, vendor = vendor).order_by('-id')
 
     
 
@@ -151,13 +151,13 @@ def product_detail_view(request, pid):
     # Fetch related products from the same department, even if the product doesn't have a category
     if product.category:
         related_products = Product.objects.filter(
-            product_status="published",
+            product_status="published",featured = True,
             category__department=product.category.department
         ).exclude(id=product.id).order_by('-id')
     else:
         # If no category, fetch related products directly from the same department
         related_products = Product.objects.filter(
-            product_status="published",
+            product_status="published",featured = True,
             department=product.department
         ).exclude(id=product.id).order_by('-id')
 
@@ -223,7 +223,7 @@ def search_view(request):
     print(f"Search query: '{query}'")  # Debug print
 
     if query:
-        products = Product.objects.filter(title__icontains=query).order_by('-date')
+        products = Product.objects.filter(title__icontains=query, featured = True).order_by('-date')
         print(f"Found {products.count()} products")  # Debug print
     else:
         products = Product.objects.none()

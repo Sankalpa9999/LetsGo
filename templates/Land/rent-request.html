@@ -1,5 +1,5 @@
 {% extends 'partial/base.html' %}
-
+{% load static %}
 {% block content %}
 <div class="container-fluid py-4">
     <div class="card shadow-sm">
@@ -12,7 +12,8 @@
                 <table class="table table-hover align-middle">
                     <thead class="table-light">
                         <tr>
-                            <th class="ps-4">Product</th>
+                            <th style="min-width: 120px">Image</th>
+                            <!-- <th class="ps-4">Product</th> -->
                             <th>Rent Date</th>
                             <th>Return Date</th>
                             <th>Days</th>
@@ -25,8 +26,19 @@
                     </thead>
                     <tbody>
                         {% for request in rental_requests %}
-                        <tr>
-                            <td class="ps-4">{{ request.product.title }}</td>
+                        <td>
+
+                            <div class="position-relative me-3">
+                                {% if request.product.image %}
+                                <img src="{{ request.product.image.url }}" 
+                                     class="img-thumbnail rounded-3" 
+                                     alt=""
+                                     >
+
+                                {% endif %}
+                            </div>
+                            </td>
+                            <!-- <td class="ps-4">{{ request.product.title }}</td> -->
                             <td>{{ request.rent_date }}</td>
                             <td>{{ request.return_date }}</td>
                             <td>{{ request.calculate_days }}</td>

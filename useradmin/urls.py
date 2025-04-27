@@ -1,6 +1,7 @@
 from django.urls import path
 from useradmin import views
 
+
 app_name = 'useradmin'
 
 urlpatterns = [
@@ -19,10 +20,15 @@ urlpatterns = [
     path('requests/', views.vendor_rental_requests, name='vendor_rental_requests'),
     path('requests/<int:request_id>/<str:action>/', views.update_rental_status, name='update_rental_status'),
     path('requests/delete/<int:request_id>/', views.delete_rental_request, name='delete_rental_request'),
+    
+    
+    path('requested-user-profile/<int:user_id>/', views.requested_user_profile, name='requested_user_profile'),
+]
+
 
 
 
 
     
 
-]
+

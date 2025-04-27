@@ -53,6 +53,11 @@ INSTALLED_APPS = [
     'Home',
     'userauths',
     'useradmin',
+    
+     'channels',
+    'rest_framework',
+    
+    
 ]
 
 MIDDLEWARE = [
@@ -206,3 +211,5 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 
 LOGIN_URL = '/user/sign-in/'
+
+

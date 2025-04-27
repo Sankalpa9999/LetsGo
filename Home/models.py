@@ -73,7 +73,7 @@ class Vendor(models.Model):
     image = models.ImageField(upload_to=user_directory_path, default='vendor.jpg')
     cover_image = models.ImageField(upload_to=user_directory_path, default='vendor.jpg')
     # user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     # description = models.TextField(null=True, blank=True)
     
     description = RichTextUploadingField(null=True, blank=True)
@@ -129,7 +129,7 @@ class Product(models.Model):
     sku = ShortUUIDField(unique=True, length=10, max_length=20, prefix = "sku", alphabet='abcdefgh12345')
     date = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(null=True, blank=True) 
-    numberp = models.CharField(max_length=100, null=True, blank=True, default='ga 1 pa 1111')
+    numberplate = models.CharField(max_length=100, null=True, blank=True, default='ga 1 pa 1111')
     # stock_count = models.IntegerField(default=1)
     
     tags = TaggableManager(blank=True)

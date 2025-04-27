@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from Home.models import Product, Category, Department, Vendor, RentOrder, RentOrderItems, ProductImages, ProductReview, Wishlist, Address, RentOrderItems, RentalRequest
-
+from userauths.models import User, Profile, ContactUs
 from django.contrib import messages
 
 
@@ -124,6 +124,9 @@ def delete_product(request, pid):
 def vendor_rental_requests(request):
     vendor = get_object_or_404(Vendor, user=request.user)
     rental_requests = RentalRequest.objects.filter(product__vendor=vendor).order_by('-created_at')
+    
+    request.session['rental_request_data_count'] = rental_requests.count()
+    
     return render(request, 'useradmin/vendor_rental_requests.html', {'rental_requests': rental_requests})
 
 @login_required
@@ -155,3 +158,15 @@ def delete_rental_request(request, request_id):
         messages.success(request, "Request deleted successfully.")
 
     return redirect('/useradmin/requests/')
+
+
+@login_required
+def requested_user_profile(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    profile, created = Profile.objects.get_or_create(user=user)
+
+    return render(request, 'useradmin/requested_user_profile.html', {
+        'profile': profile,
+        'license_image': user.license_image,
+        'citizenship_image': user.citizenship_image
+    })

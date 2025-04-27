@@ -18,7 +18,7 @@ class TermsAndConditionsAdmin(admin.TabularInline):
 class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductImagesAdmin, DocumentImageAdmin, TermsAndConditionsAdmin]
     
-    list_display = ['pid','title', 'product_image', 'price','category','vendor', 'featured', 'product_status']
+    list_display = ['pid','title', 'product_image', 'price','numberplate','vendor', 'featured', 'product_status']
     
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['title','category_image']
