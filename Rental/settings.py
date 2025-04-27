@@ -45,17 +45,19 @@ INSTALLED_APPS = [
     
     'taggit',
     'ckeditor', 
+ 
     
     
-    'crispy_forms',
-    'crispy_bootstrap4',
+    # 'crispy_forms',
+    # 'crispy_bootstrap4',
     
     'Home',
     'userauths',
     'useradmin',
+    'message'
     
-     'channels',
-    'rest_framework',
+    #  'channels',
+    # 'rest_framework',
     
     
 ]

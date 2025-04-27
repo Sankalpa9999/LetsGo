@@ -133,7 +133,7 @@
                     <i class="fas fa-car"></i> Request To Rent
                 </a>
 
-                <a href="#" class="nav-link">
+                <a href="{% url 'message:chat_detail' p.vendor.user.id %}" class="nav-link">
                     Messages 
                     <span id="unread-count-nav" class="unread-count" style="display: none;"></span>
                 </a>
