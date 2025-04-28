@@ -27,35 +27,20 @@ def chat_list(request):
 
 
 
-# @login_required
-# def chat_detail(request, user_id):
-#     user = User.objects.get(id=user_id)
-#     messages = Message.objects.filter(
-#         Q(sender=request.user, receiver=user) | Q(sender=user, receiver=request.user)
-#     ).order_by('timestamp')
-
-#     if request.method == 'POST':
-#         new_message = request.POST.get('message')
-#         if new_message:
-#             Message.objects.create(sender=request.user, receiver=user, message=new_message)
-#             return redirect('message:chat_detail', user_id=user.id)
-
-#     return render(request, 'chat/chat_detail.html', {'user': user, 'messages': messages})
-
 
 
 def chat_detail(request, user_id):
     other_user = get_object_or_404(User, id=user_id)
 
-    # If form is submitted
     if request.method == 'POST':
         message_text = request.POST.get('message')
         if message_text:
             Message.objects.create(sender=request.user, receiver=other_user, message=message_text)
             messages.success(request, 'Message successfully sent!')
-            return redirect('message:chat_detail', user_id=other_user.id)  # Corrected redirection
+            return redirect('message:chat_detail', user_id=other_user.id)
 
-    messages_qs = Message.objects.filter(
+    # Rename this to chat_messages instead of messages_qs
+    chat_messages = Message.objects.filter(
         Q(sender=request.user, receiver=other_user) |
         Q(sender=other_user, receiver=request.user)
     ).order_by('timestamp')
@@ -64,6 +49,6 @@ def chat_detail(request, user_id):
 
     return render(request, 'chat/chat_detail.html', {
         'user': other_user,
-        'messages': messages_qs,
+        'chat_messages': chat_messages,  # Changed variable name
         'base_template': base_template,
     })

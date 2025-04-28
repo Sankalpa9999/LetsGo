@@ -1,13 +1,82 @@
 {% extends base_template %}
 {% block content %}
-<h2>Chat with {{ user.username }}</h2>
+<style>
+    .message-container {
+        margin-bottom: 10px;
+    }
+    .message-bubble {
+        display: inline-block;
+        max-width: 70%;
+        padding: 8px 12px;
+        border-radius: 12px;
+        font-size: 0.9em;
+    }
+    .sent-message {
+        text-align: right;
+    }
+    .sent-message .message-bubble {
+        background: #dcf8c6;
+    }
+    .received-message {
+        text-align: left;
+    }
+    .received-message .message-bubble {
+        background: #f1f0f0;
+    }
+    .message-time {
+        font-size: 0.8em;
+        color: gray;
+        text-align: right;
+    }
+    .profile-image {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 8px;
+        vertical-align: middle;
+    }
+    .sender-info {
+        display: flex;
+        align-items: center;
+        margin-bottom: 4px;
+    }
+    .profile-link {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: inherit;
+    }
+    .profile-link:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<h2>Chat with <a href="{% url 'useradmin:requested_user_profile' user.id %}" class="profile-link">{{ user.username }}</a></h2>
 
 <div style="border:1px solid #ccc; padding:10px; height:400px; overflow-y:scroll;">
-    {% for message in messages %}
-        <div style="margin-bottom:10px;">
-            <strong>{% if message.sender == request.user %}You{% else %}{{ message.sender.username }}{% endif %}:</strong>
-            {{ message.message }}
-            <small style="color:gray;">{{ message.timestamp|date:"H:i" }}</small>
+    {% for message in chat_messages %}
+        <div class="{% if message.sender == request.user %}sent-message{% else %}received-message{% endif %} message-container">
+            {% if message.sender != request.user %}
+            <div class="sender-info">
+                <a href="{% url 'useradmin:requested_user_profile' message.sender.id %}" class="profile-link">
+                    {% if message.sender.profile_image %}
+                        <img src="{{ message.sender.profile_image.url }}" class="profile-image" alt="{{ message.sender.username }}">
+                    {% else %}
+                        <div class="profile-image">
+                            <i class="fas fa-user-circle" style="font-size: 30px; color: #ccc;"></i>
+                        </div>
+                    {% endif %}
+                    <strong>{{ message.sender.username }}</strong>
+                </a>
+            </div>
+            {% endif %}
+            <div class="message-bubble">
+                {{ message.message }}
+                <div class="message-time">
+                    {{ message.timestamp|date:"H:i" }}
+                </div>
+            </div>
         </div>
     {% endfor %}
 </div>
@@ -17,7 +86,5 @@
     <textarea name="message" rows="2" style="width:100%;" placeholder="Type your message..."></textarea><br>
     <button type="submit">Send</button>
 </form>
-
-<a href="#">Back to chats</a>
 
 {% endblock %}
