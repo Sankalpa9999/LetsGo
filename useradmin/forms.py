@@ -40,3 +40,19 @@ TermsAndConditionsFormSet = inlineformset_factory(
     extra=1,
     can_delete=True
 )
+
+
+
+class VendorForm(forms.ModelForm):
+    class Meta:
+        model = Vendor
+        fields = [
+            'title',
+            'image',
+            'cover_image',
+            'description',
+            'address',
+            'contact',
+            'chat_resp_time',
+            'authentic_rating',
+        ]

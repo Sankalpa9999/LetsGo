@@ -1,0 +1,16 @@
+{% extends 'partial/adminbase.html' %}
+{% load static %}
+
+{% block content %}
+<h2>My Profile</h2>
+
+<div>
+    <img src="{{ vendor.image.url }}" alt="Profile Picture" width="150">
+    <h3>{{ vendor.title }}</h3>
+    <p><strong>Address:</strong> {{ vendor.address }}</p>
+    <p><strong>Contact:</strong> {{ vendor.contact }}</p>
+    <p><strong>Description:</strong> {{ vendor.description|safe }}</p>
+
+    <a href="{% url 'useradmin:edit-owner-profile' %}">Edit Profile</a>
+</div>
+{% endblock %}

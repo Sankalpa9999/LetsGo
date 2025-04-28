@@ -23,6 +23,12 @@ urlpatterns = [
     
     
     path('requested-user-profile/<int:user_id>/', views.requested_user_profile, name='requested_user_profile'),
+    
+    
+    path('owner/profile/', views.owner_profile, name='owner-profile'),
+    path('owner/profile/edit/', views.edit_owner_profile, name='edit-owner-profile'),
+    
+    
 ]
 
 

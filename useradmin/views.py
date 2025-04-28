@@ -2,11 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from Home.models import Product, Category, Department, Vendor, RentOrder, RentOrderItems, ProductImages, ProductReview, Wishlist, Address, RentOrderItems, RentalRequest
 from userauths.models import User, Profile, ContactUs
 from django.contrib import messages
+from userauths.forms import UserRegisterForm,VendorRegistrationForm,UserUpdateForm
 
 
 
 from django.contrib.auth.decorators import login_required
-from useradmin.forms import ProductForm, ProductImageFormSet, DocumentImageFormSet, TermsAndConditionsFormSet
+from useradmin.forms import ProductForm, ProductImageFormSet, DocumentImageFormSet, TermsAndConditionsFormSet,VendorForm
 
 
 
@@ -160,6 +161,8 @@ def delete_rental_request(request, request_id):
     return redirect('/useradmin/requests/')
 
 
+
+
 @login_required
 def requested_user_profile(request, user_id):
     user = get_object_or_404(User, id=user_id)
@@ -170,3 +173,34 @@ def requested_user_profile(request, user_id):
         'license_image': user.license_image,
         'citizenship_image': user.citizenship_image
     })
+    
+
+@login_required
+def owner_profile(request):
+    vendor = get_object_or_404(Vendor, user=request.user)
+
+    context = {
+        'vendor': vendor
+    }
+    return render(request, 'useradmin/owner_profile.html', context)
+    
+ 
+
+@login_required
+def edit_owner_profile(request):
+    vendor = get_object_or_404(Vendor, user=request.user)
+
+    if request.method == 'POST':
+        form = VendorRegistrationForm(request.POST, request.FILES, instance=vendor)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Profile updated successfully!")
+            return redirect('useradmin:owner-profile') 
+    else:
+        form = VendorRegistrationForm(instance=vendor)
+
+    context = {
+        'form': form
+    }
+    return render(request, 'useradmin/edit_owner_profile.html', context)
+
