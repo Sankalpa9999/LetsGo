@@ -57,7 +57,7 @@
                         <a href="{% url 'vendor-detail' v.vid %}" class="btn btn-sm btn-outline-secondary">
                             <i class="fa fa-eye"></i> View Details
                         </a>
-                        <a href="#" class="btn btn-sm btn-primary">
+                        <a href="{% url 'message:chat_detail' v.user.id %}" class="btn btn-sm btn-primary">
                             <i class="fa fa-comments"></i> Chat Now
                         </a>
                     </div>

@@ -32,7 +32,7 @@
             <hr>
             <h4>Description</h4>
             <p>{{ vendor.description|default:"No description available." }}</p>
-            <a href="#" class="btn btn-primary mt-3">
+            <a href="{% url 'message:chat_detail' vendor.user.id %}" class="btn btn-primary mt-3">
                 <i class="fa fa-comments"></i> Chat Now
             </a>
         </div>
