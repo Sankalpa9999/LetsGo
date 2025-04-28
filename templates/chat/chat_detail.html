@@ -10,6 +10,7 @@
         padding: 8px 12px;
         border-radius: 12px;
         font-size: 0.9em;
+        word-wrap: break-word;
     }
     .sent-message {
         text-align: right;
@@ -27,6 +28,7 @@
         font-size: 0.8em;
         color: gray;
         text-align: right;
+        margin-top: 5px;
     }
     .profile-image {
         width: 30px;
@@ -54,9 +56,10 @@
 
 <h2>Chat with <a href="{% url 'useradmin:requested_user_profile' user.id %}" class="profile-link">{{ user.username }}</a></h2>
 
-<div style="border:1px solid #ccc; padding:10px; height:400px; overflow-y:scroll;">
+<div id="chatBox" style="border:1px solid #ccc; padding:10px; height:400px; overflow-y:scroll;">
     {% for message in chat_messages %}
         <div class="{% if message.sender == request.user %}sent-message{% else %}received-message{% endif %} message-container">
+            
             {% if message.sender != request.user %}
             <div class="sender-info">
                 <a href="{% url 'useradmin:requested_user_profile' message.sender.id %}" class="profile-link">
@@ -71,8 +74,24 @@
                 </a>
             </div>
             {% endif %}
+            
             <div class="message-bubble">
-                {{ message.message }}
+                {% if message.message_type == 'text' %}
+                    {{ message.message }}
+                {% elif message.message_type == 'image' %}
+                    <a href="{{ message.file.url }}" target="_blank">
+                        <img src="{{ message.file.url }}" alt="Image" style="max-width:100%; border-radius:8px; cursor:pointer;">
+                    </a>
+                {% elif message.message_type == 'video' %}
+                    <a href="{{ message.file.url }}" target="_blank">
+                        <video controls style="max-width:100%; border-radius:8px; cursor:pointer;">
+                            <source src="{{ message.file.url }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </a>
+                {% elif message.message_type == 'file' %}
+                    <a href="{{ message.file.url }}" target="_blank" style="color:blue;">Download File</a>
+                {% endif %}
                 <div class="message-time">
                     {{ message.timestamp|date:"H:i" }}
                 </div>
@@ -81,10 +100,25 @@
     {% endfor %}
 </div>
 
-<form method="POST" style="margin-top:20px;">
+<!-- Updated form to accept files -->
+<form method="POST" enctype="multipart/form-data" style="margin-top:20px;">
     {% csrf_token %}
-    <textarea name="message" rows="2" style="width:100%;" placeholder="Type your message..."></textarea><br>
+    <textarea name="message" rows="2" style="width:100%;" placeholder="Type your message..."></textarea><br><br>
+    <input type="file" name="file"><br><br>
     <button type="submit">Send</button>
 </form>
 
+<script>
+    // Auto-scroll to bottom
+    var chatBox = document.getElementById("chatBox");
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+ 
+    window.onload = function() {
+        var chatBox = document.getElementById("chatBox");
+        chatBox.scrollTop = chatBox.scrollHeight;
+    };
+    
+
+</script>
 {% endblock %}
