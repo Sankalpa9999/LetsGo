@@ -172,9 +172,23 @@
                         <div class="nav-item dropdown">
                             <a href="{% url 'useradmin:vendor_product_list' %}" class="nav-link">Vehicle</a>
                         </div>
-                        <div class="nav-item dropdown">
-                            <a href="{% url 'message:chat_list'%}" class="nav-link">Chat</a>
+
+
+
+                        <div class="nav-item dropdown position-relative">
+                            <a href="{% url 'message:chat_list'%}" class="nav-link position-relative">
+                                Chat
+                                {% if request.session.user_data_count %}
+                                    <span class="position-absolute top-50 end-0 translate-middle badge rounded-pill bg-danger"
+                                          style="transform: translate(30%, -50%);">
+                                        {{ request.session.user_data_count|default:0 }}
+                                        <span class="visually-hidden">Chat</span>
+                                    </span>
+                                {% endif %}
+                            </a>
                         </div>
+
+
                         <div class="nav-item dropdown position-relative">
                             <a href="{% url 'useradmin:vendor_rental_requests' %}" class="nav-link position-relative">
                                 Rent Request

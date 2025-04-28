@@ -16,7 +16,13 @@ import json
 def chat_list(request):
     # Shows all users the logged-in user has chatted with
     users = User.objects.exclude(id=request.user.id)
-    return render(request, 'chat/chat_list.html', {'users': users})
+    
+    request.session['user_data_count'] = users.count()
+    # Determine if the user is a Vendor
+    base_template = 'partial/adminbase.html' if Vendor.objects.filter(user=request.user).exists() else 'partial/base.html'
+    
+    return render(request, 'chat/chat_list.html', {'users': users, 'base_template': base_template})
+
 
 
 

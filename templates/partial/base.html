@@ -133,6 +133,13 @@
 
             </a>
 
+            <!-- <a href="{% url 'message:chat_list'%}" class="btn border position-relative me-2">
+                <i class="fa fa-message text-primary"></i>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {{ request.session.user_data_count|default:0 }}
+                    <span class="visually-hidden">Message</span>
+                </span>
+            </a> -->
 
             <a href="{% url 'wishlist' %}" class="btn border position-relative me-2">
                 <i class="fas fa-heart text-primary"></i>
@@ -208,6 +215,18 @@
                                 </div>
                             </div>
                             <a href="{% url 'userauths:contact' %}" class="nav-item nav-link">Contact</a>
+                            <a href="{% url 'message:chat_list'%}" class="nav-item nav-link">Chat
+                                <!-- <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    {{ request.session.user_data_count|default:0 }}
+                                    <span class="visually-hidden">Message</span>
+                                </span> -->
+                            </a>
+
+
+                            
+                            
+
+
                         </div>
                         <div class="navbar-nav ml-auto py-0">
                             {% if user.is_authenticated %}
