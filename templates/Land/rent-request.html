@@ -3,75 +3,86 @@
 {% block content %}
 <div class="container-fluid py-4">
     <div class="card shadow-sm">
-        <div class="card-header bg-white border-bottom">
+        <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
             <h4 class="mb-0">Your Rental Requests</h4>
         </div>
         <div class="card-body">
             {% if rental_requests %}
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th style="min-width: 120px">Image</th>
-                            <!-- <th class="ps-4">Product</th> -->
-                            <th>Rent Date</th>
-                            <th>Return Date</th>
-                            <th>Days</th>
-                            <th>Price</th>
-                            <th>Status</th>
-                            <th>Address</th>
-                            <th>Requested</th>
-                            <th class="text-end pe-4">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for request in rental_requests %}
-                        <td>
+            <form method="POST" action="{% url 'rental_checkout' %}" id="rentalForm">
+                {% csrf_token %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th><input type="checkbox" id="select-all"></th>
+                                <th style="min-width: 120px">Image</th>
+                                <th>Rent Date</th>
+                                <th>Return Date</th>
+                                <th>Days</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Address</th>
+                                <th>Requested</th>
+                                <th class="text-end pe-4">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for request in rental_requests %}
+                            <tr>
+                                <td>
+                                    {% if request.status == "Accepted" %}
+                                    <input type="checkbox" name="selected_requests" class="rent-checkbox"
+                                           value="{{ request.id }}" data-price="{{ request.total_price }}">
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="position-relative me-3">
+                                        {% if request.product.image %}
+                                        <img src="{{ request.product.image.url }}" class="img-thumbnail rounded-3" alt="">
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td>{{ request.rent_date }}</td>
+                                <td>{{ request.return_date }}</td>
+                                <td>{{ request.calculate_days }}</td>
+                                <td>रु.{{ request.total_price }}</td>
+                                <td>
+                                    <span class="badge rounded-pill 
+                                        {% if request.status == 'Pending' %}bg-warning text-dark
+                                        {% elif request.status == 'Accepted' %}bg-success
+                                        {% elif request.status == 'Rejected' %}bg-danger
+                                        {% else %}bg-secondary{% endif %}">
+                                        {{ request.status }}
+                                    </span>
+                                </td>
+                                <td>{{ request.address }}</td>
+                                <td>{{ request.created_at|date:"Y-m-d H:i" }}</td>
+                                <td class="text-end pe-4">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a href="{% url 'edit_rent_request' request.id %}" class="btn btn-outline-primary">Edit</a>
+                                        <a href="{% url 'delete_rent_request' request.id %}" class="btn btn-outline-danger"
+                                           onclick="return confirm('Are you sure you want to delete this request?');">Delete</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
 
-                            <div class="position-relative me-3">
-                                {% if request.product.image %}
-                                <img src="{{ request.product.image.url }}" 
-                                     class="img-thumbnail rounded-3" 
-                                     alt=""
-                                     >
-
-                                {% endif %}
-                            </div>
-                            </td>
-                            <!-- <td class="ps-4">{{ request.product.title }}</td> -->
-                            <td>{{ request.rent_date }}</td>
-                            <td>{{ request.return_date }}</td>
-                            <td>{{ request.calculate_days }}</td>
-                            <td>${{ request.total_price }}</td>
-                            <td>
-                                <span class="badge rounded-pill 
-                                    {% if request.status == 'Pending' %}bg-warning text-dark
-                                    {% elif request.status == 'Accepted' %}bg-success
-                                    {% elif request.status == 'Rejected' %}bg-danger
-                                    {% else %}bg-secondary{% endif %}">
-                                    {{ request.status }}
-                                </span>
-                            </td>
-                            <td>{{ request.address }}</td>
-                            <td>{{ request.created_at|date:"Y-m-d H:i" }}</td>
-                            <td class="text-end pe-4">
-                                <div class="btn-group btn-group-sm" role="group">
-                                    <a href="{% url 'edit_rent_request' request.id %}" 
-                                       class="btn btn-outline-primary">
-                                        Edit
-                                    </a>
-                                    <a href="{% url 'delete_rent_request' request.id %}" 
-                                       class="btn btn-outline-danger"
-                                       onclick="return confirm('Are you sure you want to delete this request?');">
-                                        Delete
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                <!-- Payment Summary -->
+                <div class="d-flex flex-column align-items-end mt-4">
+                    <h5 class="mb-1">Total Selected Amount: रु.<span id="totalAmount">0.00</span></h5>
+                    <h5 class="mb-3 text-primary">Advance Payment (20%): रु.<span id="advanceAmount">0.00</span></h5>
+                    <button type="submit" class="btn btn-primary btn-sm">Proceed to Checkout</button>
+                    <p class="text-muted mt-3 mb-0">
+                        <small>
+                            Note: You have to pay <strong>20%</strong> to book this vehicle.
+                            You can pay the remaining <strong>80%</strong> in cash with the owner or later online.
+                        </small>
+                    </p>
+                </div>
+            </form>
             {% else %}
             <div class="text-center py-5">
                 <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
@@ -82,7 +93,37 @@
         </div>
     </div>
 </div>
-{% endblock %}
+
+<script>
+    const checkboxes = document.querySelectorAll('.rent-checkbox');
+    const totalAmountSpan = document.getElementById('totalAmount');
+    const advanceAmountSpan = document.getElementById('advanceAmount');
+    const selectAll = document.getElementById('select-all');
+
+    function calculateTotal() {
+        let total = 0;
+        checkboxes.forEach(cb => {
+            if (cb.checked) {
+                total += parseFloat(cb.getAttribute('data-price'));
+            }
+        });
+        totalAmountSpan.textContent = total.toFixed(2);
+        // Calculate 20% as the advance payment
+        let advance = total * 0.2;
+        advanceAmountSpan.textContent = advance.toFixed(2);
+    }
+
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', calculateTotal);
+    });
+
+    selectAll.addEventListener('change', function () {
+        checkboxes.forEach(cb => {
+            cb.checked = this.checked;
+        });
+        calculateTotal();
+    });
+</script>
 
 <style>
     .card {
@@ -111,3 +152,4 @@
         background-color: rgba(0, 0, 0, 0.02);
     }
 </style>
+{% endblock %}

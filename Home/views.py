@@ -8,6 +8,14 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
 from stripe import Review
+from decimal import Decimal
+import uuid
+import base64
+from decimal import Decimal
+from django.conf import settings
+
+
+from django.views.decorators.csrf import csrf_exempt
 
 from Home.forms import ProductReviewForm, RentalRequestForm
 from Home.models import (Address, Category, Department, Product, ProductImages,
@@ -416,6 +424,9 @@ def remove_from_wishlist(request, pid):
             messages.error(request, "Item not found in wishlist.")
     return redirect('wishlist')
 
+
+
+
 @login_required
 def request_to_rent(request, pid):
     product = get_object_or_404(Product, pid=pid)
@@ -473,4 +484,129 @@ def delete_rent_request(request, id):
     # Delete directly (GET or POST — since no confirmation needed)
     rent_request.delete()
     messages.success(request, 'Rental request deleted.')
+    return redirect('rent-request')
+
+
+
+@login_required
+def rental_checkout(request):
+    if request.method == "POST":
+        selected_ids = request.POST.getlist('selected_requests')
+        rental_requests = RentalRequest.objects.filter(id__in=selected_ids)
+        
+        # Calculate the total amount as a Decimal
+        total_amount = sum(Decimal(req.total_price) for req in rental_requests)
+        
+        # Use Decimal for 0.2 instead of float
+        advance = total_amount * Decimal('0.2')
+
+        # Convert the Decimal values to string or float for session storage
+        request.session['rental_checkout'] = {
+            'selected_ids': selected_ids,
+            'total': str(total_amount),  # or float(total_amount)
+            'advance': str(advance)  # or float(advance)
+        }
+
+        # Redirect to the payment page
+        return redirect('rental_payment_page')
+    
+    return redirect('rent-request')
+
+@login_required
+def rental_payment_page(request):
+    checkout_data = request.session.get('rental_checkout')
+    if not checkout_data:
+        messages.error(request, "No rental checkout data found.")
+        return redirect('rent-request')
+
+    # Unique order ID (e.g., for verification later)
+    order_code = str(uuid.uuid4())[:8]  # You can store this in DB if needed
+
+    amount = checkout_data.get('total')
+    advance = checkout_data.get('advance')
+
+    # Optionally save the order info in the database with status = pending
+
+    # Build SkyPay checkout URL
+    api_key = settings.SKYPAY_API_KEY  # Store securely in settings.py
+    success_url = request.build_absolute_uri('/payment/success/')
+    failure_url = request.build_absolute_uri('/payment/failure/')
+
+    checkout_url = (
+        f"https://checkout.skypay.dev?"
+        f"api_key={api_key}&"
+        f"amount={advance}&"
+        f"code={order_code}&"
+        f"success_url={success_url}&"
+        f"failure_url={failure_url}"
+    )
+
+    return redirect(checkout_url)
+
+# # In the rental_payment_page view:
+# def rental_payment_page(request):
+#     checkout_data = request.session.get('rental_checkout')
+#     if not checkout_data:
+#         messages.error(request, "No rental checkout data found.")
+#         return redirect('rent-request')
+
+#     # Unique order ID (e.g., for verification later)
+#     order_code = str(uuid.uuid4())[:8]  # You can store this in DB if needed
+
+#     amount = checkout_data.get('total')
+#     advance = checkout_data.get('advance')
+
+#     # Optionally save the order info in the database with status = pending
+
+#     # Build SkyPay checkout data
+#     api_key = settings.SKYPAY_API_KEY
+#     success_url = request.build_absolute_uri('/payment/success/')
+#     failure_url = request.build_absolute_uri('/payment/failure/')
+
+#     context = {
+#         'api_key': api_key,
+#         'amount': advance,
+#         'order_code': order_code,
+#         'success_url': success_url,
+#         'failure_url': failure_url,
+#     }
+
+#     return render(request, 'payment/payment_form.html', context)
+
+
+import json
+@login_required
+@csrf_exempt
+def payment_success(request):
+    encoded_data = request.GET.get('data')
+    if not encoded_data:
+        messages.error(request, "No transaction data received.")
+        return redirect('rent-request')
+
+    # Decode base64 string to JSON
+    try:
+        decoded_bytes = base64.b64decode(encoded_data)
+        decoded_data = json.loads(decoded_bytes)
+
+        order_code = decoded_data.get('code')
+        amount = Decimal(decoded_data.get('amount'))
+        status = decoded_data.get('status')
+
+        # TODO: verify order_code and mark rental as paid
+        # Example: update database record with matching code
+        if status == 'complete':
+            messages.success(request, f"Payment successful! Order: {order_code}")
+        else:
+            messages.warning(request, f"Payment status: {status}")
+
+    except Exception as e:
+        messages.error(request, f"Error decoding payment: {e}")
+
+    return redirect('rent-request')
+
+
+@login_required
+def payment_failure(request):
+    message = request.GET.get('message', 'Payment failed.')
+    messages.error(request, message)
     return redirect('rent-request')

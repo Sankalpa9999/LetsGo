@@ -26,8 +26,8 @@ SECRET_KEY = 'django-insecure-!zwychtyqo@7anh$xw4ypq95-_w1r7brvgu7vf%abm4tabeyaz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['192.168.1.68','10.32.16.130']
+ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ['192.168.1.68','10.32.16.130']
 
 
 
@@ -215,3 +215,4 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 LOGIN_URL = '/user/sign-in/'
 
 
+SKYPAY_API_KEY = '273234191'
