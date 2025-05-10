@@ -512,6 +512,9 @@ def rental_checkout(request):
     
     return redirect('rent-request')
 
+
+
+
 @login_required
 def rental_payment_page(request):
     checkout_data = request.session.get('rental_checkout')
@@ -542,36 +545,6 @@ def rental_payment_page(request):
     )
 
     return redirect(checkout_url)
-
-# # In the rental_payment_page view:
-# def rental_payment_page(request):
-#     checkout_data = request.session.get('rental_checkout')
-#     if not checkout_data:
-#         messages.error(request, "No rental checkout data found.")
-#         return redirect('rent-request')
-
-#     # Unique order ID (e.g., for verification later)
-#     order_code = str(uuid.uuid4())[:8]  # You can store this in DB if needed
-
-#     amount = checkout_data.get('total')
-#     advance = checkout_data.get('advance')
-
-#     # Optionally save the order info in the database with status = pending
-
-#     # Build SkyPay checkout data
-#     api_key = settings.SKYPAY_API_KEY
-#     success_url = request.build_absolute_uri('/payment/success/')
-#     failure_url = request.build_absolute_uri('/payment/failure/')
-
-#     context = {
-#         'api_key': api_key,
-#         'amount': advance,
-#         'order_code': order_code,
-#         'success_url': success_url,
-#         'failure_url': failure_url,
-#     }
-
-#     return render(request, 'payment/payment_form.html', context)
 
 
 import json
