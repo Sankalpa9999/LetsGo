@@ -41,12 +41,12 @@ urlpatterns = [
 
     path('rent/remove/<int:item_id>/', views.remove_from_rent_list, name='remove-from-rent'),
 
-
     path('checkout/', views.rental_checkout, name='rental_checkout'),
 
 
+    path('rental-payment/', views.rental_payment_page, name='rental_payment_page'),
 
-    path('rental/payment/', views.rental_payment_page, name='rental_payment_page'),
+
     
     path('payment/success/', views.payment_success, name='payment_success'),
     path('payment/failure/', views.payment_failure, name='payment_failure'),

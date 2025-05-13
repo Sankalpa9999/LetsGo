@@ -13,6 +13,8 @@ import uuid
 import base64
 from decimal import Decimal
 from django.conf import settings
+import hmac, hashlib, base64, json
+import requests
 
 
 from django.views.decorators.csrf import csrf_exempt
@@ -513,7 +515,7 @@ def rental_checkout(request):
     return redirect('rent-request')
 
 
-
+# rental payent page using skypay
 
 @login_required
 def rental_payment_page(request):
@@ -583,3 +585,4 @@ def payment_failure(request):
     message = request.GET.get('message', 'Payment failed.')
     messages.error(request, message)
     return redirect('rent-request')
+

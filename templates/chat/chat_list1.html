@@ -1,4 +1,4 @@
-{% extends 'partial/base.html' %}
+{% extends 'partial/adminbase.html' %}
 
 {% block content %}
 <div class="container" style="max-width: 800px; margin: 30px auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
@@ -18,7 +18,7 @@
         <ul style="list-style: none; padding: 0; margin: 0;">
             {% for user in users %}
             <li style="border-bottom: 1px solid #eee; transition: background 0.2s;">
-                <a href="{% url 'message:chat_detail' user.id %}" 
+                <a href="{% url 'message:chat_detail1' user.id %}" 
                    style="display: flex; align-items: center; padding: 15px; text-decoration: none; color: #333;">
                     <div style="width: 40px; height: 40px; background: #e0e0e0; border-radius: 50%; margin-right: 15px; 
                                 display: flex; align-items: center; justify-content: center; color: #555; font-weight: bold;">

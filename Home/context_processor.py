@@ -36,3 +36,15 @@ def default(request):
 #         except RentOrder.DoesNotExist:
 #             pass
 #     return {'rent_data_count': rent_count}
+
+
+
+def base_template_context(request):
+    if request.user.is_authenticated:
+        is_vendor = Vendor.objects.filter(user=request.user).exists()
+        return {
+            'base_template': 'partial/adminbase.html' if is_vendor else 'partial/base.html'
+        }
+    return {
+        'base_template': 'partial/base.html'
+    }

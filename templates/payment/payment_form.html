@@ -1,20 +1,35 @@
 {% extends 'partial/base.html' %}
 {% load static %}
-
 {% block content %}
 
-<form id="payment-form" action="https://checkout.skypay.dev" method="POST">
-    <input type="hidden" name="api_key" value="{{ 273234191 }}">
-    <input type="hidden" name="amount" value="{{ amount }}">
-    <input type="hidden" name="code" value="{{ order_code }}">
-    <input type="hidden" name="success_url" value="{{ success_url }}">
-    <input type="hidden" name="failure_url" value="{{ failure_url }}">
-    <button type="submit" style="display:none;">Submit Payment</button>
-</form>
+<body>
+  <form action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST">
+    <!-- Amount Fields -->
+    <input type="text" id="amount" name="amount" value="100" required>
+    <input type="text" id="tax_amount" name="tax_amount" value="10" required>
+    <input type="text" id="total_amount" name="total_amount" value="110" required>
 
-<script type="text/javascript">
-    document.getElementById("payment-form").submit();  // Auto-submit the form
-</script>
+    <!-- Transaction Details -->
+    <input type="text" id="transaction_uuid" name="transaction_uuid" value="241028" required>
+    <input type="text" id="product_code" name="product_code" value="EPAYTEST" required>
+
+    <!-- Optional Fees -->
+    <input type="text" id="product_service_charge" name="product_service_charge" value="0" required>
+    <input type="text" id="product_delivery_charge" name="product_delivery_charge" value="0" required>
+
+    <!-- URLs -->
+    <input type="text" id="success_url" name="success_url" value="https://developer.esewa.com.np/success" required>
+    <input type="text" id="failure_url" name="failure_url" value="https://developer.esewa.com.np/failure" required>
+
+    <!-- Signed Fields and Signature -->
+    <input type="text" id="signed_field_names" name="signed_field_names" value="total_amount,transaction_uuid,product_code" required>
+    <input type="text" id="signature" name="signature" value="YOUR_SIGNATURE_HERE" required>
+
+    <input value="Submit" type="submit">
+  </form>
+</body>
+
+
 
 
 {% endblock %}
