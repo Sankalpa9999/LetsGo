@@ -201,6 +201,19 @@
                                 {% endif %}
                             </a>
                         </div>
+
+                         <div class="nav-item dropdown position-relative">
+                            <a href="" class="nav-link position-relative">
+                                Rent list
+                                {% if request.session.rental_request_data_count %}
+                                    <span class="position-absolute top-50 end-0 translate-middle badge rounded-pill bg-danger"
+                                          style="transform: translate(30%, -50%);">
+                                        {{ request.session.rental_request_data_count|default:0 }}
+                                        <span class="visually-hidden">Rent list</span>
+                                    </span>
+                                {% endif %}
+                            </a>
+                        </div>
                         
                         
                         

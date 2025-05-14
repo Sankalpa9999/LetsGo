@@ -1,30 +1,32 @@
+import base64
+import hashlib
+import hmac
+import json
+import uuid
+from datetime import timedelta
+from decimal import Decimal
 from math import prod
 
+import requests
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg, Count
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
+from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from stripe import Review
-from decimal import Decimal
-import uuid
-import base64
-from decimal import Decimal
-from django.conf import settings
-import hmac, hashlib, base64, json
-import requests
-
-
-from django.views.decorators.csrf import csrf_exempt
 
 from Home.forms import ProductReviewForm, RentalRequestForm
 from Home.models import (Address, Category, Department, Product, ProductImages,
-                         ProductReview, RentOrder, RentOrderItems, Vendor,
-                         Wishlist, RentalRequest)
+                         ProductReview, RentalRequest, RentOrder,
+                         RentOrderItems, Vendor, Wishlist)
 from userauths import views
-from datetime import timedelta
+
+from .utils.esewa_signature import generate_esewa_signature
 
 
 def index(request):
@@ -490,99 +492,156 @@ def delete_rent_request(request, id):
 
 
 
+@csrf_exempt
 @login_required
 def rental_checkout(request):
     if request.method == "POST":
         selected_ids = request.POST.getlist('selected_requests')
-        rental_requests = RentalRequest.objects.filter(id__in=selected_ids)
-        
-        # Calculate the total amount as a Decimal
-        total_amount = sum(Decimal(req.total_price) for req in rental_requests)
-        
-        # Use Decimal for 0.2 instead of float
-        advance = total_amount * Decimal('0.2')
+        rental_requests = RentalRequest.objects.filter(id__in=selected_ids, user=request.user)
 
-        # Convert the Decimal values to string or float for session storage
-        request.session['rental_checkout'] = {
-            'selected_ids': selected_ids,
-            'total': str(total_amount),  # or float(total_amount)
-            'advance': str(advance)  # or float(advance)
+        if not rental_requests:
+            messages.error(request, "No valid rental requests selected.")
+            return redirect('rent-request')
+
+        total = sum(Decimal(req.total_price) for req in rental_requests)
+        advance = int(total * Decimal('0.2'))
+
+        transaction_uuid = f"{uuid.uuid4().hex[:12]}"
+        product_code = "EPAYTEST"
+        secret_key = "8gBm/:&EnhH.1/q"
+
+        signed_fields = "total_amount,transaction_uuid,product_code"
+        signature_input = f"total_amount={advance},transaction_uuid={transaction_uuid},product_code={product_code}"
+        signature = generate_esewa_signature(secret_key, signature_input)
+
+        success_url = request.build_absolute_uri(reverse('payment_success'))
+        failure_url = request.build_absolute_uri(reverse('payment_failure'))
+
+        # Store for later verification
+        request.session['esewa_payment'] = {
+            'transaction_uuid': transaction_uuid,
+            'total_amount': advance,
+            'selected_ids': selected_ids
         }
 
-        # Redirect to the payment page
-        return redirect('rental_payment_page')
-    
+        context = {
+            'amount': advance,
+            'tax_amount': 0,
+            'total_amount': advance,
+            'transaction_uuid': transaction_uuid,
+            'product_code': product_code,
+            'product_service_charge': 0,
+            'product_delivery_charge': 0,
+            'success_url': success_url,
+            'failure_url': failure_url,
+            'signed_field_names': signed_fields,
+            'signature': signature,
+        }
+        print("🚀 Sending eSewa checkout form with:")
+        for k, v in context.items():
+            print(f"{k}: {v}")
+
+
+        return render(request, 'payment/esewa_form.html', context)
+
     return redirect('rent-request')
-
-
-# rental payent page using skypay
-
-@login_required
-def rental_payment_page(request):
-    checkout_data = request.session.get('rental_checkout')
-    if not checkout_data:
-        messages.error(request, "No rental checkout data found.")
-        return redirect('rent-request')
-
-    # Unique order ID (e.g., for verification later)
-    order_code = str(uuid.uuid4())[:8]  # You can store this in DB if needed
-
-    amount = checkout_data.get('total')
-    advance = checkout_data.get('advance')
-
-    # Optionally save the order info in the database with status = pending
-
-    # Build SkyPay checkout URL
-    api_key = settings.SKYPAY_API_KEY  # Store securely in settings.py
-    success_url = request.build_absolute_uri('/payment/success/')
-    failure_url = request.build_absolute_uri('/payment/failure/')
-
-    checkout_url = (
-        f"https://checkout.skypay.dev?"
-        f"api_key={api_key}&"
-        f"amount={advance}&"
-        f"code={order_code}&"
-        f"success_url={success_url}&"
-        f"failure_url={failure_url}"
-    )
-
-    return redirect(checkout_url)
-
 
 import json
+
+
 @login_required
 @csrf_exempt
+
+
+
+
+@csrf_exempt
+@login_required
 def payment_success(request):
-    encoded_data = request.GET.get('data')
-    if not encoded_data:
-        messages.error(request, "No transaction data received.")
+    order_code = f"TEST-{uuid.uuid4().hex[:8]}"
+    rental_checkout = request.session.get('esewa_payment')
+
+    if not rental_checkout:
+        messages.error(request, "No rental session found.")
         return redirect('rent-request')
 
-    # Decode base64 string to JSON
-    try:
-        decoded_bytes = base64.b64decode(encoded_data)
-        decoded_data = json.loads(decoded_bytes)
+    selected_ids = rental_checkout.get('selected_ids')
+    rental_requests = RentalRequest.objects.filter(id__in=selected_ids, user=request.user)
 
-        order_code = decoded_data.get('code')
-        amount = Decimal(decoded_data.get('amount'))
-        status = decoded_data.get('status')
+    if not rental_requests:
+        messages.error(request, "No valid rental requests.")
+        return redirect('rent-request')
 
-        # TODO: verify order_code and mark rental as paid
-        # Example: update database record with matching code
-        if status == 'complete':
-            messages.success(request, f"Payment successful! Order: {order_code}")
-        else:
-            messages.warning(request, f"Payment status: {status}")
+    total_amount = sum(Decimal(req.total_price) for req in rental_requests)
 
-    except Exception as e:
-        messages.error(request, f"Error decoding payment: {e}")
+    rent_order = RentOrder.objects.create(
+        user=request.user,
+        price=total_amount,
+        paid_status=True,
+        product_status='Processing',
+        payment_status="20% Paid"
+    )
 
-    return redirect('rent-request')
+    for req in rental_requests:
+        RentOrderItems.objects.create(
+            order=rent_order,
+            invoice_no=order_code,
+            Product_status='Ongoing',
+            item=req.product.title,
+            image=req.product.image,
+            qty=1,
+            price=req.product.price,
+            total=req.total_price
+        )
+
+    rental_requests.delete()
+
+    if 'esewa_payment' in request.session:
+        del request.session['esewa_payment']
+
+    messages.success(request, f"Payment Successful (Simulated) — Order: {order_code}")
+    return redirect('rent-list')
+
+
+@csrf_exempt
+def payment_failure(request):
+    return render(request, 'payment_failure.html', {
+        'message': request.GET.get('message', 'Payment failed.')
+    })
+
 
 
 @login_required
-def payment_failure(request):
-    message = request.GET.get('message', 'Payment failed.')
-    messages.error(request, message)
-    return redirect('rent-request')
+def rent_list_view(request):
+    # Get both RentOrder and RentalRequest data
+    orders = RentOrder.objects.filter(user=request.user).order_by('-order_date')
+    rental_requests = RentalRequest.objects.filter(user=request.user).order_by('-created_at')
+    
+    return render(request, 'land/rent-list.html', {
+        'orders': orders,
+        'rental_requests': rental_requests
+    })
 
+
+from datetime import date
+
+
+@login_required
+def rent_history_view(request):
+    history_items = []
+    ongoing_items = RentOrderItems.objects.filter(order__user=request.user)
+
+    for item in ongoing_items:
+        # Assuming you have rent/return date associated with each item
+        rental_request = RentalRequest.objects.filter(
+            user=request.user, product__title=item.item
+        ).last()
+
+        if rental_request and rental_request.return_date < date.today():
+            item.Product_status = 'Completed'
+            item.save()
+
+        if item.Product_status == 'Completed':
+            history_items.append(item)
+
+    return render(request, 'land/rent-history.html', {'history_items': history_items})

@@ -1,0 +1,15 @@
+{% extends 'partial/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container text-center py-5">
+    <div class="alert alert-success shadow p-4 rounded">
+        <h1 class="mb-3"><i class="bi bi-check-circle-fill text-success"></i> Payment Successful</h1>
+        <p class="lead">Thank you! Your rental request has been successfully processed.</p>
+        <a href="{% url 'index' %}" class="btn btn-primary mt-3">Go to Dashboard</a>
+    </div>
+</div>
+
+
+{% endblock %}

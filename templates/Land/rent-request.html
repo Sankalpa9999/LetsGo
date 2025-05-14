@@ -5,10 +5,18 @@
     <div class="card shadow-sm">
         <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
             <h4 class="mb-0">Your Rental Requests</h4>
+            <div>
+                <a href="{% url 'rent-list' %}" class="btn btn-outline-primary btn-sm me-2">
+                    <i class="fas fa-car me-1"></i> Vehicles in Your Rent List
+                </a>
+                <a href="{% url 'rent-history' %}" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-history me-1"></i> Rental History
+                </a>
+            </div>
         </div>
         <div class="card-body">
             {% if rental_requests %}
-            <form method="POST" action="{% url 'rental_checkout' %}" id="rentalForm">
+            <form method="POST" action="{% url 'rental_checkout' %}" id="rentalForm" target="_blank">
                 {% csrf_token %}
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
@@ -88,6 +96,14 @@
                 <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
                 <h5 class="fw-normal">No Rental Requests Found</h5>
                 <p class="text-muted">You have not made any rental requests yet.</p>
+                <div class="mt-4">
+                    <a href="{% url 'rent-list' %}" class="btn btn-outline-primary me-2">
+                        <i class="fas fa-car me-1"></i> View Vehicles in Your Rent List
+                    </a>
+                    <a href="{% url 'rent-history' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-history me-1"></i> View Rental History
+                    </a>
+                </div>
             </div>
             {% endif %}
         </div>

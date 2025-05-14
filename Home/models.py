@@ -195,6 +195,7 @@ class RentOrder(models.Model):
     paid_status = models.BooleanField(default=False)
     order_date = models.DateTimeField(auto_now_add=True)
     product_status = models.CharField(choices= STATUS_CHOICE, max_length=100, default='Processing')
+    payment_status = models.CharField(max_length=50, default='Pending')
     
     class Meta:
         verbose_name_plural = 'Rent Order'

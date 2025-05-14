@@ -1,0 +1,48 @@
+{% extends 'partial/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<h2>Rental History</h2>
+            <div>
+                <a href="{% url 'rent-list' %}" class="btn btn-outline-primary btn-sm me-2">
+                    <i class="fas fa-car me-1"></i> Vehicles in Your Rent List
+                </a>
+                <a href="{% url 'rent-history' %}" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-history me-1"></i> Rental History
+                </a>
+            </div>
+<table>
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Invoice No</th>
+            <th>Status</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Order Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in history_items %}
+        <tr>
+            <td>{{ item.item }}</td>
+            <td>{{ item.invoice_no }}</td>
+            <td>{{ item.Product_status }}</td>
+            <td>{{ item.qty }}</td>
+            <td>{{ item.price }}</td>
+            <td>{{ item.total }}</td>
+            <td>{{ item.order.order_date }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7">No rental history found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
+{% endblock %}
