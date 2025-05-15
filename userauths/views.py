@@ -15,6 +15,28 @@ from Home.models import Vendor
 
 from django.contrib import messages
 
+
+
+
+from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
+
+
+from django.contrib.auth.tokens import default_token_generator
+
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
+from django.urls import reverse
+from django.core.mail import send_mail
+
+from django.contrib.auth.tokens import default_token_generator
+
+
+
+
+
+
+
 # user = settings.AUTH_USER_MODEL
 
 def  register_view(request):
@@ -220,3 +242,68 @@ def register_as_vendor(request):
     return render(request, 'userauths/vendor_register.html', {'form': form})
 
 
+
+# Password Reset Request View
+def password_reset_view(request):
+    if request.method == "POST":
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('email')
+            associated_users = User.objects.filter(email=email)
+            if associated_users.exists():
+                for user in associated_users:
+                    token = default_token_generator.make_token(user)
+                    uid = urlsafe_base64_encode(str(user.pk).encode('utf-8'))
+                    reset_url = request.build_absolute_uri(reverse('userauths:password_reset_confirm', kwargs={'uidb64': uid, 'token': token}))
+                    send_mail(
+                        "Password Reset Request",
+                        f"Please use the following link to reset your password: {reset_url}",
+                        settings.DEFAULT_FROM_EMAIL,
+                        [user.email]
+                    )
+                messages.success(request, "A password reset link has been sent to your email address.")
+                return redirect('userauths:password_reset_done')
+            else:
+                messages.warning(request, "Email address not associated with any user.")
+    else:
+        form = PasswordResetForm()
+    return render(request, 'userauths/password_reset.html', {'form': form})
+
+
+
+
+def password_reset_done_view(request):
+    return render(request, 'userauths/password_reset_done.html')
+
+
+
+
+
+
+def password_reset_confirm_view(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode('utf-8')
+        user = User.objects.get(pk=uid)
+        if default_token_generator.check_token(user, token):
+            if request.method == "POST":
+                form = SetPasswordForm(user, request.POST)
+                if form.is_valid():
+                    form.save()
+                    messages.success(request, "Your password has been reset successfully.")
+                    return redirect('userauths:sign-in')
+            else:
+                form = SetPasswordForm(user)
+            return render(request, 'userauths/password_reset_confirm.html', {'form': form})
+        else:
+            messages.warning(request, "The password reset link is invalid or has expired.")
+            return redirect('userauths:password_reset')
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        messages.warning(request, "The password reset link is invalid or has expired.")
+        return redirect('userauths:password_reset')
+
+
+
+
+# def password_reset_complete_view(request):
+#     messages.success(request, "Your password has been reset successfully. Please sign in.")
+#     return render(request, 'userauths/password_reset_complete.html')

@@ -217,4 +217,17 @@ LOGIN_URL = '/user/sign-in/'
 
 
 # SKYPAY_API_KEY = '273234191'
-SKYPAY_API_KEY = '347371162'
+# SKYPAY_API_KEY = '347371162'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587  # TLS
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = 'letsgo69510@gmail.com'  # Your Gmail address
+EMAIL_HOST_PASSWORD = 'mukh xgdn eybt imgr'  # Your Gmail password or App Password (if 2FA is enabled)
+
+DEFAULT_FROM_EMAIL = 'letsgo69510@gmail.com'  # This can be the same as EMAIL_HOST_USER

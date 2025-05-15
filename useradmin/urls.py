@@ -29,6 +29,10 @@ urlpatterns = [
     path('owner/profile/edit/', views.edit_owner_profile, name='edit-owner-profile'),
     
     
+    
+    path('vendor/rent-list/', views.vendor_rent_list_view, name='vendor_rent_list'),
+    path('vendor/rent-history/', views.vendor_rent_history_view, name='vendor_rent_history'),
+    
 ]
 
 

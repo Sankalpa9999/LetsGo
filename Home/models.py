@@ -200,25 +200,29 @@ class RentOrder(models.Model):
     class Meta:
         verbose_name_plural = 'Rent Order'
         
-        
 class RentOrderItems(models.Model):
     order = models.ForeignKey(RentOrder, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)  # ADD THIS LINE
+
     invoice_no = models.CharField(max_length=200)
     Product_status = models.CharField(max_length=200)
     item = models.CharField(max_length=200)
     image = models.ImageField(upload_to="Rent-order", default='product.jpg')
     qty = models.IntegerField(default=0)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    total = models.DecimalField(max_digits=10, decimal_places=2,default=100)
-    
-    
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=100)
+    rent_date = models.DateField(null=True, blank=True)
+    return_date = models.DateField(null=True, blank=True)
     class Meta:
         verbose_name_plural = 'Rent Order Items'
-        
-    def order_image(self):
-        return mark_safe('<img src="/media/%s" width="50" height="50" />'%(self.image))
-    
-    
+
+    def calculate_days(self):
+        if self.rent_date and self.return_date:
+            return (self.return_date - self.rent_date).days
+        return 0
+
+
+
 class ProductReview(models.Model): 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, related_name='reviews')

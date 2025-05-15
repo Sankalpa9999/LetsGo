@@ -1,0 +1,88 @@
+
+
+@login_required
+def vendor_rent_list_view(request):
+    vendor = Vendor.objects.get(user=request.user)  
+    
+    
+    # rent_items = RentOrderItems.objects.filter(product__vendor=vendor)
+    rent_items = RentOrderItems.objects.all()
+
+    context = {
+        'rent_items': rent_items
+    }
+    return render(request, 'useradmin/vendor_rent_list.html', context)
+
+
+from datetime import date
+
+@login_required
+def vendor_rent_history_view(request):
+    vendor = get_object_or_404(Vendor, user=request.user)
+
+    completed_items = RentOrderItems.objects.filter(
+        product__vendor=vendor,
+        Product_status='Completed'
+    ).order_by('-return_date')
+
+    context = {
+        'history_items': completed_items
+    }
+    return render(request, 'useradmin/vendor_rent_history.html', context)
+
+
+
+
+
+
+
+
+
+    
+
+@login_required
+def rent_list_view(request):
+    # Get all orders of the logged-in user
+    orders = RentOrder.objects.filter(user=request.user).order_by('-order_date')
+
+    # Attach items to each order (optional: for easier access in template)
+    order_with_items = []
+    for order in orders:
+        items = RentOrderItems.objects.filter(order=order)
+        order_with_items.append({
+            'order': order,
+            'items': items
+        })
+
+    context = {
+        'order_with_items': order_with_items
+    }
+
+    return render(request, 'land/rent-list.html', context)
+
+
+
+
+from datetime import date
+
+@login_required
+def rent_history_view(request):
+    history_items = []
+    ongoing_items = RentOrderItems.objects.filter(order__user=request.user)
+
+    for item in ongoing_items:
+        # Assuming item.item stores product title, find matching Product
+        product = Product.objects.filter(title=item.item).first()
+        if not product:
+            continue
+
+        rental_request = RentalRequest.objects.filter(user=request.user, product=product).last()
+
+        if rental_request and rental_request.return_date < date.today():
+            item.Product_status = 'Completed'
+            item.save()
+
+        if item.Product_status == 'Completed':
+            history_items.append(item)
+
+    return render(request, 'land/rent-history.html', {'history_items': history_items})

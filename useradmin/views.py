@@ -204,3 +204,42 @@ def edit_owner_profile(request):
     }
     return render(request, 'useradmin/edit_owner_profile.html', context)
 
+
+
+
+
+
+
+
+@login_required
+def vendor_rent_list_view(request):
+    vendor = Vendor.objects.get(user=request.user)  
+
+    rent_items = RentOrderItems.objects.all()
+    # rent_items = RentOrderItems.objects.filter(product__vendor=vendor)
+    request.session['rent_items_data_count'] = rent_items.count()
+
+    context = {
+        'rent_items': rent_items
+    }
+    return render(request, 'useradmin/vendor_rent_list.html', context)
+
+
+from datetime import date
+
+@login_required
+def vendor_rent_history_view(request):
+    vendor = get_object_or_404(Vendor, user=request.user)
+
+    completed_items = RentOrderItems.objects.filter(
+        product__vendor=vendor,
+        Product_status='Completed'
+    ).order_by('-return_date')
+
+    request.session['completed_items_data_count'] = completed_items.count()
+    
+    context = {
+        'history_items': completed_items
+    }
+    return render(request, 'useradmin/vendor_rent_history.html', context)
+

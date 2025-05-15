@@ -53,8 +53,7 @@
         text-decoration: underline;
     }
 </style>
-<!-- 
-<h2>Chat with <a href="{% url 'useradmin:requested_user_profile' user.id %}" class="profile-link">{{ user.username }}</a></h2> -->
+
 {% for v in vendors %}
 <h2>Chat with <a href="{% url 'vendor-detail' v.vid %}" class="profile-link">{{ user.username }}</a></h2>
 

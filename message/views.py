@@ -18,6 +18,8 @@ def chat_list(request):
     request.session['user_data_count'] = users.count()
     return render(request, 'chat/chat_list.html', {'users': users})
 
+
+
 @login_required
 def chat_detail(request, user_id):
     other_user = get_object_or_404(User, id=user_id)

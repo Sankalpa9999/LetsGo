@@ -1,0 +1,45 @@
+{% extends 'partial/adminbase.html' %}
+{% block content %}
+<h2 class="mb-4">Vendor Rent List</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>UserName</th>
+            <th>Product</th>
+            <th>Image</th>
+            <th>Paid Status</th>
+            <th>Price</th>
+            <th>Rent Date</th>
+            <th>Return Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in rent_items %}
+        <tr>
+            <td>
+                <a href="{% url 'useradmin:requested_user_profile' item.order.user.id %}">
+                    {{ item.order.user.username }}
+                </a>
+            </td>
+            <td>{{ item.item }}</td>
+            <td><img src="{{ item.image.url }}" width="80"></td>
+                    <td>
+                <span class="badge 
+                    {% if item.order.payment_status == 'Paid' %}bg-success
+                    {% elif item.order.payment_status == 'Pending' %}bg-warning
+                    {% else %}bg-success{% endif %}">
+                    {{ item.order.payment_status }}
+                </span>
+                    </td>
+            <td>${{ item.total }}</td>
+            <td>{{ item.rent_date }}</td>
+            <td>{{ item.return_date }}</td>
+            <td>{{ item.Product_status }}</td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+{% endblock %}

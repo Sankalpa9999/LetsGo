@@ -550,7 +550,7 @@ import json
 
 
 @login_required
-@csrf_exempt
+
 
 
 
@@ -584,15 +584,17 @@ def payment_success(request):
 
     for req in rental_requests:
         RentOrderItems.objects.create(
-            order=rent_order,
-            invoice_no=order_code,
-            Product_status='Ongoing',
-            item=req.product.title,
-            image=req.product.image,
-            qty=1,
-            price=req.product.price,
-            total=req.total_price
-        )
+        order=rent_order,
+        invoice_no=order_code,
+        Product_status='Ongoing',
+        item=req.product.title,
+        image=req.product.image,
+        qty=1,
+        price=req.product.price,
+        total=req.total_price,
+        rent_date=req.rent_date,
+        return_date=req.return_date,
+    )
 
     rental_requests.delete()
 
@@ -611,20 +613,31 @@ def payment_failure(request):
 
 
 
+
 @login_required
 def rent_list_view(request):
-    # Get both RentOrder and RentalRequest data
+    # Get all orders of the logged-in user
     orders = RentOrder.objects.filter(user=request.user).order_by('-order_date')
-    rental_requests = RentalRequest.objects.filter(user=request.user).order_by('-created_at')
-    
-    return render(request, 'land/rent-list.html', {
-        'orders': orders,
-        'rental_requests': rental_requests
-    })
+
+    # Attach items to each order (optional: for easier access in template)
+    order_with_items = []
+    for order in orders:
+        items = RentOrderItems.objects.filter(order=order)
+        order_with_items.append({
+            'order': order,
+            'items': items
+        })
+
+    context = {
+        'order_with_items': order_with_items
+    }
+
+    return render(request, 'land/rent-list.html', context)
+
+
 
 
 from datetime import date
-
 
 @login_required
 def rent_history_view(request):
@@ -632,10 +645,12 @@ def rent_history_view(request):
     ongoing_items = RentOrderItems.objects.filter(order__user=request.user)
 
     for item in ongoing_items:
-        # Assuming you have rent/return date associated with each item
-        rental_request = RentalRequest.objects.filter(
-            user=request.user, product__title=item.item
-        ).last()
+        # Assuming item.item stores product title, find matching Product
+        product = Product.objects.filter(title=item.item).first()
+        if not product:
+            continue
+
+        rental_request = RentalRequest.objects.filter(user=request.user, product=product).last()
 
         if rental_request and rental_request.return_date < date.today():
             item.Product_status = 'Completed'

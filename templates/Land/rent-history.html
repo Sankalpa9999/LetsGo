@@ -3,7 +3,9 @@
 
 {% block content %}
 
-<h2>Rental History</h2>
+    <div class="card shadow-sm">
+        <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Your Rental History</h4>
             <div>
                 <a href="{% url 'rent-list' %}" class="btn btn-outline-primary btn-sm me-2">
                     <i class="fas fa-car me-1"></i> Vehicles in Your Rent List
@@ -12,6 +14,8 @@
                     <i class="fas fa-history me-1"></i> Rental History
                 </a>
             </div>
+        </div>
+
 <table>
     <thead>
         <tr>

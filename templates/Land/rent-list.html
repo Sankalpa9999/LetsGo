@@ -2,103 +2,72 @@
 {% load static %}
 
 {% block content %}
-<div class="container-fluid py-4">
-    <div class="card shadow-sm">
-        <div class="card-header bg-white border-bottom">
-            <h4 class="mb-0">My Active Rentals</h4>
-        </div>
-                    <div>
-                <a href="{% url 'rent-list' %}" class="btn btn-outline-primary btn-sm me-2">
+<div class="container mt-4">
+        <div class="card shadow-sm">
+        <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Your Rental Orders</h4>
+            <div>
+                <a href="{% url 'rent-request' %}" class="btn btn-outline-primary btn-sm me-2">
                     <i class="fas fa-car me-1"></i> Vehicles in Your Rent List
                 </a>
                 <a href="{% url 'rent-history' %}" class="btn btn-outline-secondary btn-sm">
                     <i class="fas fa-history me-1"></i> Rental History
                 </a>
             </div>
-        <div class="card-body">
-            {% if orders or rental_requests %}
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Product</th>
-                            <th>Rent Date</th>
-                            <th>Return Date</th>
-                            <th>Days</th>
-                            <th>Status</th>
-                            <th>Total Price</th>
-                            <th>Order Date</th>
-                            <th class="text-end">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for order in orders %}
-                        {% for item in order.rentorderitems_set.all %}
-                        {% for req in rental_requests %}
-                        {% if req.product.title == item.item %}
-                        <tr>
-                            <td><strong>{{ item.item }}</strong></td>
-                            <td>{{ req.rent_date|date:"Y-m-d" }}</td>
-                            <td>{{ req.return_date|date:"Y-m-d" }}</td>
-                            <td>{{ req.calculate_days }}</td>
-                            <td>
-                                <span class="badge bg-primary text-dark">
-                                    
+        </div>
+
+    {% if order_with_items %}
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Order #</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>Items</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order_block in order_with_items %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ order_block.order.order_date|date:"M d, Y" }}</td>
+                    <td>
+                        <span class="badge 
+                            {% if order_block.order.payment_status == 'Paid' %}bg-success
+                            {% elif order_block.order.payment_status == 'Pending' %}bg-warning
+                            {% else %}bg-success{% endif %}">
+                            {{ order_block.order.payment_status }}
+                        </span>
+                    </td>
+                    <td>${{ order_block.order.price }}</td>
+                    <td>
+                        {% for item in order_block.items %}
+                        <div class="d-flex mb-2">
+                            <img src="{{ item.image.url }}" width="40" class="me-2">
+                            <div>
+                                <strong>{{ item.item }}</strong><br>
+                                {{ item.rent_date|date:"M d" }} - {{ item.return_date|date:"M d" }}<br>
+                                <span class="badge 
+                                    {% if item.Product_status == 'Returned' %}bg-success
+                                    {% elif item.Product_status == 'Ongoing' %}bg-primary
+                                    {% else %}bg-warning{% endif %}">
                                     {{ item.Product_status }}
                                 </span>
-                            </td>
-                            <td>रु.{{ item.total }}</td>
-                            <td>{{ order.order_date|date:"Y-m-d" }}</td>
-                            <td class="text-end">
-                                <a href="" class="btn btn-sm btn-outline-primary">View</a>
-                            </td>
-                        </tr>
-                        {% endif %}
+                            </div>
+                        </div>
                         {% endfor %}
-                        {% endfor %}
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {% else %}
-            <div class="text-center py-5">
-                <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
-                <h5 class="fw-normal">No Active Rentals Found</h5>
-                <p class="text-muted">You don't have any active rentals at the moment.</p>
-                <a href="{% url 'products' %}" class="btn btn-primary mt-3">
-                    <i class="fas fa-car me-1"></i> Browse Vehicles
-                </a>
-            </div>
-            {% endif %}
-        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
+    {% else %}
+    <div class="alert alert-info">
+        You haven't placed any rent orders yet.
+    </div>
+    {% endif %}
 </div>
-
-<style>
-    .card {
-        border-radius: 0.5rem;
-        border: none;
-    }
-
-    .table {
-        font-size: 0.9rem;
-    }
-
-    .table th {
-        font-weight: 500;
-        text-transform: uppercase;
-        font-size: 0.75rem;
-        letter-spacing: 0.5px;
-        color: #D19C97;
-    }
-
-    .badge {
-        padding: 0.35em 0.65em;
-        font-weight: 500;
-    }
-
-    .table-hover tbody tr:hover {
-        background-color: #D19C97;
-    }
-</style>
 {% endblock %}

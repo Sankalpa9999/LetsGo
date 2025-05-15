@@ -1,0 +1,31 @@
+{% extends 'partial/adminbase.html' %}
+{% block content %}
+<h2 class="mb-4">Vendor Rent History</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Invoice</th>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Total</th>
+            <th>Rent Date</th>
+            <th>Return Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in history_items %}
+        <tr>
+            <td>{{ item.invoice_no }}</td>
+            <td>{{ item.item }}</td>
+            <td>{{ item.qty }}</td>
+            <td>${{ item.total }}</td>
+            <td>{{ item.rent_date }}</td>
+            <td>{{ item.return_date }}</td>
+            <td>{{ item.Product_status }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
