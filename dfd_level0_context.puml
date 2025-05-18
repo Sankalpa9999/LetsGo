@@ -1,0 +1,15 @@
+@startuml Context Level (Level 0)
+!theme plain
+skinparam componentStyle rectangle
+
+' Context Level (Level 0)
+[User] as user
+[Admin] as admin
+rectangle "Rental\nManagement\nSystem" as system
+
+user --> system : User Data, Rental Requests
+admin --> system : Admin Data, System Management
+system --> user : Rental Information, Notifications
+system --> admin : Reports, System Status
+
+@enduml 

@@ -53,12 +53,16 @@
         text-decoration: underline;
     }
 </style>
-<!-- 
-<h2>Chat with <a href="{% url 'useradmin:requested_user_profile' user.id %}" class="profile-link">{{ user.username }}</a></h2> -->
-{% for v in vendors %}
-<h2>Chat with <a href="{% url 'useradmin:requested_user_profile' user.id %}" class="profile-link">{{ user.username }}</a></h2>
 
-
+<h2>Chat with 
+    {% if user.is_authenticated %}
+        {% if is_vendor %}
+            <a href="{% url 'useradmin:requested_user_profile' user.id %}" class="profile-link">{{ user.username }}</a>
+        {% else %}
+            <span class="profile-link">{{ user.username }}</span>
+        {% endif %}
+    {% endif %}
+</h2>
 
 <div id="chatBox" style="border:1px solid #ccc; padding:10px; height:400px; overflow-y:scroll;">
     {% for message in chat_messages %}
@@ -66,7 +70,11 @@
             
             {% if message.sender != request.user %}
             <div class="sender-info">
-                <a href="{% url 'useradmin:requested_user_profile' user.id %}" class="profile-link">
+                {% if is_vendor %}
+                    <a href="{% url 'useradmin:requested_user_profile' user.id %}" class="profile-link">
+                {% else %}
+                    <div class="profile-link">
+                {% endif %}
                     {% if message.sender.profile_image %}
                         <img src="{{ message.sender.profile_image.url }}" class="profile-image" alt="{{ message.sender.username }}">
                     {% else %}
@@ -75,7 +83,11 @@
                         </div>
                     {% endif %}
                     <strong>{{ message.sender.username }}</strong>
-                </a>
+                {% if is_vendor %}
+                    </a>
+                {% else %}
+                    </div>
+                {% endif %}
             </div>
             {% endif %}
             
@@ -103,7 +115,7 @@
         </div>
     {% endfor %}
 </div>
-{% endfor %}
+
 <!-- Updated form to accept files -->
 <form method="POST" enctype="multipart/form-data" style="margin-top:20px;">
     {% csrf_token %}

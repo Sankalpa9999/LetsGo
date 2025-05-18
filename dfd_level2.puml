@@ -1,0 +1,57 @@
+@startuml Level 2
+!theme plain
+skinparam componentStyle rectangle
+
+' Level 2 DFD - Detailed Process Flow
+database "User Database" as userDB
+database "Product Database" as productDB
+database "Rental Database" as rentalDB
+database "Message Database" as messageDB
+database "Document Database" as docDB
+database "Category Database" as catDB
+
+rectangle "User Authentication" as auth
+rectangle "Profile Management" as profile
+rectangle "Product Listing" as listing
+rectangle "Category Management" as catMgmt
+rectangle "Rental Processing" as rental
+rectangle "Document Management" as docMgmt
+rectangle "Messaging System" as msg
+rectangle "Payment Processing" as payment
+
+[User] as user
+[Admin] as admin
+
+' User flows
+user --> auth : Login/Register
+auth --> userDB : Verify/Store Credentials
+user --> profile : Update Profile
+profile --> userDB : Store Profile Data
+user --> listing : View Products
+listing --> productDB : Fetch Products
+user --> rental : Request Rental
+rental --> rentalDB : Process Rental
+user --> docMgmt : Upload Documents
+docMgmt --> docDB : Store Documents
+user --> msg : Send Messages
+msg --> messageDB : Store Messages
+
+' Admin flows
+admin --> catMgmt : Manage Categories
+catMgmt --> catDB : Update Categories
+admin --> listing : Manage Products
+listing --> productDB : Update Products
+admin --> rental : Review Requests
+rental --> user : Status Updates
+admin --> payment : Process Payments
+payment --> rentalDB : Update Payment Status
+
+' Data flows
+productDB --> listing : Product Data
+catDB --> listing : Category Data
+userDB --> profile : User Data
+rentalDB --> rental : Rental Data
+messageDB --> msg : Message History
+docDB --> docMgmt : Document Data
+
+@enduml 

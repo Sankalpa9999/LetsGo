@@ -3,21 +3,17 @@ from Home.models import Product, Category, Department, Vendor, RentOrder, RentOr
 from userauths.models import User, Profile, ContactUs
 from django.contrib import messages
 from userauths.forms import UserRegisterForm,VendorRegistrationForm,UserUpdateForm
-
-
-
 from django.contrib.auth.decorators import login_required
 from useradmin.forms import ProductForm, ProductImageFormSet, DocumentImageFormSet, TermsAndConditionsFormSet,VendorForm
-
-
-
+from userauths.decorators import vendor_required
 import datetime
 # Create your views here.
 
+@vendor_required
 def dashboard(request):
     return render(request, 'useradmin/dashboard.html')
 
-@login_required
+@vendor_required
 def vendor_product_list(request):
     vendors = Vendor.objects.filter(user=request.user)
     
@@ -111,7 +107,7 @@ def edit_product(request, pid):
     
     
     
-@login_required
+@vendor_required
 def delete_product(request, pid):
     product = get_object_or_404(Product, pid=pid, vendor__user=request.user)
     product.delete()
@@ -121,7 +117,7 @@ def delete_product(request, pid):
 
 
 
-@login_required
+@vendor_required
 def vendor_rental_requests(request):
     vendor = get_object_or_404(Vendor, user=request.user)
     rental_requests = RentalRequest.objects.filter(product__vendor=vendor).order_by('-created_at')
@@ -130,7 +126,7 @@ def vendor_rental_requests(request):
     
     return render(request, 'useradmin/vendor_rental_requests.html', {'rental_requests': rental_requests})
 
-@login_required
+@vendor_required
 def update_rental_status(request, request_id, action):
     vendor = get_object_or_404(Vendor, user=request.user)
     rental_request = get_object_or_404(RentalRequest, id=request_id, product__vendor=vendor)
@@ -147,7 +143,7 @@ def update_rental_status(request, request_id, action):
 
 
 
-@login_required
+@vendor_required
 def delete_rental_request(request, request_id):
     vendor = get_object_or_404(Vendor, user=request.user)
     rental_request = get_object_or_404(RentalRequest, id=request_id, product__vendor=vendor)
@@ -175,7 +171,7 @@ def requested_user_profile(request, user_id):
     })
     
 
-@login_required
+@vendor_required
 def owner_profile(request):
     vendor = get_object_or_404(Vendor, user=request.user)
 
@@ -186,7 +182,7 @@ def owner_profile(request):
     
  
 
-@login_required
+@vendor_required
 def edit_owner_profile(request):
     vendor = get_object_or_404(Vendor, user=request.user)
 
@@ -211,7 +207,7 @@ def edit_owner_profile(request):
 
 
 
-@login_required
+@vendor_required
 def vendor_rent_list_view(request):
     vendor = Vendor.objects.get(user=request.user)  
 
@@ -227,7 +223,7 @@ def vendor_rent_list_view(request):
 
 from datetime import date
 
-@login_required
+@vendor_required
 def vendor_rent_history_view(request):
     vendor = get_object_or_404(Vendor, user=request.user)
 

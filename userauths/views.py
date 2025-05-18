@@ -224,8 +224,10 @@ def contactUs(request):
 
 @login_required
 def register_as_vendor(request):
+    # If already a vendor, redirect to dashboard
     if Vendor.objects.filter(user=request.user).exists():
-        return redirect('/useradmin/dashboard/')
+        messages.info(request, "You are already registered as a vendor.")
+        return redirect('useradmin:dashboard')
 
     if request.method == 'POST':
         form = VendorRegistrationForm(request.POST, request.FILES)
@@ -233,9 +235,8 @@ def register_as_vendor(request):
             vendor = form.save(commit=False)
             vendor.user = request.user
             vendor.save()
-            messages.success(request, "Vendor registration successful!")
-
-            return redirect('/useradmin/dashboard/')  # redirect after success
+            messages.success(request, "Vendor registration successful! You can now access the vendor dashboard.")
+            return redirect('useradmin:dashboard')
     else:
         form = VendorRegistrationForm()
     

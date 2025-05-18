@@ -41,10 +41,15 @@ def default(request):
 
 def base_template_context(request):
     if request.user.is_authenticated:
+        # Check if user is a vendor
         is_vendor = Vendor.objects.filter(user=request.user).exists()
-        return {
-            'base_template': 'partial/adminbase.html' if is_vendor else 'partial/base.html'
-        }
-    return {
-        'base_template': 'partial/base.html'
-    }
+        
+        # Check if the current URL is in the vendor registration process
+        is_vendor_registration = request.path == '/user/register-vendor/'
+        
+        # Use adminbase.html only for vendors and not during registration
+        if is_vendor and not is_vendor_registration:
+            return {'base_template': 'partial/adminbase.html'}
+    
+    # Default to base.html for non-vendors and non-authenticated users
+    return {'base_template': 'partial/base.html'}

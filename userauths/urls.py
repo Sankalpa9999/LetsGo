@@ -7,10 +7,6 @@ from django.urls import reverse_lazy
 app_name = 'userauths'
 
 
-
-
-
-
 urlpatterns = [
     path('sign-up/',views.register_view,name='sign-up'),
     path('sign-in/',views.login_view,name='sign-in'),
@@ -26,9 +22,6 @@ urlpatterns = [
     
     
     path('register-vendor/', views.register_as_vendor, name='vendor_register'),
-
-    
-    
     
     path('contact/', views.contactUs, name='contact'),
     

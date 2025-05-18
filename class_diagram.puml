@@ -1,0 +1,245 @@
+@startuml Rent System Class Diagram
+
+' Style and theme
+skinparam class {
+    BackgroundColor White
+    ArrowColor Black
+    BorderColor Black
+}
+
+' User Authentication Models
+class User {
+    + email: EmailField
+    + username: CharField
+    + Bio: TextField
+    + profile_image: ImageField
+    + license_image: ImageField
+    + citizenship_image: ImageField
+    + is_active: BooleanField
+    + is_staff: BooleanField
+    + is_superuser: BooleanField
+    + __str__(): String
+}
+
+class Profile {
+    + full_name: CharField
+    + bio: TextField
+    + phone: CharField
+    + verified: BooleanField
+    + image(): ImageField
+    + license(): ImageField
+    + citizenship(): ImageField
+    + __str__(): String
+}
+
+class ContactUs {
+    + name: CharField
+    + email: EmailField
+    + subject: CharField
+    + message: TextField
+    + phone: CharField
+    + __str__(): String
+}
+
+' Product Related Models
+class Department {
+    + did: ShortUUIDField
+    + title: CharField
+    + image: ImageField
+    + department_image(): SafeString
+    + __str__(): String
+}
+
+class Category {
+    + cid: ShortUUIDField
+    + title: CharField
+    + image: ImageField
+    + category_image(): SafeString
+    + __str__(): String
+}
+
+class Tags {
+}
+
+class Vendor {
+    + vid: ShortUUIDField
+    + title: CharField
+    + image: ImageField
+    + cover_image: ImageField
+    + description: RichTextField
+    + address: CharField
+    + contact: CharField
+    + chat_resp_time: CharField
+    + date: DateTimeField
+    + authentic_rating: CharField
+    + vendor_image(): SafeString
+    + __str__(): String
+}
+
+class Product {
+    + pid: ShortUUIDField
+    + title: CharField
+    + image: ImageField
+    + description: RichTextField
+    + price: DecimalField
+    + old_price: DecimalField
+    + specifications: RichTextField
+    + product_status: CharField
+    + status: BooleanField
+    + featured: BooleanField
+    + sku: ShortUUIDField
+    + date: DateTimeField
+    + updated: DateTimeField
+    + numberplate: CharField
+    + tags: TaggableManager
+    + product_image(): SafeString
+    + get_percentage(): Float
+    + __str__(): String
+}
+
+class ProductImages {
+    + image: ImageField
+    + date: DateTimeField
+}
+
+class DocumentImage {
+    + document: FileField
+    + date: DateTimeField
+    + __str__(): String
+}
+
+class TermsAndConditions {
+    + term_image: ImageField
+    + description: RichTextField
+    + date: DateTimeField
+    + __str__(): String
+}
+
+' Order Related Models
+class RentOrder {
+    + price: DecimalField
+    + paid_status: BooleanField
+    + order_date: DateTimeField
+    + product_status: CharField
+    + payment_status: CharField
+}
+
+class RentOrderItems {
+    + invoice_no: CharField
+    + Product_status: CharField
+    + item: CharField
+    + image: ImageField
+    + qty: IntegerField
+    + price: DecimalField
+    + total: DecimalField
+    + rent_date: DateField
+    + return_date: DateField
+    + calculate_days(): Integer
+}
+
+class ProductReview {
+    + rating: PositiveSmallIntegerField
+    + review: TextField
+    + date: DateTimeField
+    + get_rating(): Integer
+    + __str__(): String
+}
+
+class Wishlist {
+    + date: DateTimeField
+    + __str__(): String
+}
+
+class Address {
+    + address: CharField
+    + status: BooleanField
+}
+
+class RentalRequest {
+    + rent_date: DateField
+    + return_date: DateField
+    + status: CharField
+    + total_price: DecimalField
+    + address: TextField
+    + created_at: DateTimeField
+    + calculate_days(): Integer
+    + __str__(): String
+    + save(): void
+}
+
+' Message Model
+class Message {
+    + message: TextField
+    + file: FileField
+    + message_type: CharField
+    + timestamp: DateTimeField
+    + is_read: BooleanField
+    + __str__(): String
+}
+
+' Forms
+class UserRegisterForm {
+    + username: CharField
+    + email: EmailField
+    + password1: CharField
+    + password2: CharField
+}
+
+class VendorRegistrationForm {
+    + title: CharField
+    + image: ImageField
+    + cover_image: ImageField
+    + description: TextField
+    + address: CharField
+    + contact: CharField
+    + chat_resp_time: CharField
+}
+
+class ProductForm {
+    + title: CharField
+    + image: ImageField
+    + description: TextField
+    + price: DecimalField
+    + old_price: DecimalField
+    + specifications: TextField
+    + department: ForeignKey
+    + category: ForeignKey
+    + featured: BooleanField
+    + numberplate: CharField
+}
+
+' Relationships
+User "1" -- "1" Profile
+User "1" -- "*" Message : sends >
+User "1" -- "*" Message : receives >
+User "1" -- "1" Vendor
+User "1" -- "*" Product : owns >
+User "1" -- "*" RentOrder : places >
+User "1" -- "*" ProductReview : writes >
+User "1" -- "*" Wishlist : has >
+User "1" -- "*" Address : has >
+User "1" -- "*" RentalRequest : makes >
+
+Department "1" -- "*" Category
+Department "1" -- "*" Product
+
+Category "1" -- "*" Product
+
+Vendor "1" -- "*" Product : sells >
+
+Product "1" -- "*" ProductImages
+Product "1" -- "*" DocumentImage
+Product "1" -- "*" TermsAndConditions
+Product "1" -- "*" ProductReview : receives >
+Product "1" -- "*" Wishlist : included in >
+Product "1" -- "*" RentalRequest : requested for >
+Product "1" -- "*" RentOrderItems : ordered in >
+Product "*" -- "*" Tags : tagged with >
+
+RentOrder "1" -- "*" RentOrderItems
+
+UserRegisterForm ..> User : creates >
+VendorRegistrationForm ..> Vendor : creates >
+ProductForm ..> Product : creates/updates >
+
+@enduml 

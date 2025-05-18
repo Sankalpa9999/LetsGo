@@ -2,18 +2,18 @@
 {% load static %}
 
 {% block content %}
-<h2>{% if product %}Edit{% else %}Add{% endif %} Product</h2>
+<h2>{% if product %}Edit{% else %}Add{% endif %} Vehicle</h2>
 
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     
     <fieldset>
-        <legend>Product Details</legend>
+        <legend>Vehicle Details</legend>
         {{ form.as_p }}
     </fieldset>
 
     <fieldset>
-        <legend>Product Images</legend>
+        <legend>Vehicle Images</legend>
         {{ image_formset.management_form }}
         {% for form in image_formset %}
             {{ form.as_p }}
@@ -21,7 +21,7 @@
     </fieldset>
 
     <fieldset>
-        <legend>Product Documents</legend>
+        <legend>Vehicle Documents</legend>
         {{ doc_formset.management_form }}
         {% for form in doc_formset %}
             {{ form.as_p }}

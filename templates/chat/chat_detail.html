@@ -54,9 +54,7 @@
     }
 </style>
 
-{% for v in vendors %}
-<h2>Chat with <a href="{% url 'vendor-detail' v.vid %}" class="profile-link">{{ user.username }}</a></h2>
-
+<h2>Chat with <a href="{% url 'vendor-detail' vendor.vid %}" class="profile-link">{{ user.username }}</a></h2>
 
 <div id="chatBox" style="border:1px solid #ccc; padding:10px; height:400px; overflow-y:scroll;">
     {% for message in chat_messages %}
@@ -64,7 +62,7 @@
             
             {% if message.sender != request.user %}
             <div class="sender-info">
-                <a href="{% url 'vendor-detail' v.vid %}" class="profile-link">
+                <a href="{% url 'vendor-detail' vendor.vid %}" class="profile-link">
                     {% if message.sender.profile_image %}
                         <img src="{{ message.sender.profile_image.url }}" class="profile-image" alt="{{ message.sender.username }}">
                     {% else %}
@@ -101,7 +99,7 @@
         </div>
     {% endfor %}
 </div>
-{% endfor %}
+
 <!-- Updated form to accept files -->
 <form method="POST" enctype="multipart/form-data" style="margin-top:20px;">
     {% csrf_token %}

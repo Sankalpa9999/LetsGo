@@ -1,5 +1,3 @@
-
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -23,6 +21,7 @@ def chat_list(request):
 @login_required
 def chat_detail(request, user_id):
     other_user = get_object_or_404(User, id=user_id)
+    vendor = get_object_or_404(Vendor, user=other_user)
 
     if request.method == 'POST':
         message_text = request.POST.get('message')
@@ -48,7 +47,6 @@ def chat_detail(request, user_id):
             )
             messages.success(request, 'Message successfully sent!')
             return redirect('message:chat_detail', user_id=other_user.id)
-            # return redirect('message:chat_detail', user_id=other_user.id)
 
     chat_messages = Message.objects.filter(
         Q(sender=request.user, receiver=other_user) |
@@ -58,6 +56,7 @@ def chat_detail(request, user_id):
     return render(request, 'chat/chat_detail.html', {
         'user': other_user,
         'chat_messages': chat_messages,
+        'vendor': vendor,
     })
 
 
@@ -72,6 +71,7 @@ def chat_list1(request):
 @login_required
 def chat_detail1(request, user_id):
     other_user = get_object_or_404(User, id=user_id)
+    is_vendor = Vendor.objects.filter(user=other_user).exists()
 
     if request.method == 'POST':
         message_text = request.POST.get('message')
@@ -106,4 +106,5 @@ def chat_detail1(request, user_id):
     return render(request, 'chat/chat_detail1.html', {
         'user': other_user,
         'chat_messages': chat_messages,
+        'is_vendor': is_vendor,
     })

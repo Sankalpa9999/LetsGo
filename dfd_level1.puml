@@ -1,0 +1,33 @@
+@startuml Level 1
+!theme plain
+skinparam componentStyle rectangle
+
+' Level 1 DFD
+database "User Database" as userDB
+database "Product Database" as productDB
+database "Rental Database" as rentalDB
+database "Message Database" as messageDB
+
+rectangle "User Management" as userMgmt
+rectangle "Product Management" as productMgmt
+rectangle "Rental Processing" as rentalProc
+rectangle "Communication System" as commSystem
+
+[User] as user
+[Admin] as admin
+
+user --> userMgmt : Registration/Login
+userMgmt --> userDB : Store User Data
+admin --> productMgmt : Add/Update Products
+productMgmt --> productDB : Store Product Data
+user --> rentalProc : Rental Request
+rentalProc --> rentalDB : Store Rental Data
+user --> commSystem : Send Messages
+commSystem --> messageDB : Store Messages
+
+userMgmt --> user : User Profile/Auth Status
+productMgmt --> user : Product Information
+rentalProc --> user : Rental Status
+commSystem --> user : Message Notifications
+
+@enduml 

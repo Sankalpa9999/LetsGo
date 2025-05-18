@@ -54,12 +54,9 @@ INSTALLED_APPS = [
     'Home',
     'userauths',
     'useradmin',
-    'message'
-    
-    #  'channels',
-    # 'rest_framework',
-    
-    
+    'message',
+    'crispy_forms',
+    'crispy_bootstrap4',
 ]
 
 MIDDLEWARE = [
@@ -164,6 +161,10 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
+# Add crispy forms settings
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+CRISPY_TEMPLATE_PACK = "bootstrap4"
+
 # MEDIA_URL = '/media/'
 
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # add this line
@@ -206,11 +207,6 @@ CKEDITOR_CONFIGS = {
 }
 
 handler404 = 'Home.views.custom_404'
-
-
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
-CRISPY_TEMPLATE_PACK = "bootstrap4"
-
 
 
 LOGIN_URL = '/user/sign-in/'

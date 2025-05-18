@@ -1,0 +1,162 @@
+@startuml Django Rent Project Structure
+
+' Style and theme
+!theme plain
+skinparam linetype polyline
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam backgroundColor white
+skinparam ArrowColor #2C3E50
+skinparam ClassBorderColor #2C3E50
+skinparam PackageBorderColor #2C3E50
+
+' Custom styling
+skinparam class {
+    BackgroundColor #ECF0F1
+    ArrowColor #2C3E50
+    BorderColor #2C3E50
+}
+
+' Layout direction
+left to right direction
+
+package "User Management" as userauths #E8F8F5 {
+    class User {
+        + email: EmailField
+        + username: CharField
+        + Bio: TextField
+        + profile_image: ImageField
+        + license_image: ImageField
+        + citizenship_image: ImageField
+    }
+
+    class ContactUs {
+        + name: CharField
+        + email: EmailField
+        + subject: CharField
+        + message: TextField
+        + phone: CharField
+    }
+}
+
+package "Core Business Logic" as Home #F4ECF7 {
+    package "Product Management" as ProductMgmt #E8F6F3 {
+        class Product {
+            + pid: ShortUUIDField
+            + title: CharField
+            + image: ImageField
+            + description: RichTextUploadingField
+            + price: DecimalField
+            + old_price: DecimalField
+            + specifications: RichTextUploadingField
+            + product_status: CharField
+            + status: BooleanField
+            + featured: BooleanField
+            + sku: ShortUUIDField
+            + numberplate: CharField
+        }
+
+        class ProductImages {
+            + image: ImageField
+            + date: DateTimeField
+        }
+
+        class DocumentImage {
+            + document: FileField
+            + date: DateTimeField
+        }
+
+        class TermsAndConditions {
+            + term_image: ImageField
+            + description: RichTextUploadingField
+            + date: DateTimeField
+        }
+    }
+
+    package "Vendor Management" as VendorMgmt #FDF2E9 {
+        class Vendor {
+            + vid: ShortUUIDField
+            + title: CharField
+            + image: ImageField
+            + cover_image: ImageField
+            + description: RichTextUploadingField
+            + address: CharField
+            + contact: CharField
+            + chat_resp_time: CharField
+            + authentic_rating: CharField
+        }
+    }
+
+    package "Category Management" as CategoryMgmt #EBF5FB {
+        class Department {
+            + did: ShortUUIDField
+            + title: CharField
+            + image: ImageField
+        }
+
+        class Category {
+            + cid: ShortUUIDField
+            + title: CharField
+            + image: ImageField
+        }
+    }
+
+    package "Order Management" as OrderMgmt #FDEBD0 {
+        class RentOrder {
+            + price: DecimalField
+            + paid_status: BooleanField
+            + order_date: DateTimeField
+            + product_status: CharField
+            + payment_status: CharField
+        }
+
+        class ProductReview {
+            + rating: PositiveSmallIntegerField
+            + review: TextField
+            + date: DateTimeField
+        }
+
+        class Wishlist {
+            + date: DateTimeField
+        }
+
+        class Address {
+            + address: CharField
+            + status: BooleanField
+        }
+    }
+}
+
+package "Communication" as message #F9EBEA {
+    class Message {
+        + message: TextField
+        + file: FileField
+        + message_type: CharField
+        + timestamp: DateTimeField
+        + is_read: BooleanField
+    }
+}
+
+' Main Flow Relationships
+User "1" --> "1" Vendor : becomes
+User "1" --> "*" Product : lists
+User "1" --> "*" RentOrder : places
+User "1" --> "*" ProductReview : writes
+User "1" --> "*" Wishlist : saves
+User "1" --> "*" Address : has
+User "1" <--> "*" Message : exchanges
+
+' Hierarchical Relationships
+Department "1" --> "*" Category : contains
+Department "1" --> "*" Product : organizes
+Category "1" --> "*" Product : classifies
+
+' Product Relationships
+Product "*" <-- "1" Vendor : offers
+Product "1" --> "*" ProductImages : has
+Product "1" --> "*" DocumentImage : includes
+Product "1" --> "*" TermsAndConditions : specifies
+Product "1" --> "*" ProductReview : receives
+Product "1" --> "*" Wishlist : added to
+
+@enduml 
